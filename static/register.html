@@ -1,0 +1,84 @@
+{{template "header" . }}
+<div class="container">
+	<div class="input-wrapper">
+		<div>
+			<h1>Register</h1>
+		</div>
+		<div>
+			<h3>Sign in with</h3>
+		</div>
+		<div class="alternative-sign-up">
+			<div class="social">
+				<form action="/google/login" method="POST">
+					<button class="social-button" type="submit">
+						<i class="fa-brands fa-google"></i>
+					</button>
+				</form>
+			</div>
+			<div class="social">
+				<form action="/github/login" method="POST">
+					<button class="social-button" type="submit">
+						<i class="fa-brands fa-github"></i>
+					</button>
+				</form>
+			</div>
+			<!-- <div class="social">
+					<form action="/facebook/login" method="POST">
+						<button class="social-button" type="submit">
+							<i class="fa-brands fa-facebook"></i>
+						</button>
+					</form>
+				</div> -->
+		</div>
+		<form action="/register_account" method="POST">
+			<div class="login-input">
+				<label for="user_name"><i class="fa-solid fa-user"></i></label>
+				<input
+					type="text"
+					placeholder="Username"
+					name="user_name"
+					autocomplete="off"
+					autofocus
+					required
+				/>
+			</div>
+			<div class="login-input">
+				<label for="email"><i class="fa-solid fa-envelope"></i></label>
+				<input
+					type="email"
+					placeholder="Email"
+					name="email"
+					autocomplete="off"
+					required
+				/>
+			</div>
+			<div class="login-input">
+				<label for="password"><i class="fa-solid fa-lock"></i></label>
+				<input
+					type="password"
+					placeholder="Password"
+					name="password"
+					minlength="6"
+					maxlength="20"
+					autocomplete="off"
+					required
+				/>
+			</div>
+			{{if ne .RegisterError ""}}
+			<div class="login-input-incorrect">
+				<p class="login-incorrect-password">
+					Sorry, that {{.RegisterError}} is already taken.
+				</p>
+			</div>
+			{{end}}
+			<div class="login-input">
+				<button type="submit">Sign Up</button>
+			</div>
+		</form>
+		<p>
+			Registered?
+			<a accesskey="a" href="/login">Sign in</a>
+		</p>
+	</div>
+</div>
+{{template "footer"}}

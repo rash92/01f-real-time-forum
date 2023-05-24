@@ -1,0 +1,111 @@
+{{ template "header" . }}
+
+<div class="container-filter">
+	<div class="filter">
+		<button id="mod" onclick="hideShowAdmin(this)" value="mod"><i class="fa-solid fa-hourglass-start"></i>
+			Pending
+			Mod Requests</button>
+	</div>
+	<div class="filter">
+		<button id="reports" onclick="hideShowAdmin(this)" value="reports"><i class="fa-solid fa-flag"></i>
+			Pending
+			Reported Posts</button>
+	</div>
+	<div class="filter">
+		<button id="users" onclick="hideShowAdmin(this)" value="users"><i class="fa-solid fa-users"></i>
+			Users</button>
+	</div>
+	<div class="filter">
+		<button id="tags" onclick="hideShowAdmin(this)" value="tags"><i class="fa-solid fa-tags"></i>
+			Tags</button>
+	</div>
+</div>
+
+<div id="mod-requests" style="display: block;">
+	{{range .AdminRequests}}
+	{{if eq .Description "this user is asking to become a moderator"}}
+	<div class="container-post">
+		<div class="post">
+			{{.RequestFromId}} {{.RequestFromName}}
+			<p>{{.Description}}</p>
+			<form action="/admin" method="POST">
+				<button class="delete-btn" name="delete request" value="{{.UUID}}">
+					delete request
+				</button>
+				<button class="delete-btn" name="set to moderator" value="{{.RequestFromId}}">
+					Set to moderator
+				</button>
+			</form>
+		</div>
+	</div>
+	{{end}}
+	{{end}}
+</div>
+
+<div id="reported-posts" style="display: none">
+	{{range .AdminRequests}}
+	{{if ne .ReportedPostId ""}}
+	<div class="container-post">
+		<div class="post">
+			the post {{.ReportedPostId}} has been reported by:
+			{{.RequestFromId}} {{.RequestFromName}}
+			<p>{{.Description}}</p>
+			<a href="/posts/{{.ReportedPostId}}">Go to post</a>
+			<form action="/admin" method="POST">
+				<input type="text" name="response message" placeholder="reponse message">
+				<button type="submit" name="acknowledge report" value="{{.UUID}}">
+					acknowledge report
+				</button>
+				<button class="delete-btn" name="delete request" value="{{.UUID}}">
+					delete request
+				</button>
+			</form>
+		</div>
+	</div>
+	{{end}}
+	{{end}}
+</div>
+
+<div id="user-admin" style="display: none;">
+	{{range .AllUsers}}
+	<div class="container-post">
+		<div class="post">
+			<p>User name: {{.Name}}</p>
+			<p>Permission: {{.Permission}}</p>
+			<form action="/admin" method="POST">
+				<button class="delete-btn" name="set to user" value="{{.UUID}}">set to user</button>
+				<button class="delete-btn" name="set to moderator" value="{{.UUID}}">
+					Set to moderator
+				</button>
+				<button class="delete-btn" name="set to admin" value="{{.UUID}}">set to admin</button>
+				<button class="delete-btn" name="delete user" value="{{.UUID}}">delete user</button>
+			</form>
+		</div>
+	</div>
+	{{end}}
+</div>
+
+<div id="tags-admin" style="display: none;">
+	<div class="container-post">
+		<form action="/admin" method="post">
+			<input type="text" name="tags" placeholder="Tags (#General etc.)">
+			<input type="submit">
+		</form>
+	</div>
+	{{range .TagsList}}
+	<div class="container-post">
+		<div class="post">
+			<p>Tag Name: {{.TagName}}</p>
+			<form action="/admin" method="POST">
+				<button class="delete-btn" name="delete tag" value={{.UUID}}>delete tag</button>
+				<button class="delete-btn admin-all-tag-delete" name="delete all posts with tag"
+					value={{.TagName}}>delete all posts with this tag</button>
+			</form>
+		</div>
+	</div>
+	{{end}}
+</div>
+
+<script src="static/js/hideshowadmin.js"></script>
+
+{{ template "footer"}}

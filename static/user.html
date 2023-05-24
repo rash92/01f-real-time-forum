@@ -1,0 +1,313 @@
+{{template "header" .}}
+{{$UserInfo := .UserInfo}}
+<div class="container-filter">
+    <div class="filter">
+        <button id="posts" onclick="hideShow(this)" value="posts"><i class="fa-solid fa-signs-post"></i> Your
+            posts</button>
+    </div>
+    <div class="filter">
+        <button id="comments" onclick="hideShow(this)" value="comments"><i class="fa-solid fa-message"></i> Your
+            comments</button>
+    </div>
+    <div class="filter">
+        <button id="likes" onclick="hideShow(this)" value="liked-posts"><i class="fa-solid fa-thumbs-up"></i> Your liked
+            posts</button>
+    </div>
+    <div class="filter">
+        <button id="Dislikes" onclick="hideShow(this)" value="disliked-posts"><i class="fa-solid fa-thumbs-down"></i>
+            Your disliked
+            posts</button>
+    </div>
+</div>
+
+<div id="user-posts" style="display: block;">
+    {{range .UserPosts}}
+    <div class="container-post">
+        <div class="post">
+            <div class="tags-interactions">
+                <div class="post-tags">
+                    {{range .Tags}}
+                    <a class="tag-link" href="/categories/{{.TagName}}">{{.TagName}}</a>
+                    {{end}}
+                </div>
+                {{ if or (eq $UserInfo.Name .OwnerId) (eq $UserInfo.Permission "admin") (eq
+                $UserInfo.Permission "moderator")}}
+                <div class="post-interactions">
+                    <form method="POST">
+                        <div class="tooltip">
+                            <button class="delete-btn" name="deletepost" value="{{.UUID}}">
+                                <i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
+                            </button>
+                        </div>
+                    </form>
+                    {{if eq $UserInfo.Name .OwnerId}}
+                    <form action="/submitpost" method="post">
+                        <div class="tooltip">
+                            <button type="submit" class="delete-btn tooltip" id="editbutton" name="editpost"
+                                value="{{.UUID}}">
+                                <i class="fa-solid fa-pen-to-square"></i><span class="tooltiptext">Edit</span>
+                            </button>
+                        </div>
+                    </form>
+                    {{end}}
+                </div>
+                {{end}}
+            </div>
+            <div class="post-info">
+                <a href="/posts/{{.UUID}}">
+                    <div class="post-author-time">
+                        <p>Posted by {{.OwnerId}} on {{.FormattedTime}}</p>
+                    </div>
+                    <div class="post-title">
+                        <h2>{{.Title}}</h2>
+                    </div>
+                    {{ if ne .ImageName ""}}
+                    <div class="post-image">
+                        <img src="{{.ImageName}}" alt="user submitted image" />
+                    </div>
+                    {{end}}
+                    <div class="post-content">
+                        <div class="post-content-text">{{.Content}}</div>
+                    </div>
+                    <div class="post-comments-likes-dislikes">
+                        <div>
+                            <p>
+                                <i class="fa-regular fa-comment"></i>
+                                {{.NumOfComments}}
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <form action="/posts/{{.UUID}}" method="post" target="_self">
+                <div class="post-likes-dislikes">
+                    {{if ne $UserInfo.Name "" }}
+                    <button class="like" name="like" value="{{.UUID}}">
+                        <i class="fa-solid fa-thumbs-up"></i>
+                    </button>
+                    {{ else }}
+                    <p><i class="fa-solid fa-thumbs-up"></i></p>
+                    {{end}}
+                    <p>{{.Likes}}</p>
+                    {{if ne $UserInfo.Name "" }}
+                    <button class="dislike" name="dislike" value="{{.UUID}}">
+                        <i class="fa-solid fa-thumbs-down"></i>
+                    </button>
+                    {{else}}
+                    <p><i class="fa-solid fa-thumbs-down"></i></p>
+                    {{end}}
+                    <p>{{.Dislikes}}</p>
+                </div>
+            </form>
+        </div>
+    </div>
+    {{end}}
+</div>
+
+<div id="liked-user-posts" style="display: none;">
+    {{range .LikedUserPosts}}
+    <div class="container-post">
+        <div class="post">
+            <div class="tags-interactions">
+                <div class="post-tags">
+                    {{range .Tags}}
+                    <a class="tag-link" href="/categories/{{.TagName}}">{{.TagName}}</a>
+                    {{end}}
+                </div>
+                {{ if or (eq $UserInfo.Name .OwnerId) (eq $UserInfo.Permission "admin") (eq
+                $UserInfo.Permission "moderator")}}
+                <div class="post-interactions">
+                    <form method="POST">
+                        <div class="tooltip">
+                            <button class="delete-btn" name="deletepost" value="{{.UUID}}">
+                                <i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
+                            </button>
+                        </div>
+                    </form>
+                    {{if eq $UserInfo.Name .OwnerId}}
+                    <form action="/submitpost" method="post">
+                        <div class="tooltip">
+                            <button type="submit" class="delete-btn tooltip" id="editbutton" name="editpost"
+                                value="{{.UUID}}">
+                                <i class="fa-solid fa-pen-to-square"></i><span class="tooltiptext">Edit</span>
+                            </button>
+                        </div>
+                    </form>
+                    {{end}}
+                </div>
+                {{end}}
+            </div>
+            <div class="post-info">
+                <a href="/posts/{{.UUID}}">
+                    <div class="post-author-time">
+                        <p>Posted by {{.OwnerId}} on {{.FormattedTime}}</p>
+                    </div>
+                    <div class="post-title">
+                        <h2>{{.Title}}</h2>
+                    </div>
+                    {{if ne .ImageName ""}}
+                    <div class="post-image">
+                        <img src="{{.ImageName}}" alt="user submitted image" />
+                    </div>
+                    {{end}}
+                    <div class="post-content">
+                        <div class="post-content-text">{{.Content}}</div>
+                    </div>
+                    <div class="post-comments-likes-dislikes">
+                        <div>
+                            <p>
+                                <i class="fa-regular fa-comment"></i>
+                                {{.NumOfComments}}
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <form action="/posts/{{.UUID}}" method="post" target="_self">
+                <div class="post-likes-dislikes">
+                    {{if ne $UserInfo.Name "" }}
+                    <button class="like" name="like" value="{{.UUID}}">
+                        <i class="fa-solid fa-thumbs-up"></i>
+                    </button>
+                    {{ else }}
+                    <p><i class="fa-solid fa-thumbs-up"></i></p>
+                    {{end}}
+                    <p>{{.Likes}}</p>
+                    {{if ne $UserInfo.Name "" }}
+                    <button class="dislike" name="dislike" value="{{.UUID}}">
+                        <i class="fa-solid fa-thumbs-down"></i>
+                    </button>
+                    {{else}}
+                    <p><i class="fa-solid fa-thumbs-down"></i></p>
+                    {{end}}
+                    <p>{{.Dislikes}}</p>
+                </div>
+            </form>
+        </div>
+    </div>
+    {{end}}
+</div>
+
+<div id="disliked-user-posts" style="display: none;">
+    {{range .DislikedUserPosts}}
+    <div class="container-post">
+        <div class="post">
+            <div class="tags-interactions">
+                <div class="post-tags">
+                    {{range .Tags}}
+                    <a class="tag-link" href="/categories/{{.TagName}}">{{.TagName}}</a>
+                    {{end}}
+                </div>
+                {{ if or (eq $UserInfo.Name .OwnerId) (eq $UserInfo.Permission "admin") (eq
+                $UserInfo.Permission "moderator")}}
+                <div class="post-interactions">
+                    <form method="POST">
+                        <div class="tooltip">
+                            <button class="delete-btn" name="deletepost" value="{{.UUID}}">
+                                <i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
+                            </button>
+                        </div>
+                    </form>
+                    {{if eq $UserInfo.Name .OwnerId}}
+                    <form action="/submitpost" method="post">
+                        <div class="tooltip">
+                            <button type="submit" class="delete-btn tooltip" id="editbutton" name="editpost"
+                                value="{{.UUID}}">
+                                <i class="fa-solid fa-pen-to-square"></i><span class="tooltiptext">Edit</span>
+                            </button>
+                        </div>
+                    </form>
+                    {{end}}
+                </div>
+                {{end}}
+            </div>
+
+            <div class="post-info">
+                <a href="/posts/{{.UUID}}">
+                    <div class="post-author-time">
+                        <p>Posted by {{.OwnerId}} on {{.FormattedTime}}</p>
+                    </div>
+                    <div class="post-title">
+                        <h2>{{.Title}}</h2>
+                    </div>
+                    {{if ne .ImageName ""}}
+                    <div class="post-image">
+                        <img src="{{.ImageName}}" alt="user submitted image" />
+                    </div>
+                    {{end}}
+                    <div class="post-content">
+                        <div class="post-content-text">{{.Content}}</div>
+                    </div>
+                    <div class="post-comments-likes-dislikes">
+                        <div>
+                            <p>
+                                <i class="fa-regular fa-comment"></i>
+                                {{.NumOfComments}}
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <form action="/posts/{{.UUID}}" method="post" target="_self">
+                <div class="post-likes-dislikes">
+                    {{if ne $UserInfo.Name "" }}
+                    <button class="like" name="like" value="{{.UUID}}">
+                        <i class="fa-solid fa-thumbs-up"></i>
+                    </button>
+                    {{ else }}
+                    <p><i class="fa-solid fa-thumbs-up"></i></p>
+                    {{end}}
+                    <p>{{.Likes}}</p>
+                    {{if ne $UserInfo.Name "" }}
+                    <button class="dislike" name="dislike" value="{{.UUID}}">
+                        <i class="fa-solid fa-thumbs-down"></i>
+                    </button>
+                    {{else}}
+                    <p><i class="fa-solid fa-thumbs-down"></i></p>
+                    {{end}}
+                    <p>{{.Dislikes}}</p>
+                </div>
+            </form>
+        </div>
+    </div>
+    {{end}}
+</div>
+
+<div id="user-comments" style="display: none;">
+    {{range .UserComments}}
+    <div class="container-post">
+        <div class="post">
+            <div class="tags-interactions">
+                <div class="commentor-name-time">
+                    <p>{{.OwnerName}}</p>
+                </div>
+                {{ if or (eq $UserInfo.Name .OwnerName) (eq $UserInfo.Permission "admin") (eq
+                $UserInfo.Permission "moderator")}}
+                <div class="post-interactions">
+                    <form method="POST">
+                        <div class="tooltip">
+                            <button class="delete-btn" name="deletecomment" value="{{.UUID}}">
+                                <i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                {{end}}
+            </div>
+            <div class="comment">
+                <p>
+                    {{.Content}}
+                </p>
+            </div>
+            <div class="go-to-post">
+                <a href="/posts/{{.PostId}}">Go to post</a>
+            </div>
+
+        </div>
+    </div>
+    {{end}}
+</div>
+
+<script src="static/js/hideshow.js"></script>
+
+{{template "footer"}}

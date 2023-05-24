@@ -1,0 +1,104 @@
+{{ template "header" . }} {{$UserInfo := .UserInfo}} {{$SubName := .SubName}}
+<form action="/categories/{{.SubName}}" method="post">
+	<div class="container-filter">
+		<div class="filter">
+			<p>
+				<i class="fa-solid fa-angles-right"></i>
+				{{.SubName}}
+			</p>
+		</div>
+		<div class="filter">
+			<button name="filter" value="newest">
+				<i class="fa-brands fa-hotjar"></i>
+				Hot
+			</button>
+		</div>
+		<div class="filter">
+			<button name="filter" value="oldest">
+				<i class="fa-solid fa-clock"></i>
+				Oldest
+			</button>
+		</div>
+	</div>
+</form>
+{{range .ListOfData}}
+<div class="container-post">
+	<div class="post">
+		<div class="tags-interactions">
+			<div class="post-tags">
+				{{range .Tags}}
+				<a class="tag-link" href="/categories/{{.TagName}}">{{.TagName}}</a>
+				{{end}}
+			</div>
+			{{ if or (eq $UserInfo.Name .OwnerId) (eq $UserInfo.Permission "admin") (eq
+			$UserInfo.Permission "moderator")}}
+			<div class="post-interactions">
+				<form method="POST">
+					<div class="tooltip">
+						<button class="delete-btn" name="deletepost" value="{{.UUID}}">
+							<i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
+						</button>
+					</div>
+				</form>
+				{{if eq $UserInfo.Name .OwnerId}}
+				<form action="/submitpost" method="post">
+					<div class="tooltip">
+						<button type="submit" class="delete-btn tooltip" id="editbutton" name="editpost"
+							value="{{.UUID}}">
+							<i class="fa-solid fa-pen-to-square"></i><span class="tooltiptext">Edit</span>
+						</button>
+					</div>
+				</form>
+				{{end}}
+			</div>
+			{{end}}
+		</div>
+		<div class="post-info">
+			<a href="/posts/{{.UUID}}">
+				<div class="post-author-time">
+					<p>Posted by {{.OwnerId}} on {{.FormattedTime}}</p>
+				</div>
+				<div class="post-title">
+					<h2>{{.Title}}</h2>
+				</div>
+				{{ if ne .ImageName ""}}
+				<div class="post-image">
+					<img src="{{.ImageName}}" alt="user submitted image" />
+				</div>
+				{{end}}
+				<div class="post-content">
+					<div class="post-content-text">{{.Content}}</div>
+				</div>
+				<div class="post-comments-likes-dislikes">
+					<div>
+						<p>
+							<i class="fa-regular fa-comment"></i>
+							{{.NumOfComments}}
+						</p>
+					</div>
+				</div>
+			</a>
+		</div>
+		<form action="/categories/{{$SubName}}" method="post" target="_self">
+			<div class="post-likes-dislikes">
+				{{if ne $UserInfo.Name "" }}
+				<button class="like" name="like" value="{{.UUID}}">
+					<i class="fa-solid fa-thumbs-up"></i>
+				</button>
+				{{ else }}
+				<p><i class="fa-solid fa-thumbs-up"></i></p>
+				{{end}}
+				<p>{{.Likes}}</p>
+				{{if ne $UserInfo.Name "" }}
+				<button class="dislike" name="dislike" value="{{.UUID}}">
+					<i class="fa-solid fa-thumbs-down"></i>
+				</button>
+				{{else}}
+				<p><i class="fa-solid fa-thumbs-down"></i></p>
+				{{end}}
+				<p>{{.Dislikes}}</p>
+			</div>
+		</form>
+	</div>
+</div>
+{{end}} {{template "footer"}}

@@ -1,0 +1,48 @@
+{{template "header" . }}
+<div class="container-post">
+    <div class="submission">
+        <h2>Create a post</h2>
+        {{if .IsEdit}}
+        <form action="/forum" method="POST" enctype="multipart/form-data">
+            <input type="text" name="submission-title" value="{{.EditPost.Title}}" maxlength="300" autocomplete="off"
+                autofocus required>
+            <textarea name="post" id="" cols="30" rows="10" required>{{.EditPost.Content}}</textarea>
+            <select name="tags" id="tags" multiple="multiple">
+                <option value="" disabled>Select a tag (Hold Ctrl for mulitple tags)</option>
+                {{range .TagsList}}
+                <option value="{{.TagName}}">{{.TagName}}</option>
+                {{end}}
+            </select>
+            <div class="submission-bottom-row">
+                <label for="file-upload" class="image-upload">
+                    <i class="fa-solid fa-image"></i> Upload Image
+                </label>
+                <input id="file-upload" name="submission-image" type="file"
+                    accept="image/jpeg, image/png, image/gif, image/svg+xml" />
+                <button name="editpost" value="{{.EditPost.UUID}}">Edit</button>
+            </div>
+        </form>
+        {{else}}
+        <form action="/forum" method="POST" enctype="multipart/form-data">
+            <input type="text" name="submission-title" placeholder="Title" maxlength="300" autocomplete="off" autofocus
+                required>
+            <textarea name="post" id="" cols="30" rows="10" placeholder="Text" required></textarea>
+                <select name="tags" id="tags" multiple="multiple">
+                    <option value="" disabled>Select a tag (Hold Ctrl for mulitple tags)</option>
+                    {{range .TagsList}}
+                    <option value="{{.TagName}}">{{.TagName}}</option>
+                    {{end}}
+                </select>
+            <div class="submission-bottom-row">
+                <label for="file-upload" class="image-upload">
+                    <i class="fa-solid fa-image"></i> Upload Image
+                </label>
+                <input id="file-upload" name="submission-image" type="file"
+                    accept="image/jpeg, image/png, image/gif, image/svg+xml" />
+                <button type="submit">Post</button>
+            </div>
+        </form>
+        {{end}}
+    </div>
+</div>
+{{template "footer"}}

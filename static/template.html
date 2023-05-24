@@ -1,0 +1,152 @@
+{{ define "header"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+		integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="/static/stylesheets/styles.css">
+	<title>{{.TitleName}}</title>
+</head>
+
+<body>
+	{{$UserInfo := .UserInfo}}
+	<nav class="navbar">
+		<!-- LOGO -->
+		<div class="logo"><a accesskey="h" href="/">F<i class="fa-regular fa-comment"></i>rum</a></div>
+		<!-- SEARCHBAR & CREATE -->
+		<div class="searchbar">
+			<input type="text" placeholder="Search tags" name="search" onkeyup="searchTags()" id="search"
+				autocomplete="off">
+			<div id="list">
+				{{range .TagsList}}
+				<ul>
+					<li class="listItem"><a href="/categories/{{.TagName}}">{{.TagName}}</a></li>
+				</ul>
+				{{end}}
+			</div>
+			<button type="submit">
+			</button>
+		</div>
+		<!-- MENU -->
+		{{if not .}}
+		<div class="menu">
+			<li><a accesskey="a" href="/login">Sign in</a></li>
+			<p>|</p>
+			<li><a accesskey="a" href="/register">Sign up</a></li>
+		</div>
+		{{else if eq $UserInfo.Name "" }}
+		<div class="menu">
+			<li><a accesskey="a" href="/login">Sign in</a></li>
+			<p>|</p>
+			<li><a accesskey="a" href="/register">Sign up</a></li>
+		</div>
+		{{else}}
+		<div class="menu">
+			<div class="create">
+				<a href="/submitpost"><i class="fa-solid fa-plus"></i> Create</a>
+			</div>
+			<li><a href="/user"><i class="fa-solid fa-user"></i> {{$UserInfo.Name}}</a></li>
+			<div class="dropdown">
+				<button class="dropbtn">
+					<i class="fa-solid fa-bell"></i>
+					{{if $UserInfo.Notifications}}
+					<span class="badge"><i class="fa-solid fa-circle"></i></span>
+					{{end}}
+				</button>
+				<div class="dropdown-content">
+					<div class="notifications-interactions">
+						{{range $UserInfo.Notifications}}
+						<div class="tags-interactions">
+							<a class="dropdown-content-links" href="/posts/{{.PostId}}">
+								<div>
+									{{.Sender}} {{.Statement}}
+								</div>
+							</a>
+							<div class="tooltip">
+								<form action="/forum" method="post">
+									<button class="delete-btn" name="delete notification" value="{{.UUID}}">
+										<i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
+									</button>
+								</form>
+							</div>
+						</div>
+						{{end}}
+
+					</div>
+				</div>
+			</div>
+			<div class="dropdown">
+				<button class="dropbtn">
+					<i class="fa-solid fa-chevron-down"></i>
+				</button>
+				<div class="dropdown-content">
+					<a class="dropdown-content-links" href="/user">
+						<div>
+							<i class="fa-solid fa-user"></i> Profile
+						</div>
+					</a>
+					{{ if eq $UserInfo.Permission "user"}}
+					<form action="/user" method="POST">
+						<button class="dropdown-content-links" name="request to become moderator"
+							value={{$UserInfo.UUID}}>
+							<div>
+								<i class="fa-solid fa-gavel"></i> Become a moderator?
+							</div>
+						</button>
+					</form>
+					{{end}}
+					{{ if eq $UserInfo.Permission "admin"}}
+					<a class="dropdown-content-links" href="/admin">
+						<div>
+							<i class="fa-solid fa-gear"></i> Admin tools
+						</div>
+					</a>
+					{{end}}
+					<a class="dropdown-content-links" href="/logout">
+						<div>
+							<i class="fa-solid fa-right-from-bracket"></i> Sign out
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		{{end}}
+	</nav>
+	{{end}}
+</body>
+
+{{ define "footer"}}
+	<footer>
+		<div class="container-footer">
+			<a href="/privacy_policy">Privacy Policy</a>
+		</div>
+	</footer>
+	<script>
+		function searchTags() {
+			console.log("got here");
+			let listContainer = document.getElementById("list");
+			let listItems = document.getElementsByClassName("listItem");
+			let input = document.getElementById("search").value;
+			console.log(input)
+
+			let noResults = true;
+			for (i = 0; i < listItems.length; i++) {
+				if (!listItems[i].innerText.includes(input) || input === "") {
+					listItems[i].style.display = "none";
+					continue;
+				}
+				else {
+					listItems[i].style.display = "flex";
+					noResults = false;
+				}
+			}
+			listContainer.style.display = noResults ? "none" : "block";
+		}
+	</script>
+</html>
+{{end}}

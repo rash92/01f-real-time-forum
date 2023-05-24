@@ -1,0 +1,67 @@
+{{template "header" . }}
+<div class="container">
+	<div class="input-wrapper">
+		<div class="input-header">
+			<div>
+				<h1>Log In</h1>
+			</div>
+			<div>
+				<h3>Sign in with</h3>
+			</div>
+		</div>
+		<div class="alternative-sign-up">
+			<div class="social">
+				<form action="/google/login" method="POST">
+					<button class="social-button" type="submit">
+						<i class="fa-brands fa-google"></i>
+					</button>
+				</form>
+			</div>
+			<div class="social">
+				<form action="/github/login" method="POST">
+					<button class="social-button" type="submit">
+						<i class="fa-brands fa-github"></i>
+					</button>
+				</form>
+			</div>
+			<!-- <div class="social">
+				<form action="/facebook/login" method="POST">
+					<button class="social-button" type="submit">
+						<i class="fa-brands fa-facebook"></i>
+					</button>
+				</form>
+			</div> -->
+		</div>
+		<form action="/authenticate" method="POST">
+			<div class="login-input">
+				<label for="user_name"><i class="fa-solid fa-user"></i></label>
+				<input type="text" placeholder="Username" name="user_name" autocomplete="off" maxlength="20"
+					autofocus required/>
+			</div>
+			{{if .IsLoggedIn}}
+			<div class="login-input-incorrect">
+				<p class="login-incorrect-password">You are already logged in!</p>
+			</div>
+			{{end}}
+			<div class="login-input">
+				<label for="password"><i class="fa-solid fa-lock"></i></label>
+				<input type="password" placeholder="Password" name="password" autocomplete="off" required/>
+			</div>
+			{{if not .IsCorrect}}
+			<div class="login-input-incorrect">
+				<p class="login-incorrect-password">Incorrect Password or Username! Try Again.</p>
+			</div>
+			{{end}}
+			<div class="login-input">
+				<button type="submit">Log In</button>
+			</div>
+		</form>
+		<p>
+			Not Registered?
+			<a href="/register">Click Here</a>
+		</p>
+	</div>
+	</body>
+
+	{{template "footer"}}
+	</html>
