@@ -1,23 +1,23 @@
 const renderForum = () => {
 
     fetch("/forum")
-    .then(function (response) {
-        if (response.ok) {
-            return response.json();
-        } else {
-            throw new Error("Error: " + response.status);
-        }
-    })
-    .then(function (jdata) {
-        // Process the JSON data received from Go
-        console.log(jdata);
-        addForumInnerHTML(jdata)
-        renderNavbar()
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
-    
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error("Error: " + response.status);
+            }
+        })
+        .then(function (jdata) {
+            // Process the JSON data received from Go
+            console.log(jdata);
+            addForumInnerHTML(jdata)
+            renderNavbar()
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
 };
 
 function addForumInnerHTML(data) {
@@ -101,7 +101,6 @@ function addForumInnerHTML(data) {
                             </div>
                         </a>
                     </div>
-                    <form action="/forum" method="post" target="_self">
                         <div class="post-likes-dislikes">
                             ${data.UserInfo.Name
                     ? `
@@ -126,7 +125,6 @@ function addForumInnerHTML(data) {
                 }
                             <p>${item.Dislikes}</p>
                         </div>
-                    </form>
                 </div>
             </div>
           `;
@@ -134,6 +132,58 @@ function addForumInnerHTML(data) {
     }
 
     document.getElementById('container').innerHTML = html;
-}
+
+    const reactPost = async (formData) => {
+        console.log(formData);
+        try {
+            const response = await fetch('/react', {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                // Authentication successful
+                renderForum()
+            } else {
+                // Handle error response
+                console.error('React Post failed.');
+            }
+        } catch (error) {
+            // Handle network or other errors
+            console.error('Error occurred:', error);
+        }
+    };
+
+    // Attach event listeners to each like button
+    const likeButtons = document.querySelectorAll('.like');
+    likeButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            const id = button.value;
+            const formData = { id, like: true };
+
+            reactPost(formData);
+        });
+    });
+
+    // Attach event listeners to each dislike button
+    const dislikeButtons = document.querySelectorAll('.dislike');
+    dislikeButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            const id = button.value;
+            const formData = { id, dislike: true };
+
+            reactPost(formData);
+        });
+    });
+
+};
+
 
 renderForum()

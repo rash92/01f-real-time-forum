@@ -123,6 +123,10 @@ func SubmitPostHandler(w http.ResponseWriter, r *http.Request) {
 	controller.SubmitPost(w, r, tmpl)
 }
 
+func ReactPostHandler(w http.ResponseWriter, r *http.Request) {
+	controller.ReactPost(w, r, tmpl)
+}
+
 func AdminHandler(w http.ResponseWriter, r *http.Request) {
 	controller.Admin(w, r, tmpl)
 }
