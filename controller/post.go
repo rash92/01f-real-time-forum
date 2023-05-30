@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
@@ -146,6 +147,15 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 		data.TagsList = dbmanagement.SelectAllTags()
 		message = fmt.Sprintf("%v, %v", data.UserInfo.Name, data.Post.OwnerId)
 		utils.WriteMessageToLogFile(message)
-		tmpl.ExecuteTemplate(w, "post.html", data)
+		//tmpl.ExecuteTemplate(w, "post.html", data)
+
+		// Convert the struct to JSON
+		jsonData, err := json.Marshal(data)
+		if err != nil {
+			// Handle error
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsonData)
 	}
 }

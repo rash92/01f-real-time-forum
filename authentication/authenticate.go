@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"encoding/json"
 	"fmt"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -20,6 +21,17 @@ type Data struct {
 	TagsList      []dbmanagement.Tag
 }
 
+type RegisterAccountFormData struct {
+	UserName string `json:"user_name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type AuthenticateFormData struct {
+	UserName string `json:"user_name"`
+	Password string `json:"password"`
+}
+
 type OauthAccount struct {
 	Name, Email string
 }
@@ -37,7 +49,16 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data.TitleName = "Login"
 		data.IsCorrect = true
 		data.TagsList = dbmanagement.SelectAllTags()
-		tmpl.ExecuteTemplate(w, "login.html", data)
+		//tmpl.ExecuteTemplate(w, "login.html", data)
+
+		// Convert the struct to JSON
+		jsonData, err := json.Marshal(data)
+		if err != nil {
+			// Handle error
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsonData)
 	}
 }
 
@@ -46,8 +67,17 @@ Authenticate user with credentials - If the username and password match an entry
 otherwise the user stays on the log in page. Session Cookie is also set here.
 */
 func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	userName := r.FormValue("user_name")
-	password := r.FormValue("password")
+	// Parse the JSON body into FormData struct
+	var formData AuthenticateFormData
+	err := json.NewDecoder(r.Body).Decode(&formData)
+	if err != nil {
+		// Handle error
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+
+	userName := formData.UserName
+	password := formData.Password
 
 	user, err := dbmanagement.SelectUserFromName(userName)
 	utils.HandleError("Unable to get user error:", err)
@@ -61,7 +91,19 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		utils.HandleError("Unable to update users token", err)
 		dbmanagement.UpdateUserLoggedInStatus(user.UUID, 1)
 		utils.WriteMessageToLogFile(user.IsLoggedIn)
-		http.Redirect(w, r, "/forum", http.StatusSeeOther)
+
+		data := Data{}
+		data.IsCorrect = true
+		data.TagsList = dbmanagement.SelectAllTags()
+
+		// Convert the struct to JSON
+		jsonData, err := json.Marshal(data)
+		if err != nil {
+			// Handle error
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsonData)
 	} else {
 		if user.IsLoggedIn != 0 {
 			utils.WriteMessageToLogFile("Already Logged In!")
@@ -70,14 +112,32 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 			data.IsCorrect = true
 			data.IsLoggedIn = true
 			data.TagsList = dbmanagement.SelectAllTags()
-			tmpl.ExecuteTemplate(w, "login.html", data)
+			//tmpl.ExecuteTemplate(w, "login.html", data)
+
+			// Convert the struct to JSON
+			jsonData, err := json.Marshal(data)
+			if err != nil {
+				// Handle error
+			}
+
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(jsonData)
 		} else {
 			utils.WriteMessageToLogFile("Incorrect Password!")
 			data := Data{}
 			data.TitleName = "Login"
 			data.IsCorrect = false
 			data.TagsList = dbmanagement.SelectAllTags()
-			tmpl.ExecuteTemplate(w, "login.html", data)
+			//tmpl.ExecuteTemplate(w, "login.html", data)
+
+			// Convert the struct to JSON
+			jsonData, err := json.Marshal(data)
+			if err != nil {
+				// Handle error
+			}
+
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(jsonData)
 		}
 	}
 }
@@ -111,24 +171,49 @@ func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	LoggedInStatus(w, r, tmpl, 0)
 	data := Data{}
 	data.TagsList = dbmanagement.SelectAllTags()
-	tmpl.ExecuteTemplate(w, "register.html", data)
+	//tmpl.ExecuteTemplate(w, "register.html", data)
+
+	// Convert the struct to JSON
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		// Handle error
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonData)
 }
 
 // Registers a user with given details then redirects to log in page.  Password is hashed here.
 func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	// Parse the JSON body into FormData struct
+	var formData RegisterAccountFormData
+	err := json.NewDecoder(r.Body).Decode(&formData)
+	if err != nil {
+		// Handle error
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+
+	data := Data{}
 	if r.Method == "POST" {
-		userName := r.FormValue("user_name")
-		email := r.FormValue("email")
-		password := HashPassword(r.FormValue("password"))
+		userName := formData.UserName
+		email := formData.Email
+		password := HashPassword(formData.Password)
 		_, err := dbmanagement.InsertUser(userName, email, password, "user", 0)
-		data := Data{}
 		if err != nil {
 			data.RegisterError = strings.Split(err.Error(), ".")[1]
 			data.TagsList = dbmanagement.SelectAllTags()
-			tmpl.ExecuteTemplate(w, "register.html", data)
+			//tmpl.ExecuteTemplate(w, "register.html", data)
 		}
 	}
-	http.Redirect(w, r, "/login", http.StatusSeeOther)
+	// Convert the struct to JSON
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		// Handle error
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonData)
 }
 
 // Checks whether the user is logged in or not for displaying certain pages

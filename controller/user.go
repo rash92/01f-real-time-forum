@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -88,5 +89,15 @@ func User(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data.UserComments = dbmanagement.SelectAllCommentsFromUser(data.UserInfo.UUID)
 	data.TitleName = data.UserInfo.Name
 	data.TagsList = dbmanagement.SelectAllTags()
-	tmpl.ExecuteTemplate(w, "user.html", data)
+	//tmpl.ExecuteTemplate(w, "user.html", data)
+
+	// Convert the struct to JSON
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		// Handle error
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonData)
+
 }

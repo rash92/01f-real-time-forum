@@ -95,4 +95,13 @@
 		</form>
 	</div>
 </div>
-{{end}} {{template "footer"}}
+{{end}}
+<div id="chat-container" style="background-color: red;">
+	<div id="input-message">
+		<input type="text" id="message-receiver" placeholder="other username">
+		<input type="text" id="dm-content" placeholder="message">
+		<button type="button" onclick="sendMessage()">Send</button>
+	</div>
+	<div id="received-messages"></div>
+</div>
+{{template "footer"}}

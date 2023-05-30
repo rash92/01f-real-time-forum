@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"encoding/json"
+	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -23,6 +25,7 @@ type SubmitData struct {
 func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	auth.LoggedInStatus(w, r, tmpl, 1)
 
+	fmt.Println(r.Method)
 	data := SubmitData{}
 	user := dbmanagement.User{}
 	tags := []dbmanagement.Tag{}
@@ -36,6 +39,8 @@ func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template)
 			http.Redirect(w, r, "/error", http.StatusSeeOther)
 			return
 		}
+
+		SubmissionHandler(w, r, user, tmpl)
 
 		idToEdit := r.FormValue("editpost")
 		if idToEdit != "" {
@@ -58,5 +63,14 @@ func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template)
 	}
 	data.Tags = tagsAsString
 	data.TagsList = dbmanagement.SelectAllTags()
-	tmpl.ExecuteTemplate(w, "submitpost.html", data)
+	//tmpl.ExecuteTemplate(w, "submitpost.html", data)
+
+	// Convert the struct to JSON
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		// Handle error
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonData)
 }

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -104,6 +105,15 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 		data.UserInfo = user
 		data.ListOfData = posts
 		data.TagsList = dbmanagement.SelectAllTags()
-		tmpl.ExecuteTemplate(w, "subforum.html", data)
+		//tmpl.ExecuteTemplate(w, "subforum.html", data)
+
+		// Convert the struct to JSON
+		jsonData, err := json.Marshal(data)
+		if err != nil {
+			// Handle error
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsonData)
 	}
 }

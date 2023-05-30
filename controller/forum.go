@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
@@ -22,6 +23,13 @@ type Data struct {
 	TitleName  string
 	IsCorrect  bool
 	TagsList   []dbmanagement.Tag
+}
+
+type SubmitPostFormData struct {
+	Title    string   `json:"title"`
+	Content  string   `json:"content"`
+	Tags     []string `json:"tags"`
+	EditPost string   `json:"editpost"`
 }
 
 /*
@@ -61,7 +69,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			if filter == "oldest" {
 				filterOrder = true
 			} else {
-				SubmissionHandler(w, r, user, tmpl)
+
 				http.Redirect(w, r, "/", http.StatusFound)
 			}
 		}
@@ -83,7 +91,16 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data.TitleName = "Forum"
 		data.TagsList = dbmanagement.SelectAllTags()
 		data.ListOfData = append(data.ListOfData, posts...)
-		tmpl.ExecuteTemplate(w, "forum.html", data)
+		//tmpl.ExecuteTemplate(w, "forum.html", data)
+
+		// Convert the struct to JSON
+		jsonData, err := json.Marshal(data)
+		if err != nil {
+			// Handle error
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsonData)
 	}
 }
 
@@ -129,6 +146,19 @@ func UploadHandler(w http.ResponseWriter, r *http.Request, file multipart.File, 
 
 // followed this: https://freshman.tech/file-upload-golang/
 func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement.User, tmpl *template.Template) {
+	fmt.Println(r.Body)
+
+	// Parse the JSON body into FormData struct
+	var formData SubmitPostFormData
+	jerr := json.NewDecoder(r.Body).Decode(&formData)
+	if jerr != nil {
+		// Handle error
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+
+	fmt.Println(formData)
+
 	// 20 megabytes
 	idToDelete := r.FormValue("deletepost")
 	if idToDelete != "" {
@@ -162,18 +192,18 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 		dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1, "")
 	}
 
-	maxSize := 20 * 1024 * 1024
+	//maxSize := 20 * 1024 * 1024
 
-	r.Body = http.MaxBytesReader(w, r.Body, int64(maxSize))
-	err := r.ParseMultipartForm(int64(maxSize))
-	if err != nil {
-		// only actual post submissions have multipart enabled, deleting, likes, dislikes aren't mulipart but that's already handled above so can end function
-		if err.Error() == "request Content-Type isn't multipart/form-data" {
-			return
-		}
-		utils.HandleError("error parsing form for image, likely too big", err)
-		return
-	}
+	// r.Body = http.MaxBytesReader(w, r.Body, int64(maxSize))
+	// err := r.ParseMultipartForm(int64(maxSize))
+	// if err != nil {
+	// 	// only actual post submissions have multipart enabled, deleting, likes, dislikes aren't mulipart but that's already handled above so can end function
+	// 	if err.Error() == "request Content-Type isn't multipart/form-data" {
+	// 		return
+	// 	}
+	// 	utils.HandleError("error parsing form for image, likely too big", err)
+	// 	return
+	// }
 
 	file, fileHeader, err := r.FormFile("submission-image")
 	fileName := ""
@@ -186,12 +216,15 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 		fileName = UploadHandler(w, r, file, fileHeader)
 	}
 
-	title := r.FormValue("submission-title")
-	content := r.FormValue("post")
-	tags := r.Form["tags"]
-	edit := r.FormValue("editpost")
+	title := formData.Title
+	content := formData.Content
+	tags := formData.Tags
+	edit := formData.EditPost
+
+	fmt.Println(title, content, tags, edit)
 
 	if edit != "" {
+		fmt.Println("editing")
 		if CheckInputs(content) && CheckInputs(title) {
 			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 			utils.HandleError("cant get user with uuid in all posts", err)
@@ -218,6 +251,7 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 		if CheckInputs(content) && CheckInputs(title) {
 			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 			utils.HandleError("cant get user with uuid in all posts", err)
+			fmt.Println("Inserting")
 			post, err := dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, time.Now(), fileName)
 			if err != nil {
 				PageErrors(w, r, tmpl, 500, "Internal Server Error")

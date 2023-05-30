@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
@@ -120,5 +121,14 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	adminData.TitleName = "Admin"
 	adminData.TagsList = dbmanagement.SelectAllTags()
 	adminData.UserInfo = loggedInAs
-	tmpl.ExecuteTemplate(w, "admin.html", adminData)
+	//tmpl.ExecuteTemplate(w, "admin.html", adminData)
+
+	// Convert the struct to JSON
+	jsonData, err := json.Marshal(adminData)
+	if err != nil {
+		// Handle error
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonData)
 }
