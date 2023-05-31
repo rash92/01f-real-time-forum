@@ -21,10 +21,15 @@ func init() {
 
 // We'll need to define an Upgrader
 // this will require a Read and Write buffer size
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-}
+var (
+	upgrader = websocket.Upgrader{
+		ReadBufferSize:  1024,
+		WriteBufferSize: 1024,
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
+	}
+)
 
 func main() {
 	if len(os.Args) == 2 && os.Args[1] == "--reset" {
@@ -52,7 +57,7 @@ func main() {
 	// mux.HandleFunc("/posts", protectGetRequests(IndexHandler))
 	mux.HandleFunc("/categories/", CategoriesHandler)
 	mux.HandleFunc("/posts/", PostsHandler)
-	mux.HandleFunc("/ws", wsEndpoint)
+	mux.HandleFunc("/ws", wsHandler)
 
 	// authentication handlers
 	mux.HandleFunc("/login", protectGetRequests(LoginHandler))
@@ -86,8 +91,9 @@ func main() {
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }
 
-func wsEndpoint(w http.ResponseWriter, r *http.Request) {
-	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
+var clients = make(map[*websocket.Conn]bool)
+
+func wsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Check the headers for WebSocket upgrade
 	if r.Header.Get("Upgrade") != "websocket" || !websocket.IsWebSocketUpgrade(r) {
@@ -104,14 +110,19 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	clients[ws] = true // add this client to the map of connected clients
+
 	log.Println("Client Connected")
 	err = ws.WriteMessage(1, []byte("Hi Client!"))
 	if err != nil {
 		log.Println(err)
 	}
-	// listen indefinitely for new messages coming
-	// through on our WebSocket connection
-	reader(ws)
+
+	// Start a new goroutine for handling this connection
+	go func() {
+		defer delete(clients, ws) // make sure to remove client upon disconnect
+		reader(ws)
+	}()
 }
 
 // define a reader which will listen for
@@ -121,18 +132,30 @@ func reader(conn *websocket.Conn) {
 	log.Println("here")
 	for {
 		// read in a message
-		messageType, p, err := conn.ReadMessage()
+		_, p, err := conn.ReadMessage()
 		if err != nil {
 			log.Println(err)
 			return
 		}
 		// print out that message for clarity
 		fmt.Println(string(p))
-
-		if err := conn.WriteMessage(messageType, p); err != nil {
+		if err := conn.WriteMessage(websocket.TextMessage, OnlineUsersHandler()); err != nil {
 			log.Println(err)
 			return
 		}
 
 	}
+}
+
+func broadcast() {
+	for client := range clients {
+		if err := client.WriteMessage(websocket.TextMessage, OnlineUsersHandler()); err != nil {
+			log.Println(err)
+			return
+		}
+	}
+}
+
+func Broadcast() {
+	broadcast()
 }

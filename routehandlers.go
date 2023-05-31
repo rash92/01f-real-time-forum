@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	auth "forum/authentication"
 	"forum/controller"
 	"forum/dbmanagement"
+	"log"
 	"net/http"
 )
 
@@ -63,6 +65,16 @@ func PostsHandler(w http.ResponseWriter, r *http.Request) {
 	if postexists && r.URL.Path != "/" {
 		controller.Post(w, r, tmpl, url)
 	}
+}
+
+func OnlineUsersHandler() []byte {
+	onlineUsers, _ := dbmanagement.SelectAllOnlineUsers()
+	jsonData, err := json.Marshal(onlineUsers)
+	if err != nil {
+		log.Println("Online User Data error", err)
+	}
+	return jsonData
+
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {

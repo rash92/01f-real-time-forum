@@ -20,6 +20,11 @@
             socket.send("Hi From the Client!");
         };
 
+        socket.onmessage = function (event) {
+            let gotData = JSON.parse(event.data)
+            console.log("[message] Data receieved from server:", gotData)
+        }
+
         socket.onclose = event => {
             console.log("Socket Closed Connection: ", event);
         };

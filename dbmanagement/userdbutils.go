@@ -125,6 +125,22 @@ func SelectAllUsers() []User {
 	return allUsers
 }
 
+func SelectAllOnlineUsers() ([]User, error) {
+	db, _ := sql.Open("sqlite3", "./forum.db")
+	defer db.Close()
+
+	row, err := db.Query("SELECT * FROM Users WHERE isLoggedIn = 1")
+	utils.HandleError("Logged in Users query failed", err)
+	defer row.Close()
+	var loggedInUsers []User
+	for row.Next() {
+		var currentUser User
+		row.Scan(&currentUser.UUID, &currentUser.Name, &currentUser.Email, &currentUser.Password, &currentUser.Permission, &currentUser.IsLoggedIn, &currentUser.LimitTokens)
+		loggedInUsers = append(loggedInUsers, currentUser)
+	}
+	return loggedInUsers, err
+}
+
 /*
 Initially used for when a user is trying to log in.  Returns a User's information when searched for by name.
 */
@@ -228,46 +244,6 @@ func UpdateUserToken(UUID string, n int) error {
 
 	return err
 }
-
-// func UpdateUserToken(UUID string, atLimit bool) error {
-// 	usertoken := GetUserToken(UUID)
-// 	var tokenStatement string
-
-// 	if !atLimit {
-// 		tokenStatement = `
-// 	UPDATE Users
-// 	SET limitTokens = limitTokens - 1
-// 	WHERE uuid = ?
-// `
-// 	}
-// 	if usertoken == 0 && !atLimit {
-// 		utils.WriteMessageToLogFile("Token limit reached for user")
-// 		return errors.New("limit reached")
-// 	} else {
-// 		if atLimit {
-// 			tokenStatement = `
-// 	UPDATE Users
-// 	SET limitTokens = ?
-// 	WHERE uuid = ?
-// `
-// 		}
-// 	}
-// 	db, _ := sql.Open("sqlite3", "./forum.db")
-// 	defer db.Close()
-
-// 	statement, err := db.Prepare(tokenStatement)
-// 	utils.HandleError("token statement failed", err)
-
-// 	if !atLimit {
-// 		_, err = statement.Exec(UUID)
-// 		utils.HandleError("token statement Exec failed", err)
-// 	} else {
-// 		_, err = statement.Exec(Limit, UUID)
-// 		utils.HandleError("token statement Exec failed", err)
-// 	}
-
-// 	return err
-// }
 
 func ResetAllTokens() error {
 

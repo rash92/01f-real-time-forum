@@ -91,7 +91,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		utils.HandleError("Unable to update users token", err)
 		dbmanagement.UpdateUserLoggedInStatus(user.UUID, 1)
 		utils.WriteMessageToLogFile(user.IsLoggedIn)
-
+		Broadcast()
 		data := Data{}
 		data.IsCorrect = true
 		data.TagsList = dbmanagement.SelectAllTags()
