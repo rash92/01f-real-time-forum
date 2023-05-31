@@ -22,10 +22,31 @@ socket.onerror = (error) => {
 };
 
 function onlineUserInfo(data) {
-  const usersContainer = document.getElementById("online-users");
-  data.forEach((user) => {
-    const userDiv = document.createElement("div")
-    userDiv.textContent = user.Name
-    usersContainer.appendChild(userDiv)
-  });
-}
+    const usersContainer = document.getElementById("online-users");
+    const userArr = Array.from(document.getElementsByClassName("users"));
+  
+    data.forEach((user) => {
+      // Try to find existing userDiv for the user
+      const existingUserDiv = userArr.find((onlineUser) => onlineUser.textContent.split(" ")[1] === user.Name);
+      
+      let userDiv;
+      if (existingUserDiv) {
+        // If userDiv already exists, use it
+        userDiv = existingUserDiv;
+      } else {
+        // If userDiv does not exist, create it
+        userDiv = document.createElement("div");
+        userDiv.classList.add("users");
+        usersContainer.appendChild(userDiv);
+      }
+  
+      // Update textContent based on user's online status
+      if (user.IsLoggedIn === 0) {
+        userDiv.textContent = `🔴 ${user.Name}`;
+      } else {
+        userDiv.textContent = `🟢 ${user.Name}`;
+      }
+    });
+  }
+  
+  

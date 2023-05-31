@@ -156,7 +156,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 }
 
 func OnlineUsersHandler() []byte {
-	onlineUsers, _ := dbmanagement.SelectAllOnlineUsers()
+	onlineUsers := dbmanagement.SelectAllUsers()
 	jsonData, err := json.Marshal(onlineUsers)
 	if err != nil {
 		log.Println("Online User Data error", err)

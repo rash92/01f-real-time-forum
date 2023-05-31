@@ -125,22 +125,6 @@ func SelectAllUsers() []User {
 	return allUsers
 }
 
-func SelectAllOnlineUsers() ([]User, error) {
-	db, _ := sql.Open("sqlite3", "./forum.db")
-	defer db.Close()
-
-	row, err := db.Query("SELECT * FROM Users WHERE isLoggedIn = 1")
-	utils.HandleError("Logged in Users query failed", err)
-	defer row.Close()
-	var loggedInUsers []User
-	for row.Next() {
-		var currentUser User
-		row.Scan(&currentUser.UUID, &currentUser.Name, &currentUser.Email, &currentUser.Password, &currentUser.Permission, &currentUser.IsLoggedIn, &currentUser.LimitTokens)
-		loggedInUsers = append(loggedInUsers, currentUser)
-	}
-	return loggedInUsers, err
-}
-
 /*
 Initially used for when a user is trying to log in.  Returns a User's information when searched for by name.
 */

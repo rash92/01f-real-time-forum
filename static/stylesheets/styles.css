@@ -293,13 +293,14 @@ p {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 2%;
+    padding: 0.5%;
     position: absolute;
-    right: 0;
-    top: 100vh / 2;
+    top: 25%;
+    right: 10px;
+    transform: translateY(-25%);
     width: 100px;
-    height: 100px;
-    border: 2px solid black;
+    height: 200px;
+    border: 1px solid black;
     z-index: 10;
 
 }
