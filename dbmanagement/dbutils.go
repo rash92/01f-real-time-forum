@@ -123,6 +123,18 @@ var createNotificationsTableStatement = `
 		FOREIGN KEY (sendingUserId) REFERENCES Users(uuid)
 	);`
 
+var createChatTableStatement = `
+CREATE TABLE Chat (
+	uuid TEXT NOT NULL PRIMARY KEY,
+	sender TEXT NOT NULL,
+	receiver TEXT NOT NULL,
+	text TEXT NOT NULL,
+	time TEXT NOT NULL,
+	FOREIGN KEY (sender) REFERENCES Users(uuid),
+	FOREIGN KEY (receiver) REFERENCES Users(uuid),
+)
+`
+
 /*
 Only used to create brand new databases, wiping all previous data in the process.
 To be used when initially implementing database or clearing data after testing.
@@ -142,6 +154,7 @@ func CreateDatabaseWithTables() {
 	CreateTable(forumDB, createSessionTableStatement)
 	CreateTable(forumDB, createAdminRequestTableStatement)
 	CreateTable(forumDB, createNotificationsTableStatement)
+	CreateTable(forumDB, createChatTableStatement)
 
 	os.Remove("logfile.txt")
 	os.Create("logfile.txt")

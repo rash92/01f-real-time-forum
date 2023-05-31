@@ -69,3 +69,20 @@ type Notification struct {
 	Reaction  int
 	Statement string
 }
+
+type ChatBox struct {
+	UUID     string
+	Sender   User
+	Receiver User
+	Content  []ChatText //sort it chronologically
+}
+
+//implement a date system
+type ChatText struct {
+	Content string //encrypt content for security purposes
+
+	//time is relative to the server's time zone
+	//the text's time will be loaded relative
+	//to the user's time zone in JS
+	Time time.Time
+}
