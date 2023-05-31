@@ -131,9 +131,8 @@ CREATE TABLE Chat (
 	text TEXT NOT NULL,
 	time TEXT NOT NULL,
 	FOREIGN KEY (sender) REFERENCES Users(uuid),
-	FOREIGN KEY (receiver) REFERENCES Users(uuid),
-)
-`
+	FOREIGN KEY (receiver) REFERENCES Users(uuid)
+);`
 
 /*
 Only used to create brand new databases, wiping all previous data in the process.

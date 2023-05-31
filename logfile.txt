@@ -2856,3 +2856,70 @@ Tue May 30 16:48:55 BST 2023: session id is: d8580673-5566-4842-be45-fc21da28d55
 Tue May 30 16:54:45 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
 Tue May 30 16:54:45 BST 2023: ***** Unable to user session from admin handler: sql: no rows in result set on line 31 in forum/controller.Admin at file admin.go *****
 Tue May 30 16:54:45 BST 2023: Please log in as a user with admin permissions on line 34 in forum/controller.Admin at file admin.go
+Wed May 31 19:08:47 BST 2023: The statement has affected 1 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Wed May 31 19:08:47 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Wed May 31 19:09:48 BST 2023: The statement has affected 0 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Wed May 31 19:09:48 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Wed May 31 19:10:34 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Wed May 31 19:10:34 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Wed May 31 19:10:36 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:10:36 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 19:10:36 BST 2023: session id is: ac7cca4f-046b-41e0-87c5-1d647f67a392user info is: {     0 [] 0}cookie data is: ac7cca4f-046b-41e0-87c5-1d647f67a392 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:10:36 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:10:36 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 19:10:36 BST 2023: session id is: ac7cca4f-046b-41e0-87c5-1d647f67a392user info is: {     0 [] 0}cookie data is: ac7cca4f-046b-41e0-87c5-1d647f67a392 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:11:02 BST 2023: ***** Query Row failed in: sql: no rows in result set on line 140 in forum/dbmanagement.SelectUserFromName at file userdbutils.go *****
+Wed May 31 19:11:02 BST 2023: ***** Unable to get user error:: sql: no rows in result set on line 83 in forum/authentication.Authenticate at file authenticate.go *****
+Wed May 31 19:11:02 BST 2023: Incorrect Password! on line 126 in forum/authentication.Authenticate at file authenticate.go
+Wed May 31 19:11:47 BST 2023: Inserting user record... on line 19 in forum/dbmanagement.InsertUser at file userdbutils.go
+Wed May 31 19:11:52 BST 2023: ***** Query Row failed in: sql: no rows in result set on line 140 in forum/dbmanagement.SelectUserFromName at file userdbutils.go *****
+Wed May 31 19:11:52 BST 2023: ***** Unable to get user error:: sql: no rows in result set on line 83 in forum/authentication.Authenticate at file authenticate.go *****
+Wed May 31 19:11:52 BST 2023: Incorrect Password! on line 126 in forum/authentication.Authenticate at file authenticate.go
+Wed May 31 19:12:03 BST 2023: updating user login status to: 1 on line 37 in forum/dbmanagement.UpdateUserLoggedInStatus at file userdbutils.go
+Wed May 31 19:12:03 BST 2023: %!s(int=0) on line 93 in forum/authentication.Authenticate at file authenticate.go
+Wed May 31 19:12:03 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69user info is: {342f1fd8-2f64-4fa9-85f3-508f6e3e9c41 antoniosakkal as@gmail.com $2a$10$YkQUhS1dxJ1ptuwmIwOYHuNays4XckTmcJOuinz0gTXmUzQhIn4uO user 1 [] 99}cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:12:03 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69user info is: {342f1fd8-2f64-4fa9-85f3-508f6e3e9c41 antoniosakkal as@gmail.com $2a$10$YkQUhS1dxJ1ptuwmIwOYHuNays4XckTmcJOuinz0gTXmUzQhIn4uO user 1 [] 99}cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:12:08 BST 2023: Current Cookie: session=c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 223 in forum/authentication.LoggedInStatus at file authenticate.go
+Wed May 31 19:12:44 BST 2023: Current Cookie: session=c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 223 in forum/authentication.LoggedInStatus at file authenticate.go
+Wed May 31 19:12:44 BST 2023: ***** error retrieving file from form: request Content-Type isn't multipart/form-data on line 212 in forum/controller.SubmissionHandler at file forum.go *****
+Wed May 31 19:12:44 BST 2023: Inserting post record... on line 17 in forum/dbmanagement.InsertPost at file postdbutils.go
+Wed May 31 19:12:44 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69user info is: {342f1fd8-2f64-4fa9-85f3-508f6e3e9c41 antoniosakkal as@gmail.com $2a$10$YkQUhS1dxJ1ptuwmIwOYHuNays4XckTmcJOuinz0gTXmUzQhIn4uO user 1 [] 98}cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:12:44 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69user info is: {342f1fd8-2f64-4fa9-85f3-508f6e3e9c41 antoniosakkal as@gmail.com $2a$10$YkQUhS1dxJ1ptuwmIwOYHuNays4XckTmcJOuinz0gTXmUzQhIn4uO user 1 [] 98}cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:12:46 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69user info is: {342f1fd8-2f64-4fa9-85f3-508f6e3e9c41 antoniosakkal as@gmail.com $2a$10$YkQUhS1dxJ1ptuwmIwOYHuNays4XckTmcJOuinz0gTXmUzQhIn4uO user 1 [] 98}cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:12:46 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69user info is: {342f1fd8-2f64-4fa9-85f3-508f6e3e9c41 antoniosakkal as@gmail.com $2a$10$YkQUhS1dxJ1ptuwmIwOYHuNays4XckTmcJOuinz0gTXmUzQhIn4uO user 1 [] 98}cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:14:05 BST 2023: The statement has affected 2 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Wed May 31 19:14:05 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Wed May 31 19:14:09 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:09 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:09 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 19:14:09 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69user info is: {     0 [] 0}cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:14:09 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:09 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:09 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 19:14:09 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69user info is: {     0 [] 0}cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:14:10 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:10 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:10 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 19:14:10 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69user info is: {     0 [] 0}cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:14:10 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:10 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:10 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 19:14:10 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69user info is: {     0 [] 0}cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:14:27 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:27 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:27 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 19:14:27 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69user info is: {     0 [] 0}cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:14:27 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:27 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:27 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 19:14:27 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69user info is: {     0 [] 0}cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 19:14:28 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:28 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:28 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69 user info is: {     0 [] 0} cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 43 in forum/controller.Post at file post.go
+Wed May 31 19:14:28 BST 2023: ***** Unable to get user: sql: no rows in result set on line 129 in forum/controller.Post at file post.go *****
+Wed May 31 19:14:28 BST 2023: , antoniosakkal on line 149 in forum/controller.Post at file post.go
+Wed May 31 19:14:32 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:32 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 19:14:32 BST 2023: session id is: c9244955-f9ff-40d9-89cf-72d711fd7a69 user info is: {     0 [] 0} cookie data is: c9244955-f9ff-40d9-89cf-72d711fd7a69 on line 43 in forum/controller.Post at file post.go
+Wed May 31 19:14:32 BST 2023: ***** Unable to get user: sql: no rows in result set on line 129 in forum/controller.Post at file post.go *****
+Wed May 31 19:14:32 BST 2023: , antoniosakkal on line 149 in forum/controller.Post at file post.go
