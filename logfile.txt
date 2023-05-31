@@ -3654,3 +3654,244 @@ Wed May 31 16:29:42 BST 2023: ***** User from session query failed: sql: no rows
 Wed May 31 16:29:42 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
 Wed May 31 16:29:42 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
 Wed May 31 16:29:42 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:40:52 BST 2023: The statement has affected 0 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Wed May 31 16:40:52 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Wed May 31 16:40:55 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:40:55 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:40:55 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:40:55 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:40:55 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:40:55 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:40:55 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:40:55 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:42:19 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:42:19 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:42:19 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:42:19 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:42:19 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:42:19 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:42:19 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:42:19 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:42:37 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:42:37 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:42:37 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:42:37 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:42:37 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:42:37 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:42:37 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:42:37 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:43:10 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:10 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:10 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:43:10 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:43:10 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:10 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:10 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:43:10 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:43:24 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:24 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:24 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc user info is: {     0 [] 0} cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 43 in forum/controller.Post at file post.go
+Wed May 31 16:43:24 BST 2023: ***** Unable to get user: sql: no rows in result set on line 129 in forum/controller.Post at file post.go *****
+Wed May 31 16:43:24 BST 2023: , momo on line 149 in forum/controller.Post at file post.go
+Wed May 31 16:43:26 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:26 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:26 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:43:26 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:43:28 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:28 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:28 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:43:28 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:43:28 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:28 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:28 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:43:28 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:43:54 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:54 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:54 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:43:54 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:43:54 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:54 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:43:54 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:43:54 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:44:00 BST 2023: The statement has affected 0 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Wed May 31 16:44:00 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Wed May 31 16:44:01 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:01 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:01 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:44:01 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:44:01 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:01 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:01 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:44:01 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:44:10 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:10 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:10 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc user info is: {     0 [] 0} cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 43 in forum/controller.Post at file post.go
+Wed May 31 16:44:10 BST 2023: ***** Unable to get user: sql: no rows in result set on line 129 in forum/controller.Post at file post.go *****
+Wed May 31 16:44:10 BST 2023: , momo on line 149 in forum/controller.Post at file post.go
+Wed May 31 16:44:12 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:12 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:12 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:44:12 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:44:13 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:13 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:13 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:44:13 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:44:13 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:13 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:13 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:44:13 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:44:18 BST 2023: The statement has affected 0 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Wed May 31 16:44:18 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Wed May 31 16:44:21 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:21 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:21 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:44:21 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:44:21 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:21 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:21 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:44:21 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:44:41 BST 2023: The statement has affected 0 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Wed May 31 16:44:41 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Wed May 31 16:44:43 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:43 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:43 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:44:43 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:44:43 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:43 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:43 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:44:43 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:44:57 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:57 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:57 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:44:57 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:44:57 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:57 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:44:57 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:44:57 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:45:50 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:45:50 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:45:50 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:45:50 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:45:50 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:45:50 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:45:50 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:45:50 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:45:53 BST 2023: The statement has affected 0 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Wed May 31 16:45:53 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Wed May 31 16:45:58 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:45:58 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:45:58 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:45:58 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:45:58 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:45:58 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:45:58 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:45:58 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:48:02 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:02 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:02 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:48:02 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:48:02 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:02 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:02 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:48:02 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:48:08 BST 2023: The statement has affected 0 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Wed May 31 16:48:08 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Wed May 31 16:48:09 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:09 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:09 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:48:09 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:48:09 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:09 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:09 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:48:09 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:48:18 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:18 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:18 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:48:18 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:48:18 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:18 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:18 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:48:18 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:48:25 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:25 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:25 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:48:25 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:48:25 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:25 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:25 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:48:25 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:48:59 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:59 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:59 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:48:59 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:48:59 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:59 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:48:59 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:48:59 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:49:45 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:49:45 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:49:45 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:49:45 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:49:45 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:49:45 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:49:45 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:49:45 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:49:57 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:49:57 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:49:57 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:49:57 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:49:57 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:49:57 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:49:57 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:49:57 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:50:09 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:50:09 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:50:09 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:50:09 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:50:09 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:50:09 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:50:09 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:50:09 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:50:29 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:50:29 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:50:29 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:50:29 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:50:29 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:50:29 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:50:29 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:50:29 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:50:38 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:50:38 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:50:38 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:50:38 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:50:38 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:50:38 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:50:38 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:50:38 BST 2023: session id is: 3e3e634a-be24-485b-b0cd-50a5a38a46dcuser info is: {     0 [] 0}cookie data is: 3e3e634a-be24-485b-b0cd-50a5a38a46dc on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:54:09 BST 2023: updating user login status to: 1 on line 37 in forum/dbmanagement.UpdateUserLoggedInStatus at file userdbutils.go
+Wed May 31 16:54:09 BST 2023: %!s(int=0) on line 93 in forum/authentication.Authenticate at file authenticate.go
+Wed May 31 16:54:09 BST 2023: session id is: 5719e20a-d5af-471e-ab43-c71f14ce0ddduser info is: {333b52c6-acd3-45e1-8f05-9f678ee79055 admin a@a $2a$10$wiDWkwgnP9iqD1W2X.X.M.Txr.sWw5r6tefaBzj8k9KIj/zyMT2mO admin 1 [] 99}cookie data is: 5719e20a-d5af-471e-ab43-c71f14ce0ddd on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:54:09 BST 2023: session id is: 5719e20a-d5af-471e-ab43-c71f14ce0ddduser info is: {333b52c6-acd3-45e1-8f05-9f678ee79055 admin a@a $2a$10$wiDWkwgnP9iqD1W2X.X.M.Txr.sWw5r6tefaBzj8k9KIj/zyMT2mO admin 1 [] 99}cookie data is: 5719e20a-d5af-471e-ab43-c71f14ce0ddd on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:54:22 BST 2023: Logging out on line 146 in forum/authentication.Logout at file authenticate.go
+Wed May 31 16:54:22 BST 2023: updating user login status to: 0 on line 37 in forum/dbmanagement.UpdateUserLoggedInStatus at file userdbutils.go
+Wed May 31 16:54:22 BST 2023: %!s(int=1) on line 152 in forum/authentication.Logout at file authenticate.go
+Wed May 31 16:54:22 BST 2023: The statement has affected 1 rows on line 155 in forum/dbmanagement.DeleteSessionByUUID at file deleting.go
+Wed May 31 16:54:22 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:54:22 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:54:22 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:54:22 BST 2023: session id is: user info is: {     0 [] 0}cookie data is:  on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:54:22 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:54:22 BST 2023: ***** Unable to get user: sql: no rows in result set on line 55 in forum/controller.AllPosts at file forum.go *****
+Wed May 31 16:54:22 BST 2023: session id is: 033d84ea-132f-4caa-b840-39fed28d7ce8user info is: {     0 [] 0}cookie data is: 033d84ea-132f-4caa-b840-39fed28d7ce8 on line 60 in forum/controller.AllPosts at file forum.go
+Wed May 31 16:54:24 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:54:24 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:54:24 BST 2023: ***** Unable to get user or no user: sql: no rows in result set on line 27 in forum/authentication.LimitRequests.func1 at file limiter.go *****
+Wed May 31 16:54:39 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:54:39 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:54:39 BST 2023: ***** Unable to get user or no user: sql: no rows in result set on line 27 in forum/authentication.LimitRequests.func1 at file limiter.go *****
+Wed May 31 16:54:54 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:54:54 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:54:54 BST 2023: ***** Unable to get user or no user: sql: no rows in result set on line 27 in forum/authentication.LimitRequests.func1 at file limiter.go *****
+Wed May 31 16:55:09 BST 2023: ***** User from session query failed: sql: no rows in result set on line 188 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:55:09 BST 2023: ***** User query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Wed May 31 16:55:09 BST 2023: ***** Unable to get user or no user: sql: no rows in result set on line 27 in forum/authentication.LimitRequests.func1 at file limiter.go *****

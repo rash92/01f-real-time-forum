@@ -811,20 +811,21 @@ input[type="file"] {
   justify-content: flex-start;
   align-items: flex-start;
   padding: 0.5%;
-  position: absolute;
+  position: fixed;
   top: 25%;
-  right: 10px;
+  right: 5%;
   transform: translateY(-25%);
-  width: 100px;
-  height: 200px;
+  width: 10vw;
+  height: 50vh;
   background-color: var(--highlight-color);
-  border: 1px solid black;
   z-index: 10;
 }
 
 .users {
   cursor: pointer;
-  margin-bottom: 5%;
+  font-size: 1rem;
+  margin: 5%;
+  padding: 2%;
 }
 
 @media screen and (max-width: 1012px) {
