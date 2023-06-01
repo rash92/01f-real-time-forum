@@ -46,6 +46,11 @@ type Client struct {
 	send chan []byte
 }
 
+type Message struct {
+	Type string                 `json:"type"`
+	Info map[string]interface{} `json:"info"`
+}
+
 // readPump pumps messages from the websocket connection to the hub.
 //
 // The application runs readPump in a per-connection goroutine. The application
@@ -68,19 +73,30 @@ func (c *Client) readPump() {
 			break
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.hub.broadcast <- message
-		log.Printf("Recieved %s", message)
 
-		// When a name is clicked on user status list, the database info of user is retrieved
-		var msg map[string]string
+		var msg Message
 		if err := json.Unmarshal(message, &msg); err != nil {
 			log.Printf("Error decoding JSON: %v", err)
 			continue
 		}
-		userName := msg["name"]
-		log.Printf("User Name: %s", userName)
-		userConnection, _ := dbmanagement.SelectUserFromName(userName) // This brings back hashed password, probably not necessary
-		log.Printf("User Data: %v", userConnection)
+		switch msg.Type {
+		case "recipientSelect":
+			name, ok := msg.Info["name"].(string)
+			if ok {
+				log.Printf("Name: %s", name)
+				userConnection, _ := dbmanagement.SelectUserFromName(name) // This brings back hashed password, probably not necessary
+				log.Printf("User Data: %v", userConnection)
+			}
+		case "private":
+			recipient, ok1 := msg.Info["recipient"].(string)
+			text, ok2 := msg.Info["text"].(string)
+			if ok1 && ok2 {
+				log.Printf("Private Message: %s %s", recipient, text)
+			}
+		default:
+			c.hub.broadcast <- message
+			log.Printf("Recieved %s", message)
+		}
 	}
 }
 

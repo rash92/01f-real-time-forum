@@ -41,8 +41,7 @@ function onlineUserInfo(data) {
       userDiv.classList.add("users");
       usersContainer.appendChild(userDiv);
       userDiv.addEventListener("click", function () {
-        console.log("I've been clicked")
-        const userName = { name: user.Name };
+        const userName = { type: "recipientSelect", info: {name: user.Name} };
         console.log(userName);
         socket.send(JSON.stringify(userName));
       });
