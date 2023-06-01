@@ -26,6 +26,7 @@ function onlineUserInfo(data) {
     const userArr = Array.from(document.getElementsByClassName("users"));
   
     data.forEach((user) => {
+      console.log(user)
       // Try to find existing userDiv for the user
       const existingUserDiv = userArr.find((onlineUser) => onlineUser.textContent.split(" ")[1] === user.Name);
       
@@ -41,7 +42,7 @@ function onlineUserInfo(data) {
       }
   
       // Update textContent based on user's online status
-      if (user.IsLoggedIn === 0) {
+      if (user.LoggedInStatus === 0) {
         userDiv.textContent = `🔴 ${user.Name}`;
       } else {
         userDiv.textContent = `🟢 ${user.Name}`;

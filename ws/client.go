@@ -3,6 +3,7 @@ package ws
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"forum/dbmanagement"
 	"log"
 	"net/http"
@@ -155,9 +156,19 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	go client.readPump()
 }
 
+type BasicUserInfo struct {
+	Name           string
+	LoggedInStatus int
+}
+
 func OnlineUsersHandler() []byte {
 	onlineUsers := dbmanagement.SelectAllUsers()
-	jsonData, err := json.Marshal(onlineUsers)
+	userArr := []BasicUserInfo{}
+	for _, user := range onlineUsers {
+		userArr = append(userArr, BasicUserInfo{user.Name, user.IsLoggedIn})
+	}
+	fmt.Println(userArr)
+	jsonData, err := json.Marshal(userArr)
 	if err != nil {
 		log.Println("Online User Data error", err)
 	}
