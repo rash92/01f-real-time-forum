@@ -3,7 +3,9 @@ package ws
 import (
 	"bytes"
 	"encoding/json"
+	auth "forum/authentication"
 	"forum/dbmanagement"
+	"forum/utils"
 	"log"
 	"net/http"
 	"time"
@@ -44,6 +46,8 @@ type Client struct {
 
 	// Buffered channel of outbound messages.
 	send chan []byte
+
+	UUID string
 }
 
 type Message struct {
@@ -169,7 +173,15 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+
+	SessionId, err := auth.GetSessionFromBrowser(w, r)
+	utils.HandleError("Unable to find user session id", err)
+
+	uuid, err := dbmanagement.SelectUserFromSession(SessionId)
+	utils.HandleError("Unable to find user session id", err)
+	log.Printf("UUID in serverWS: %v", uuid.UUID)
+
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), UUID: uuid.UUID}
 	client.hub.register <- client
 
 	// Get online users
