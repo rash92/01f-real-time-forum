@@ -229,46 +229,6 @@ func UpdateUserToken(UUID string, n int) error {
 	return err
 }
 
-// func UpdateUserToken(UUID string, atLimit bool) error {
-// 	usertoken := GetUserToken(UUID)
-// 	var tokenStatement string
-
-// 	if !atLimit {
-// 		tokenStatement = `
-// 	UPDATE Users
-// 	SET limitTokens = limitTokens - 1
-// 	WHERE uuid = ?
-// `
-// 	}
-// 	if usertoken == 0 && !atLimit {
-// 		utils.WriteMessageToLogFile("Token limit reached for user")
-// 		return errors.New("limit reached")
-// 	} else {
-// 		if atLimit {
-// 			tokenStatement = `
-// 	UPDATE Users
-// 	SET limitTokens = ?
-// 	WHERE uuid = ?
-// `
-// 		}
-// 	}
-// 	db, _ := sql.Open("sqlite3", "./forum.db")
-// 	defer db.Close()
-
-// 	statement, err := db.Prepare(tokenStatement)
-// 	utils.HandleError("token statement failed", err)
-
-// 	if !atLimit {
-// 		_, err = statement.Exec(UUID)
-// 		utils.HandleError("token statement Exec failed", err)
-// 	} else {
-// 		_, err = statement.Exec(Limit, UUID)
-// 		utils.HandleError("token statement Exec failed", err)
-// 	}
-
-// 	return err
-// }
-
 func ResetAllTokens() error {
 
 	tokenStatement := `

@@ -95,6 +95,7 @@ const renderLoginForm = (encodedData, attempted) => {
                 const data = await response.json();
 
                 if (data.IsCorrect) {
+                    
                     renderForum()
                 } else {
                     // Call the rendering function with the updated variables
