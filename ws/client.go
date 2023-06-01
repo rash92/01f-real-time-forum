@@ -3,7 +3,9 @@ package ws
 import (
 	"bytes"
 	"encoding/json"
+	auth "forum/authentication"
 	"forum/dbmanagement"
+	"forum/utils"
 	"log"
 	"net/http"
 	"time"
@@ -44,6 +46,13 @@ type Client struct {
 
 	// Buffered channel of outbound messages.
 	send chan []byte
+
+	UUID string
+}
+
+type Message struct {
+	Type string                 `json:"type"`
+	Info map[string]interface{} `json:"info"`
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -68,7 +77,30 @@ func (c *Client) readPump() {
 			break
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.hub.broadcast <- message
+
+		var msg Message
+		if err := json.Unmarshal(message, &msg); err != nil {
+			log.Printf("Error decoding JSON: %v", err)
+			continue
+		}
+		switch msg.Type {
+		case "recipientSelect":
+			name, ok := msg.Info["name"].(string)
+			if ok {
+				log.Printf("Name: %s", name)
+				userConnection, _ := dbmanagement.SelectUserFromName(name) // This brings back hashed password, probably not necessary
+				log.Printf("User Data: %v", userConnection)
+			}
+		case "private":
+			recipient, ok1 := msg.Info["recipient"].(string)
+			text, ok2 := msg.Info["text"].(string)
+			if ok1 && ok2 {
+				log.Printf("Private Message: %s %s", recipient, text)
+			}
+		default:
+			c.hub.broadcast <- message
+			log.Printf("Recieved %s", message)
+		}
 	}
 }
 
@@ -79,7 +111,7 @@ func (c *Client) readPump() {
 // executing all writes from this goroutine.
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
-	onlineUsersTicker := time.NewTicker(5 * time.Second) // Update online users every 30 seconds
+	onlineUsersTicker := time.NewTicker(5 * time.Second) // Update online users every 5 seconds
 	defer func() {
 		ticker.Stop()
 		onlineUsersTicker.Stop()
@@ -141,7 +173,15 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+
+	SessionId, err := auth.GetSessionFromBrowser(w, r)
+	utils.HandleError("Unable to find user session id", err)
+
+	uuid, err := dbmanagement.SelectUserFromSession(SessionId)
+	utils.HandleError("Unable to find user session id", err)
+	log.Printf("UUID in serverWS: %v", uuid.UUID)
+
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), UUID: uuid.UUID}
 	client.hub.register <- client
 
 	// Get online users
@@ -155,9 +195,18 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	go client.readPump()
 }
 
+type BasicUserInfo struct {
+	Name           string
+	LoggedInStatus int
+}
+
 func OnlineUsersHandler() []byte {
 	onlineUsers := dbmanagement.SelectAllUsers()
-	jsonData, err := json.Marshal(onlineUsers)
+	userArr := []BasicUserInfo{}
+	for _, user := range onlineUsers {
+		userArr = append(userArr, BasicUserInfo{user.Name, user.IsLoggedIn})
+	}
+	jsonData, err := json.Marshal(userArr)
 	if err != nil {
 		log.Println("Online User Data error", err)
 	}
