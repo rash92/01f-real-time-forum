@@ -70,6 +70,8 @@ func (c *Client) readPump() {
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 		c.hub.broadcast <- message
 		log.Printf("Recieved %s", message)
+
+		// When a name is clicked on user status list, the database info of user is retrieved
 		var msg map[string]string
 		if err := json.Unmarshal(message, &msg); err != nil {
 			log.Printf("Error decoding JSON: %v", err)
@@ -77,6 +79,8 @@ func (c *Client) readPump() {
 		}
 		userName := msg["name"]
 		log.Printf("User Name: %s", userName)
+		userConnection, _ := dbmanagement.SelectUserFromName(userName) // This brings back hashed password, probably not necessary
+		log.Printf("User Data: %v", userConnection)
 	}
 }
 
