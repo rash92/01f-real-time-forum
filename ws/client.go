@@ -3,7 +3,6 @@ package ws
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"forum/dbmanagement"
 	"log"
 	"net/http"
@@ -70,6 +69,14 @@ func (c *Client) readPump() {
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 		c.hub.broadcast <- message
+		log.Printf("Recieved %s", message)
+		var msg map[string]string
+		if err := json.Unmarshal(message, &msg); err != nil {
+			log.Printf("Error decoding JSON: %v", err)
+			continue
+		}
+		userName := msg["name"]
+		log.Printf("User Name: %s", userName)
 	}
 }
 
@@ -80,7 +87,7 @@ func (c *Client) readPump() {
 // executing all writes from this goroutine.
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
-	onlineUsersTicker := time.NewTicker(5 * time.Second) // Update online users every 30 seconds
+	onlineUsersTicker := time.NewTicker(5 * time.Second) // Update online users every 5 seconds
 	defer func() {
 		ticker.Stop()
 		onlineUsersTicker.Stop()
@@ -167,7 +174,6 @@ func OnlineUsersHandler() []byte {
 	for _, user := range onlineUsers {
 		userArr = append(userArr, BasicUserInfo{user.Name, user.IsLoggedIn})
 	}
-	fmt.Println(userArr)
 	jsonData, err := json.Marshal(userArr)
 	if err != nil {
 		log.Println("Online User Data error", err)
