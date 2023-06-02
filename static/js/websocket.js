@@ -1,5 +1,6 @@
 let socket = new WebSocket("wss://localhost:8080/ws");
 let gotData;
+let chatQueue = [];
 console.log("Attempting Connection...");
 
 socket.onopen = () => {
@@ -24,12 +25,14 @@ socket.onerror = (error) => {
 function onlineUserInfo(data) {
   const usersContainer = document.getElementById("online-users");
   const userArr = Array.from(document.getElementsByClassName("users"));
-  const chatBoxesContainer = document.getElementById("chat-boxes-container")
+  const chatBoxesContainer = document.getElementById("chat-boxes-container");
 
   data.forEach((user) => {
     // Try to find existing userDiv for the user
     const existingUserDiv = userArr.find(
-      (onlineUser) => onlineUser.textContent.split(" ")[1] === user.Name.charAt(0).toUpperCase()+user.Name.slice(1)
+      (onlineUser) =>
+        onlineUser.textContent.split(" ")[1] ===
+        user.Name.charAt(0).toUpperCase() + user.Name.slice(1)
     );
 
     let userDiv;
@@ -42,14 +45,45 @@ function onlineUserInfo(data) {
       userDiv.classList.add("users");
       usersContainer.appendChild(userDiv);
       userDiv.addEventListener("click", function () {
-        const chatDiv = document.createElement("div")
-        chatDiv.classList.add("chat-box")
-        const chatTitle = document.createElement("div")
-        chatTitle.classList.add("chat-title")
-        chatTitle.textContent = user.Name.charAt(0).toUpperCase()+user.Name.slice(1)
-        chatDiv.append(chatTitle)
-        chatBoxesContainer.appendChild(chatDiv)
-        const userName = { type: "recipientSelect", info: {name: user.Name} };
+        const chatDiv = document.createElement("div");
+        if(chatQueue.length === 1) {
+          const oldestChatDiv = chatQueue.shift();
+          chatBoxesContainer.removeChild(oldestChatDiv)
+        }
+        chatDiv.classList.add("chat-box");
+
+        const chatTitle = document.createElement("div");
+        chatTitle.classList.add("chat-title");
+        chatTitle.textContent =
+          user.Name.charAt(0).toUpperCase() + user.Name.slice(1);
+
+        const chatContentDiv = document.createElement("div");
+        chatContentDiv.classList.add("chat-content");
+
+        const chatInputDiv = document.createElement("div");
+        chatInputDiv.classList.add("chat-input-div");
+
+        const chatInput = document.createElement("textarea");
+        chatInput.rows = 1;
+        chatInput.classList.add("chat-input");
+        chatInput.placeholder = "Type your message here...";
+        chatInput.addEventListener("input", () => {
+          chatInput.style.height = "auto";
+          chatInput.style.height = `${chatInput.scrollHeight}px`;
+        });
+        chatInputDiv.append(chatInput);
+
+        const sendButton = document.createElement("button");
+        sendButton.textContent = "Send";
+        sendButton.classList.add("send-button");
+        chatInputDiv.append(sendButton);
+
+        chatDiv.append(chatTitle);
+        chatDiv.append(chatContentDiv);
+        chatDiv.append(chatInputDiv);
+        chatBoxesContainer.appendChild(chatDiv);
+        chatQueue.push(chatDiv)
+        const userName = { type: "recipientSelect", info: { name: user.Name } };
         console.log(userName);
         socket.send(JSON.stringify(userName));
       });
@@ -57,9 +91,13 @@ function onlineUserInfo(data) {
 
     // Update textContent based on user's online status
     if (user.LoggedInStatus === 0) {
-      userDiv.textContent = `🔴 ${user.Name.charAt(0).toUpperCase()+user.Name.slice(1)}`;
+      userDiv.textContent = `🔴 ${
+        user.Name.charAt(0).toUpperCase() + user.Name.slice(1)
+      }`;
     } else {
-      userDiv.textContent = `🟢 ${user.Name.charAt(0).toUpperCase()+user.Name.slice(1)}`;
+      userDiv.textContent = `🟢 ${
+        user.Name.charAt(0).toUpperCase() + user.Name.slice(1)
+      }`;
     }
   });
 }
