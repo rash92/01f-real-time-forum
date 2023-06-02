@@ -28,7 +28,7 @@ type RegisterAccountFormData struct {
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Gender    string `json:"gender"`
-	Age       int    `json:"age"`
+	Age       int    `json:"age,string"`
 }
 
 type AuthenticateFormData struct {
@@ -196,7 +196,9 @@ func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	// Parse the JSON body into FormData struct
 	var formData RegisterAccountFormData
+
 	err := json.NewDecoder(r.Body).Decode(&formData)
+	fmt.Println("form data", formData, "err ", err)
 	if err != nil {
 		// Handle error
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)

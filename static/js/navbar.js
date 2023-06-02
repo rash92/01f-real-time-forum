@@ -53,7 +53,7 @@ function addNavBarHTML(data) {
         <div class="menu">
         <li><a accesskey="a" onclick="renderLoginForm('${encodeURIComponent(JSON.stringify(data))}', false)">Sign in</a></li>
         <p>|</p>
-        <li><a accesskey="a" onclick="renderLoginForm('${encodeURIComponent(JSON.stringify(data))}', false)">Sign up</a></li>
+        <li><a accesskey="a" onclick="renderRegisterForm('${encodeURIComponent(JSON.stringify(data))}')">Sign up</a></li>
         </div>
       `;
     } else {

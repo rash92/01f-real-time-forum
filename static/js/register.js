@@ -7,9 +7,6 @@ const renderRegisterForm = (encodedData) => {
           <div>
             <h1>Register</h1>
           </div>
-          <div>
-            <h3>Sign in with</h3>
-          </div>
           <form id="register-form" method="POST">
             <div class="login-input">
               <label for="user_name"><i class="fa-solid fa-user"></i></label>
