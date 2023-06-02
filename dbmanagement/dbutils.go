@@ -14,15 +14,15 @@ import (
 var createUserTableStatement = `
 	CREATE TABLE Users (
 		uuid TEXT NOT NULL PRIMARY KEY,		
-		name TEXT UNIQUE,
-		email TEXT UNIQUE,
-		password TEXT,
-		permission TEXT,
+		name TEXT UNIQUE NOT NULL,
+		email TEXT UNIQUE NOT NULL,
+		password TEXT NOT NULL,
+		permission TEXT NOT NULL,
 		IsLoggedIn INTEGER,
 		limitTokens INTEGER,
-		firstName TEXT,
-		lastName TEXT,
-		gender TEXT,
+		firstName TEXT NOT NULL,
+		lastName TEXT NOT NULL,
+		gender TEXT NOT NULL,
 		age INTEGER
 	);`
 
@@ -43,9 +43,9 @@ var createPostTableStatement = `
 var createCommentTableStatement = `
 	CREATE TABLE Comments (
 		uuid TEXT NOT NULL PRIMARY KEY,
-		content TEXT,
-		postId TEXT,
-		ownerId TEXT,
+		content TEXT NOT NULL,
+		postId TEXT NOT NULL,
+		ownerId TEXT NOT NULL,
 		likes INTEGER,
 		dislikes INTEGER,
 		time DATETIME,
@@ -115,10 +115,10 @@ var createAdminRequestTableStatement = `
 var createNotificationsTableStatement = `
 	CREATE TABLE Notifications (
 		uuid TEXT NOT NULL PRIMARY KEY,
-		receivingUserId TEXT,
-		postId TEXT,
-		commentId TEXT,
-		sendingUserId TEXT,
+		receivingUserId TEXT NOT NULL,
+		postId TEXT NOT NULL,
+		commentId TEXT NOT NULL,
+		sendingUserId TEXT NOT NULL,
 		reaction INT,
 		notificationStatement TEXT,
 		FOREIGN KEY (receivingUserId) REFERENCES Users(uuid),
