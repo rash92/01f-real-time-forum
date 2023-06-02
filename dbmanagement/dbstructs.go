@@ -11,6 +11,10 @@ type User struct {
 	IsLoggedIn    int
 	Notifications []Notification
 	LimitTokens   int
+	FirstName     string
+	LastName      string
+	Gender        string
+	Age           int
 }
 
 type Post struct {

@@ -14,7 +14,6 @@ var tmpl *template.Template
 
 func init() {
 	tmpl = template.Must(template.ParseGlob("static/*.html"))
-
 }
 
 func main() {
@@ -37,7 +36,7 @@ func main() {
 	hub := ws.NewHub()
 	go hub.Run()
 	// handlers
-	//mux.HandleFunc("/", protectPostGetRequests(IndexHandler))
+	// mux.HandleFunc("/", protectPostGetRequests(IndexHandler))
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tmpl.ExecuteTemplate(w, "one-page.html", nil)
 	})
@@ -76,6 +75,6 @@ func main() {
 	dbmanagement.DeleteAllSessions()
 	dbmanagement.ResetAllUserLoggedInStatus()
 	dbmanagement.ResetAllTokens()
-	// dbmanagement.DisplayAllUsers()
+	dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }

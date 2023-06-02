@@ -27,7 +27,7 @@ func LoginUserWithOauth(w http.ResponseWriter, r *http.Request, tmpl *template.T
 		utils.WriteMessageToLogFile(user.IsLoggedIn)
 	} else {
 		// create user
-		user, err := dbmanagement.InsertUser(account.Name, account.Email, "", "user", 0)
+		user, err := dbmanagement.InsertUser(account.Name, account.Email, "", "user", 0, "placeholder", "placeholder", "unknown", 0)
 		utils.HandleError("Unable to create oauth user", err)
 		// create session cookie for user
 		CreateUserSession(w, r, user)

@@ -10,29 +10,6 @@ const renderRegisterForm = (encodedData) => {
           <div>
             <h3>Sign in with</h3>
           </div>
-          <div class="alternative-sign-up">
-            <div class="social">
-              <form action="/google/login" method="POST">
-                <button class="social-button" type="submit">
-                  <i class="fa-brands fa-google"></i>
-                </button>
-              </form>
-            </div>
-            <div class="social">
-              <form action="/github/login" method="POST">
-                <button class="social-button" type="submit">
-                  <i class="fa-brands fa-github"></i>
-                </button>
-              </form>
-            </div>
-            <!-- <div class="social">
-              <form action="/facebook/login" method="POST">
-                <button class="social-button" type="submit">
-                  <i class="fa-brands fa-facebook"></i>
-                </button>
-              </form>
-            </div> -->
-          </div>
           <form id="register-form" method="POST">
             <div class="login-input">
               <label for="user_name"><i class="fa-solid fa-user"></i></label>
@@ -67,6 +44,47 @@ const renderRegisterForm = (encodedData) => {
                 required
               />
             </div>
+            <div class="login-input">
+              <label for="firstName"><i class="fa-solid fa-lock"></i></label>
+              <input
+                type="firstName"
+                placeholder="First Name"
+                name="firstName"
+                autocomplete="off"
+                required
+              />
+            </div>
+            <div class="login-input">
+              <label for="lastName"><i class="fa-solid fa-lock"></i></label>
+              <input
+                type="lastName"
+                placeholder="last Name"
+                name="lastName"
+                autocomplete="off"
+                required
+              />
+            </div>
+            <div class="login-input">
+              <label for="gender"><i class="fa-solid fa-lock"></i></label>
+              <input
+                type="gender"
+                placeholder="Gender"
+                name="gender"
+                autocomplete="off"
+                required
+              />
+            </div>
+            <div class="login-input">
+              <label for="age"><i class="fa-solid fa-lock"></i></label>
+              <input
+                type="age"
+                placeholder="Age"
+                name="age"
+                autocomplete="off"
+                required
+              />
+            </div>
+            
       `;
 
     // Check if there's a register error
@@ -102,7 +120,11 @@ const renderRegisterForm = (encodedData) => {
         const formData = {
             user_name: document.querySelector('input[name="user_name"]').value,
             email: document.querySelector('input[name="email"]').value,
-            password: document.querySelector('input[name="password"]').value
+            password: document.querySelector('input[name="password"]').value,
+            firstName: document.querySelector('input[name="firstName"]').value,
+            lastName: document.querySelector('input[name="lastName"]').value,
+            gender: document.querySelector('input[name="gender"]').value,
+            age: document.querySelector('input[name="age"]').value
         };
 
         registerUser(formData);

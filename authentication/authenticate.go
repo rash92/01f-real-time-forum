@@ -22,9 +22,13 @@ type Data struct {
 }
 
 type RegisterAccountFormData struct {
-	UserName string `json:"user_name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	UserName  string `json:"user_name"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	FirstName string `json: "firstName"`
+	LastName  string `json: "lastName"`
+	Gender    string `json: "gender"`
+	Age       int    `json: "age"`
 }
 
 type AuthenticateFormData struct {
@@ -49,7 +53,7 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data.TitleName = "Login"
 		data.IsCorrect = true
 		data.TagsList = dbmanagement.SelectAllTags()
-		//tmpl.ExecuteTemplate(w, "login.html", data)
+		// tmpl.ExecuteTemplate(w, "login.html", data)
 
 		// Convert the struct to JSON
 		jsonData, err := json.Marshal(data)
@@ -111,7 +115,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 			data.IsCorrect = true
 			data.IsLoggedIn = true
 			data.TagsList = dbmanagement.SelectAllTags()
-			//tmpl.ExecuteTemplate(w, "login.html", data)
+			// tmpl.ExecuteTemplate(w, "login.html", data)
 
 			// Convert the struct to JSON
 			jsonData, err := json.Marshal(data)
@@ -127,7 +131,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 			data.TitleName = "Login"
 			data.IsCorrect = false
 			data.TagsList = dbmanagement.SelectAllTags()
-			//tmpl.ExecuteTemplate(w, "login.html", data)
+			// tmpl.ExecuteTemplate(w, "login.html", data)
 
 			// Convert the struct to JSON
 			jsonData, err := json.Marshal(data)
@@ -170,7 +174,7 @@ func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	LoggedInStatus(w, r, tmpl, 0)
 	data := Data{}
 	data.TagsList = dbmanagement.SelectAllTags()
-	//tmpl.ExecuteTemplate(w, "register.html", data)
+	// tmpl.ExecuteTemplate(w, "register.html", data)
 
 	// Convert the struct to JSON
 	jsonData, err := json.Marshal(data)
@@ -195,14 +199,12 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 
 	data := Data{}
 	if r.Method == "POST" {
-		userName := formData.UserName
-		email := formData.Email
 		password := HashPassword(formData.Password)
-		_, err := dbmanagement.InsertUser(userName, email, password, "user", 0)
+		_, err := dbmanagement.InsertUser(formData.UserName, formData.Email, password, "user", 0, formData.FirstName, formData.LastName, formData.Gender, formData.Age)
 		if err != nil {
 			data.RegisterError = strings.Split(err.Error(), ".")[1]
 			data.TagsList = dbmanagement.SelectAllTags()
-			//tmpl.ExecuteTemplate(w, "register.html", data)
+			// tmpl.ExecuteTemplate(w, "register.html", data)
 		}
 	}
 	// Convert the struct to JSON

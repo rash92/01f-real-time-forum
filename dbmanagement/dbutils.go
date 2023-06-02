@@ -2,6 +2,7 @@ package dbmanagement
 
 import (
 	"database/sql"
+	"fmt"
 	"forum/utils"
 	"os"
 	"time"
@@ -19,7 +20,11 @@ var createUserTableStatement = `
 		password TEXT,
 		permission TEXT,
 		IsLoggedIn INTEGER,
-		limitTokens INTEGER
+		limitTokens INTEGER,
+		firstName TEXT,
+		lastName TEXT,
+		gender TEXT,
+		age INTEGER
 	);`
 
 // ADD TITLE TO POST TABLE AND THEN FIX EVERYTHING
@@ -150,7 +155,8 @@ func CreateDatabaseWithTables() {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
 	utils.HandleError("password hashing error for default admin on database creation", err)
 
-	InsertUser("admin", "a@a", string(hashedPassword), "admin", 0)
+	insertedAdmin, err := InsertUser("admin", "a@a", string(hashedPassword), "admin", 0, "first", "last", "gender", 0)
+	fmt.Println(insertedAdmin, err)
 	e := os.RemoveAll("./static/uploads/")
 	if e != nil {
 		utils.HandleError("Unable to insert user", e)
