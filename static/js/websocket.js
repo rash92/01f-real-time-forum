@@ -28,7 +28,7 @@ function onlineUserInfo(data) {
   data.forEach((user) => {
     // Try to find existing userDiv for the user
     const existingUserDiv = userArr.find(
-      (onlineUser) => onlineUser.textContent.split(" ")[1] === user.Name
+      (onlineUser) => onlineUser.textContent.split(" ")[1] === user.Name.charAt(0).toUpperCase()+user.Name.slice(1)
     );
 
     let userDiv;
@@ -49,9 +49,9 @@ function onlineUserInfo(data) {
 
     // Update textContent based on user's online status
     if (user.LoggedInStatus === 0) {
-      userDiv.textContent = `🔴 ${user.Name}`;
+      userDiv.textContent = `🔴 ${user.Name.charAt(0).toUpperCase()+user.Name.slice(1)}`;
     } else {
-      userDiv.textContent = `🟢 ${user.Name}`;
+      userDiv.textContent = `🟢 ${user.Name.charAt(0).toUpperCase()+user.Name.slice(1)}`;
     }
   });
 }

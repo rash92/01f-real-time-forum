@@ -4,6 +4,7 @@
   --like: #a5aa52;
   --dislke: #d64933;
   --dim-font: rgba(0, 0, 0, 0.5);
+  --navHeight: 5%;
 }
 
 * {
@@ -25,6 +26,8 @@ body {
   background-size: cover;
   height: 100vh;
   padding-top: 32px;
+  display: flex;
+  flex-direction: column;
 }
 
 footer {
@@ -64,8 +67,9 @@ h3 {
   top: 0;
   width: 100vw;
   background-color: var(--highlight-color);
-  height: 54px;
+  height: 5%;
   border-bottom: 1px solid black;
+  z-index: 50;
 }
 
 .logo {
@@ -806,17 +810,13 @@ input[type="file"] {
 /* CHAT */
 
 #online-users {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  flex-grow: 1;
+  overflow: auto;
   padding: 0.5%;
   position: fixed;
-  top: 30%;
-  right: 5%;
-  transform: translateY(-25%);
-  width: 10vw;
-  height: 50vh;
+  width: 20vw;
+  height: 90vh;
+  right: 0;
   background-color: var(--highlight-color);
   z-index: 1;
 }

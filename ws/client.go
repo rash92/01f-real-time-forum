@@ -8,6 +8,7 @@ import (
 	"forum/utils"
 	"log"
 	"net/http"
+	"sort"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -60,7 +61,7 @@ type Message struct {
 // The application runs readPump in a per-connection goroutine. The application
 // ensures that there is at most one reader on a connection by executing all
 // reads from this goroutine.
-func (c *Client) readPump() {
+func (c *Client) readPump() { // Same as POST
 	defer func() {
 		c.hub.unregister <- c
 		c.conn.Close()
@@ -174,6 +175,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Get SessionId from browser and tie it to client
 	SessionId, err := auth.GetSessionFromBrowser(w, r)
 	utils.HandleError("Unable to find user session id", err)
 
@@ -206,6 +208,10 @@ func OnlineUsersHandler() []byte {
 	for _, user := range onlineUsers {
 		userArr = append(userArr, BasicUserInfo{user.Name, user.IsLoggedIn})
 	}
+	// TO DO: SORTED ALPHABETICALLY WHEN NEW USER ELSE BY LAST CHATTED TO
+	sort.Slice(userArr, func(i, j int) bool {
+		return userArr[i].Name < userArr[j].Name
+	})
 	jsonData, err := json.Marshal(userArr)
 	if err != nil {
 		log.Println("Online User Data error", err)
