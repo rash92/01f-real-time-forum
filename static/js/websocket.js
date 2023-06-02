@@ -24,6 +24,7 @@ socket.onerror = (error) => {
 function onlineUserInfo(data) {
   const usersContainer = document.getElementById("online-users");
   const userArr = Array.from(document.getElementsByClassName("users"));
+  const chatBoxesContainer = document.getElementById("chat-boxes-container")
 
   data.forEach((user) => {
     // Try to find existing userDiv for the user
@@ -41,6 +42,9 @@ function onlineUserInfo(data) {
       userDiv.classList.add("users");
       usersContainer.appendChild(userDiv);
       userDiv.addEventListener("click", function () {
+        const chatDiv = document.createElement("div")
+        chatDiv.classList.add("chat-box")
+        chatBoxesContainer.appendChild(chatDiv)
         const userName = { type: "recipientSelect", info: {name: user.Name} };
         console.log(userName);
         socket.send(JSON.stringify(userName));
