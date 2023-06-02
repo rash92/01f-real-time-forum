@@ -44,6 +44,10 @@ function onlineUserInfo(data) {
       userDiv.addEventListener("click", function () {
         const chatDiv = document.createElement("div")
         chatDiv.classList.add("chat-box")
+        const chatTitle = document.createElement("div")
+        chatTitle.classList.add("chat-title")
+        chatTitle.textContent = user.Name.charAt(0).toUpperCase()+user.Name.slice(1)
+        chatDiv.append(chatTitle)
         chatBoxesContainer.appendChild(chatDiv)
         const userName = { type: "recipientSelect", info: {name: user.Name} };
         console.log(userName);
