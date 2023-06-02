@@ -75,6 +75,6 @@ func main() {
 	dbmanagement.DeleteAllSessions()
 	dbmanagement.ResetAllUserLoggedInStatus()
 	dbmanagement.ResetAllTokens()
-	dbmanagement.DisplayAllUsers()
+	// dbmanagement.DisplayAllUsers()
 	log.Fatal(s.ListenAndServeTLS("", ""))
 }

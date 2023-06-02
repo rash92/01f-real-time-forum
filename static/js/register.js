@@ -55,7 +55,7 @@ const renderRegisterForm = (encodedData) => {
               <label for="lastName"><i class="fa-solid fa-lock"></i></label>
               <input
                 type="lastName"
-                placeholder="last Name"
+                placeholder="Last Name"
                 name="lastName"
                 autocomplete="off"
                 required

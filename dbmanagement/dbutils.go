@@ -2,7 +2,6 @@ package dbmanagement
 
 import (
 	"database/sql"
-	"fmt"
 	"forum/utils"
 	"os"
 	"time"
@@ -155,11 +154,13 @@ func CreateDatabaseWithTables() {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
 	utils.HandleError("password hashing error for default admin on database creation", err)
 
-	insertedAdmin, err := InsertUser("admin", "a@a", string(hashedPassword), "admin", 0, "first", "last", "gender", 0)
-	fmt.Println(insertedAdmin, err)
-	e := os.RemoveAll("./static/uploads/")
-	if e != nil {
-		utils.HandleError("Unable to insert user", e)
+	_, err = InsertUser("admin", "a@a", string(hashedPassword), "admin", 0, "first", "last", "gender", 0)
+	if err != nil {
+		utils.HandleError("unable to create admin on reset", err)
+	}
+	err = os.RemoveAll("./static/uploads/")
+	if err != nil {
+		utils.HandleError("Unable to uploads on reset", err)
 	}
 
 	utils.WriteMessageToLogFile("forum.db created successfully!")
