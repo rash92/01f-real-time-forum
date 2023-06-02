@@ -25,15 +25,16 @@ type RegisterAccountFormData struct {
 	UserName  string `json:"user_name"`
 	Email     string `json:"email"`
 	Password  string `json:"password"`
-	FirstName string `json: "firstName"`
-	LastName  string `json: "lastName"`
-	Gender    string `json: "gender"`
-	Age       int    `json: "age"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Gender    string `json:"gender"`
+	Age       int    `json:"age"`
 }
 
 type AuthenticateFormData struct {
 	UserName string `json:"user_name"`
 	Password string `json:"password"`
+	Email    string `json:"email"`
 }
 
 type OauthAccount struct {
@@ -82,9 +83,14 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 
 	userName := formData.UserName
 	password := formData.Password
+	email := formData.Email
 
 	user, err := dbmanagement.SelectUserFromName(userName)
-	utils.HandleError("Unable to get user error:", err)
+	utils.HandleError("Unable to get user from name error, trying by email:", err)
+	if err != nil {
+		user, err = dbmanagement.SelectUserFromEmail(email)
+		utils.HandleError("Unable to get user from email error:", err)
+	}
 
 	if CompareHash(user.Password, password) && user.IsLoggedIn == 0 {
 		err := CreateUserSession(w, r, user)

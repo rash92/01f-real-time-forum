@@ -15,11 +15,11 @@ const renderLoginForm = (encodedData, attempted) => {
           <form id="login-form" method="POST">
             <div class="login-input">
               <label for="user_name"><i class="fa-solid fa-user"></i></label>
-              <input type="text" placeholder="Username" name="user_name" autocomplete="off" maxlength="20" autofocus required/>
+              <input type="text" placeholder="Username" name="user_name" autocomplete="off" maxlength="20" autofocus />
             </div>
               <div class="login-input">
                 <label for="email"><i class="fa-solid fa-user"></i></label>
-                <input type="text" placeholder="Email" name="email" autocomplete="off" autofocus required/>
+                <input type="text" placeholder="Email" name="email" autocomplete="off" autofocus />
               </div>
 
     `;
@@ -42,7 +42,7 @@ const renderLoginForm = (encodedData, attempted) => {
     if (!data.isCorrect && attempted) {
         html += `
         <div class="login-input-incorrect">
-          <p class="login-incorrect-password">Incorrect Password or Username! Try Again.</p>
+          <p class="login-incorrect-password">Incorrect Email, Password or Username! Try Again.</p>
         </div>
       `;
     }
