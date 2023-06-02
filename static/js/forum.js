@@ -50,27 +50,25 @@ function addForumInnerHTML(data) {
                 <div class="post">
                     <div class="tags-interactions">
                         <div class="post-tags">
-                            ${item.Tags.map((tag) => `<a class="tag-link" href="/categories/${tag.TagName}">${tag.TagName}</a>`).join('')}
+                            ${item.Tags.map((tag) => `<a class="tag-link" onclick="renderCategory(${tag.TagName})">${tag.TagName}</a>`).join('')}
                         </div>
                         ${(data.UserInfo.Name === item.OwnerId || data.UserInfo.Permission === 'admin' || data.UserInfo.Permission === 'moderator')
                     ? `
                             <div class="post-interactions">
                                 <form method="POST">
                                     <div class="tooltip">
-                                        <button class="delete-btn" name="deletepost" value="${item.UUID}">
+                                        <button id="post-delete-button" class="delete-btn" name="deletepost" value="${item.UUID}">
                                             <i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
                                         </button>
                                     </div>
                                 </form>
                                 ${data.UserInfo.Name === item.OwnerId
                         ? `
-                                  <form action="/submitpost" method="post">
                                       <div class="tooltip">
-                                          <button type="submit" class="delete-btn tooltip" id="editbutton" name="editpost" value="${item.UUID}">
+                                          <button class="delete-btn tooltip" id="editbutton" name="editpost" value="${item.UUID}">
                                               <i class="fa-solid fa-pen-to-square"></i><span class="tooltiptext">Edit</span>
                                           </button>
                                       </div>
-                                  </form>
                                   `
                         : ''
                     }
@@ -80,7 +78,7 @@ function addForumInnerHTML(data) {
                 }
                     </div>
                     <div class="post-info">
-                        <a href="/posts/${item.UUID}">
+                        <a onclick="renderPostPage('${item.UUID}')">
                             <div class="post-author-time">
                                 <p>Posted by ${item.OwnerId} on ${item.FormattedTime}</p>
                             </div>
@@ -164,7 +162,7 @@ function addForumInnerHTML(data) {
             event.preventDefault();
 
             const id = button.value;
-            const formData = { id, like: true };
+            const formData = { isComment: false, id, like: true };
 
             reactPost(formData);
         });
@@ -177,11 +175,86 @@ function addForumInnerHTML(data) {
             event.preventDefault();
 
             const id = button.value;
-            const formData = { id, dislike: true };
+            const formData = { isComment: false, id, dislike: true };
 
             reactPost(formData);
         });
     });
+
+    // Attach event listeners to each delete button
+    const deleteButtons = document.querySelectorAll('#post-delete-button');
+    deleteButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            const id = button.value;
+            const formData = { editPost: id };
+
+            deletePost(formData);
+        });
+    });
+
+
+    const deletePost = async (formData) => {
+        try {
+            const response = await fetch(`/deletepost`, {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                // Authentication successful
+                renderForum()
+            } else {
+                // Handle error response
+                console.error('Delete Post failed.');
+            }
+        } catch (error) {
+            // Handle network or other errors
+            console.error('Error occurred:', error);
+        }
+    };
+
+    const editPost = async (formData) => {
+        try {
+            const response = await fetch(`/editpost`, {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                renderEditPost(data.EditPost.UUID)
+            } else {
+                // Handle error response
+                console.error('Edit Post failed.');
+            }
+        } catch (error) {
+            // Handle network or other errors
+            console.error('Error occurred:', error);
+        }
+    };
+
+    const editButtons = document.querySelectorAll('#editbutton');
+    // Submit form event handler
+    editButtons.forEach((button) => {
+        button.addEventListener('click', async (event) => {
+            event.preventDefault(); // Prevent form submission
+
+            const formData = {
+                editPostID: document.querySelector('button[name="editpost"]').value
+            };
+
+            editPost(formData);
+        })
+    });
+
 
 };
 

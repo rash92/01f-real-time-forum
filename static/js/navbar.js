@@ -62,7 +62,7 @@ function addNavBarHTML(data) {
           <div class="create">
             <a onclick="renderSubmitPost()"><i class="fa-solid fa-plus"></i> Create</a>
           </div>
-          <li><a href="/user"><i class="fa-solid fa-user"></i> ${data.UserInfo.Name}</a></li>
+          <li><a onclick="renderUserPage()"><i class="fa-solid fa-user"></i> ${data.UserInfo.Name}</a></li>
           <div class="dropdown">
             <button class="dropbtn">
               <i class="fa-solid fa-bell"></i>
@@ -100,24 +100,22 @@ function addNavBarHTML(data) {
               <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div class="dropdown-content">
-              <a class="dropdown-content-links" href="/user">
+              <a class="dropdown-content-links" onclick="renderUserPage()">
                 <div><i class="fa-solid fa-user"></i> Profile</div>
               </a>
       `;
 
         if (data.UserInfo.Permission === 'user') {
             html += `
-          <form action="/user" method="POST">
-            <button class="dropdown-content-links" name="request to become moderator" value=${data.UserInfo.UUID}>
+            <button class="dropdown-content-links" name="request to become moderator" value=${data.UserInfo.UUID} onclick="renderUserPage()">
               <div><i class="fa-solid fa-gavel"></i> Become a moderator?</div>
             </button>
-          </form>
         `;
         }
 
         if (data.UserInfo.Permission === 'admin') {
             html += `
-          <a class="dropdown-content-links" href="/admin">
+          <a class="dropdown-content-links" onclick="renderAdminPage()">
             <div><i class="fa-solid fa-gear"></i> Admin tools</div>
           </a>
         `;

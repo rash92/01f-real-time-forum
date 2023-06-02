@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -9,26 +10,11 @@ import (
 	"net/http"
 )
 
-type SubmitData struct {
-	ListOfData []dbmanagement.Post
-	Cookie     string
-	UserInfo   dbmanagement.User
-	TitleName  string
-	IsCorrect  bool
-	IsEdit     bool
-	EditPost   dbmanagement.Post
-	Tags       string
-	TagsList   []dbmanagement.Tag
+type EditPostIDData struct {
+	PostID string `json:"editPostID"`
 }
 
-type SubmitPostFormData struct {
-	Title    string   `json:"title"`
-	Content  string   `json:"content"`
-	Tags     []string `json:"tags"`
-	EditPost string   `json:"editpost"`
-}
-
-func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+func EditPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	auth.LoggedInStatus(w, r, tmpl, 1)
 
 	data := SubmitData{}
@@ -46,15 +32,28 @@ func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template)
 		}
 
 		// Parse the JSON body into FormData struct
-		var formData SubmitPostFormData
-		jerr := json.NewDecoder(r.Body).Decode(&formData)
+		var editData EditPostIDData
+		jerr := json.NewDecoder(r.Body).Decode(&editData)
 		if jerr != nil {
 			// Handle error
 			http.Error(w, "Invalid request payload", http.StatusBadRequest)
 			return
 		}
 
-		SubmissionHandler(w, r, user, formData, tmpl)
+		idToEdit := editData.PostID
+
+		fmt.Println(idToEdit)
+
+		if idToEdit != "" {
+			data.IsEdit = true
+			data.EditPost, err = dbmanagement.SelectPostFromUUID(idToEdit)
+			if err != nil {
+				fmt.Println(err)
+				PageErrors(w, r, tmpl, 500, "Internal Server Error")
+				return
+			}
+			tags = dbmanagement.SelectAllTagsFromPost(data.EditPost.UUID)
+		}
 	}
 	data.TitleName = "Submit to Forum"
 	data.Cookie = sessionId
@@ -67,6 +66,8 @@ func SubmitPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template)
 	data.Tags = tagsAsString
 	data.TagsList = dbmanagement.SelectAllTags()
 	//tmpl.ExecuteTemplate(w, "submitpost.html", data)
+
+	fmt.Println(data.EditPost.UUID)
 
 	// Convert the struct to JSON
 	jsonData, err := json.Marshal(data)

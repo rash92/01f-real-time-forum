@@ -25,13 +25,6 @@ type Data struct {
 	TagsList   []dbmanagement.Tag
 }
 
-type SubmitPostFormData struct {
-	Title    string   `json:"title"`
-	Content  string   `json:"content"`
-	Tags     []string `json:"tags"`
-	EditPost string   `json:"editpost"`
-}
-
 /*
 Executes the forum.html template that includes all posts in the database.  SessionID is used the determine which user is currently using the website.
 Also handles inserting a new post that updates in realtime.
@@ -145,19 +138,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request, file multipart.File, 
 }
 
 // followed this: https://freshman.tech/file-upload-golang/
-func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement.User, tmpl *template.Template) {
-	fmt.Println(r.Body)
-
-	// Parse the JSON body into FormData struct
-	var formData SubmitPostFormData
-	jerr := json.NewDecoder(r.Body).Decode(&formData)
-	if jerr != nil {
-		// Handle error
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
-		return
-	}
-
-	fmt.Println(formData)
+func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement.User, formData SubmitPostFormData, tmpl *template.Template) {
 
 	// 20 megabytes
 	idToDelete := r.FormValue("deletepost")

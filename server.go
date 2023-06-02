@@ -52,6 +52,7 @@ func main() {
 	// mux.HandleFunc("/posts", protectGetRequests(IndexHandler))
 	mux.HandleFunc("/categories/", CategoriesHandler)
 	mux.HandleFunc("/posts/", PostsHandler)
+	mux.HandleFunc("/comments/", CommentHandler)
 	mux.HandleFunc("/ws", wsEndpoint)
 
 	// authentication handlers
@@ -71,7 +72,9 @@ func main() {
 
 	// forum handlers
 	mux.HandleFunc("/forum", protectPostGetRequests(ForumHandler))
+	mux.HandleFunc("/deletepost", protectPostGetRequests(DeletePostHandler))
 	mux.HandleFunc("/submitpost", protectPostGetRequests(SubmitPostHandler))
+	mux.HandleFunc("/editpost", protectPostGetRequests(EditPostHandler))
 	mux.HandleFunc("/react", protectPostGetRequests(ReactPostHandler))
 	mux.HandleFunc("/admin", protectPostGetRequests(AdminHandler))
 	mux.HandleFunc("/user", protectPostGetRequests(UserHandler))
