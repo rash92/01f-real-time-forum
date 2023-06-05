@@ -41,6 +41,7 @@ footer {
 a {
   text-decoration: none;
   color: black;
+  cursor: pointer;
 }
 
 a:hover {
@@ -77,6 +78,7 @@ h3 {
 .logo {
   font-size: 22px;
   padding-left: 10px;
+  cursor: pointer;
 }
 
 .logo:hover {
@@ -812,6 +814,7 @@ input[type="file"] {
 /* CHAT */
 
 #online-users {
+  display: none;
   flex-grow: 1;
   overflow: auto;
   padding: 0.5%;

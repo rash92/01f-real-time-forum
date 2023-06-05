@@ -10,7 +10,6 @@ const renderForum = () => {
         })
         .then(function (jdata) {
             // Process the JSON data received from Go
-            console.log(jdata);
             addForumInnerHTML(jdata)
             renderNavbar()
         })
@@ -255,6 +254,3 @@ function addForumInnerHTML(data) {
 
 
 };
-
-
-renderForum()

@@ -73,8 +73,8 @@ const renderLoginForm = (encodedData, attempted) => {
                 const data = await response.json();
 
                 if (data.IsCorrect) {
-                    
                     renderForum()
+                    startWebSocket()
                 } else {
                     // Call the rendering function with the updated variables
                     renderLoginForm(encodeURIComponent(JSON.stringify(data)), true);
@@ -102,3 +102,20 @@ const renderLoginForm = (encodedData, attempted) => {
     });
 
 };
+
+fetch("/forum")
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error("Error: " + response.status);
+            }
+        })
+        .then(function (jdata) {
+            // Process the JSON data received from Go
+            renderLoginForm(encodeURIComponent(JSON.stringify(jdata)), false)
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
