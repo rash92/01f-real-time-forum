@@ -26,7 +26,7 @@ const renderNavbar = () => {
 function addNavBarHTML(data) {
   let html = `
       <nav class="navbar">
-        <div class="logo"><a accesskey="h" href="/">F<i class="fa-regular fa-comment"></i>rum</a></div>
+        <div class="logo"><a accesskey="h" onclick="renderForum()">F<i class="fa-regular fa-comment"></i>rum</a></div>
         <div class="searchbar">
           <input type="text" placeholder="Search tags" name="search" onkeyup="searchTags()" id="search" autocomplete="off">
           <div id="list">
