@@ -12,34 +12,12 @@ const renderLoginForm = (encodedData, attempted) => {
               <h3>Sign in with</h3>
             </div>
           </div>
-          <div class="alternative-sign-up">
-            <div class="social">
-              <form action="/google/login" method="POST">
-                <button class="social-button" type="submit">
-                  <i class="fa-brands fa-google"></i>
-                </button>
-              </form>
-            </div>
-            <div class="social">
-              <form action="/github/login" method="POST">
-                <button class="social-button" type="submit">
-                  <i class="fa-brands fa-github"></i>
-                </button>
-              </form>
-            </div>
-            <!-- <div class="social">
-              <form action="/facebook/login" method="POST">
-                <button class="social-button" type="submit">
-                  <i class="fa-brands fa-facebook"></i>
-                </button>
-              </form>
-            </div> -->
-          </div>
           <form id="login-form" method="POST">
             <div class="login-input">
               <label for="user_name"><i class="fa-solid fa-user"></i></label>
-              <input type="text" placeholder="Username" name="user_name" autocomplete="off" maxlength="20" autofocus required/>
+              <input type="text" placeholder="Username or Email" name="user_name" autocomplete="off" maxlength="20" autofocus />
             </div>
+
     `;
 
     if (data.UserInfo.isLoggedIn) {
@@ -60,7 +38,7 @@ const renderLoginForm = (encodedData, attempted) => {
     if (!data.isCorrect && attempted) {
         html += `
         <div class="login-input-incorrect">
-          <p class="login-incorrect-password">Incorrect Password or Username! Try Again.</p>
+          <p class="login-incorrect-password">Incorrect Email, Password or Username! Try Again.</p>
         </div>
       `;
     }
@@ -117,7 +95,7 @@ const renderLoginForm = (encodedData, attempted) => {
 
         const formData = {
             user_name: document.querySelector('input[name="user_name"]').value,
-            password: document.querySelector('input[name="password"]').value
+            password: document.querySelector('input[name="password"]').value,
         };
 
         authenticateUser(formData);

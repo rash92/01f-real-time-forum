@@ -14,12 +14,16 @@ import (
 var createUserTableStatement = `
 	CREATE TABLE Users (
 		uuid TEXT NOT NULL PRIMARY KEY,		
-		name TEXT UNIQUE,
-		email TEXT UNIQUE,
-		password TEXT,
-		permission TEXT,
+		name TEXT UNIQUE NOT NULL,
+		email TEXT UNIQUE NOT NULL,
+		password TEXT NOT NULL,
+		permission TEXT NOT NULL,
 		IsLoggedIn INTEGER,
-		limitTokens INTEGER
+		limitTokens INTEGER,
+		firstName TEXT NOT NULL,
+		lastName TEXT NOT NULL,
+		gender TEXT NOT NULL,
+		age INTEGER
 	);`
 
 // ADD TITLE TO POST TABLE AND THEN FIX EVERYTHING
@@ -39,9 +43,9 @@ var createPostTableStatement = `
 var createCommentTableStatement = `
 	CREATE TABLE Comments (
 		uuid TEXT NOT NULL PRIMARY KEY,
-		content TEXT,
-		postId TEXT,
-		ownerId TEXT,
+		content TEXT NOT NULL,
+		postId TEXT NOT NULL,
+		ownerId TEXT NOT NULL,
 		likes INTEGER,
 		dislikes INTEGER,
 		time DATETIME,
@@ -111,10 +115,10 @@ var createAdminRequestTableStatement = `
 var createNotificationsTableStatement = `
 	CREATE TABLE Notifications (
 		uuid TEXT NOT NULL PRIMARY KEY,
-		receivingUserId TEXT,
-		postId TEXT,
-		commentId TEXT,
-		sendingUserId TEXT,
+		receivingUserId TEXT NOT NULL,
+		postId TEXT NOT NULL,
+		commentId TEXT NOT NULL,
+		sendingUserId TEXT NOT NULL,
 		reaction INT,
 		notificationStatement TEXT,
 		FOREIGN KEY (receivingUserId) REFERENCES Users(uuid),
@@ -150,10 +154,13 @@ func CreateDatabaseWithTables() {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
 	utils.HandleError("password hashing error for default admin on database creation", err)
 
-	InsertUser("admin", "a@a", string(hashedPassword), "admin", 0)
-	e := os.RemoveAll("./static/uploads/")
-	if e != nil {
-		utils.HandleError("Unable to insert user", e)
+	_, err = InsertUser("admin", "a@a", string(hashedPassword), "admin", 0, "first", "last", "gender", 0)
+	if err != nil {
+		utils.HandleError("unable to create admin on reset", err)
+	}
+	err = os.RemoveAll("./static/uploads/")
+	if err != nil {
+		utils.HandleError("Unable to uploads on reset", err)
 	}
 
 	utils.WriteMessageToLogFile("forum.db created successfully!")

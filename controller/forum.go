@@ -45,7 +45,6 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			utils.HandleError("Unable to create visitor session", err)
 		} else {
 			sessionId, _ = auth.GetSessionFromBrowser(w, r)
-
 		}
 	}
 
@@ -69,7 +68,6 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			if filter == "oldest" {
 				filterOrder = true
 			} else {
-
 				http.Redirect(w, r, "/", http.StatusFound)
 			}
 		}
@@ -91,7 +89,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data.TitleName = "Forum"
 		data.TagsList = dbmanagement.SelectAllTags()
 		data.ListOfData = append(data.ListOfData, posts...)
-		//tmpl.ExecuteTemplate(w, "forum.html", data)
+		// tmpl.ExecuteTemplate(w, "forum.html", data)
 
 		// Convert the struct to JSON
 		jsonData, err := json.Marshal(data)
@@ -192,7 +190,7 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 		dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1, "")
 	}
 
-	//maxSize := 20 * 1024 * 1024
+	// maxSize := 20 * 1024 * 1024
 
 	// r.Body = http.MaxBytesReader(w, r.Body, int64(maxSize))
 	// err := r.ParseMultipartForm(int64(maxSize))
