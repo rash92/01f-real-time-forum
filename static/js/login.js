@@ -102,5 +102,3 @@ const renderLoginForm = (encodedData, attempted) => {
     });
 
 };
-
-

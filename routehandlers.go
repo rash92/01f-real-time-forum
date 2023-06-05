@@ -5,6 +5,7 @@ import (
 	"forum/controller"
 	"forum/dbmanagement"
 	"net/http"
+	"strings"
 )
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
@@ -119,12 +120,29 @@ func ForumHandler(w http.ResponseWriter, r *http.Request) {
 	controller.AllPosts(w, r, tmpl)
 }
 
+func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
+	controller.DeletePost(w, r, tmpl)
+}
+
 func SubmitPostHandler(w http.ResponseWriter, r *http.Request) {
 	controller.SubmitPost(w, r, tmpl)
 }
 
+func EditPostHandler(w http.ResponseWriter, r *http.Request) {
+	controller.EditPost(w, r, tmpl)
+}
+
 func ReactPostHandler(w http.ResponseWriter, r *http.Request) {
 	controller.ReactPost(w, r, tmpl)
+}
+
+func CommentHandler(w http.ResponseWriter, r *http.Request) {
+	url := strings.Split(r.URL.Path, "/comments/")[1]
+	if r.URL.Path != "/" {
+		controller.Comment(w, r, tmpl, url)
+	} else {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
 }
 
 func AdminHandler(w http.ResponseWriter, r *http.Request) {
@@ -133,6 +151,10 @@ func AdminHandler(w http.ResponseWriter, r *http.Request) {
 
 func UserHandler(w http.ResponseWriter, r *http.Request) {
 	controller.User(w, r, tmpl)
+}
+
+func NotificationHandler(w http.ResponseWriter, r *http.Request) {
+	controller.Notification(w, r, tmpl)
 }
 
 func PrivacyPolicyHandler(w http.ResponseWriter, r *http.Request) {

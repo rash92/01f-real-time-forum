@@ -258,7 +258,7 @@ func GetUserToken(UUID string) int {
 	stm, err := db.Prepare("SELECT * FROM Users WHERE uuid = ?")
 	utils.HandleError("Statement failed", err)
 
-	err = stm.QueryRow(UUID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission, &user.IsLoggedIn, &user.LimitTokens)
+	err = stm.QueryRow(UUID).Scan(&user.UUID, &user.Name, &user.Email, &user.Password, &user.Permission, &user.IsLoggedIn, &user.LimitTokens, &user.FirstName, &user.LastName, &user.Gender, &user.Age)
 	utils.HandleError("Query Row failed", err)
 
 	return user.LimitTokens
