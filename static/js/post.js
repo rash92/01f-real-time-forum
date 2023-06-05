@@ -145,34 +145,6 @@ function addPostInnerHTML(data) {
 
     document.getElementById("container").innerHTML = html;
 
-    const commentButton = document.getElementById("comment-btn");
-    commentButton.addEventListener('click', (event) => {
-        event.preventDefault();
-
-        const commentText = document.getElementById("comment-text").value
-        const formData = {
-            commentContent: commentText,
-            deleteComment: "",
-            editComment: "",
-            commentUUID: ""
-        }
-
-        comment(formData)
-    })
-
-    const editCommentButton = document.getElementById("finalEditButton");
-    editCommentButton.addEventListener('click', (event) => {
-        event.preventDefault();
-
-        const commentText = document.getElementById("commentEditor").value
-        const formData = {
-            commentContent: "",
-            deleteComment: "",
-            editComment: commentText,
-            commentUUID: ""
-        }
-    })
-
     const comment = async (formData) => {
         try {
             const response = await fetch(`/comments/${data.Post.UUID}`, {
@@ -195,6 +167,51 @@ function addPostInnerHTML(data) {
             console.error('Error occurred:', error);
         }
     }
+
+    const commentButton = document.getElementById("comment-btn");
+    commentButton.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        const commentText = document.getElementById("comment-text").value
+        const formData = {
+            commentContent: commentText,
+            deleteComment: "",
+            editComment: "",
+            commentUUID: ""
+        }
+
+        comment(formData)
+    })
+
+    const deleteCommentButton = document.getElementById("comment-delete-button");
+    deleteCommentButton.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        const commentid = document.getElementById("comment-delete-button").value
+        const formData = {
+            commentContent: "",
+            deleteComment: commentid,
+            editComment: "",
+            commentUUID: ""
+        }
+
+        comment(formData)
+    })
+
+    const editCommentButton = document.getElementById("finalEditButton");
+    editCommentButton.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        const commentText = document.getElementById("commentEditor").value
+        const formData = {
+            commentContent: "",
+            deleteComment: "",
+            editComment: commentText,
+            commentUUID: document.getElementById("finalEditButton").value
+        }
+
+        comment(formData)
+    })
 
     //add button functionality below
     const reactPost = async (formData) => {

@@ -23,6 +23,15 @@ type AdminData struct {
 	TagsList         []dbmanagement.Tag
 }
 
+type AdminFormData struct {
+	SetToUserID      string `json:""`
+	SetToModeratorID string `json:""`
+	SetToAdminID     string `json:""`
+	DeleteUserID     string `json:""`
+	TagsToCreate     string `json:""`
+	DeleteTag        string `json:""`
+}
+
 // username: admin password: admin for existing user with admin permissions, can create and change other users to be admin while logged in as anyone who is admin
 func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	adminData := AdminData{}

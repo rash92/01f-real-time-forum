@@ -140,39 +140,6 @@ func UploadHandler(w http.ResponseWriter, r *http.Request, file multipart.File, 
 // followed this: https://freshman.tech/file-upload-golang/
 func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement.User, formData SubmitPostFormData, tmpl *template.Template) {
 
-	// 20 megabytes
-	idToDelete := r.FormValue("deletepost")
-	if idToDelete != "" {
-		dbmanagement.DeletePostWithUUID(idToDelete)
-	}
-	notificationToDelete := r.FormValue("delete notification")
-	if notificationToDelete != "" {
-		dbmanagement.DeleteFromTableWithUUID("Notifications", notificationToDelete)
-	}
-
-	like := r.FormValue("like")
-	dislike := r.FormValue("dislike")
-
-	if like != "" {
-		dbmanagement.AddReactionToPost(user.UUID, like, 1)
-		post, err := dbmanagement.SelectPostFromUUID(like)
-		if err != nil {
-			PageErrors(w, r, tmpl, 500, "Internal Server Error")
-			return
-		}
-		receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
-		dbmanagement.AddNotification(receiverId.UUID, like, "", user.UUID, 1, "")
-	}
-	if dislike != "" {
-		dbmanagement.AddReactionToPost(user.UUID, dislike, -1)
-		post, err := dbmanagement.SelectPostFromUUID(dislike)
-		if err != nil {
-			PageErrors(w, r, tmpl, 500, "Internal Server Error")
-		}
-		receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
-		dbmanagement.AddNotification(receiverId.UUID, dislike, "", user.UUID, -1, "")
-	}
-
 	//maxSize := 20 * 1024 * 1024
 
 	// r.Body = http.MaxBytesReader(w, r.Body, int64(maxSize))

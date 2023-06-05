@@ -78,6 +78,7 @@ func main() {
 	mux.HandleFunc("/react", protectPostGetRequests(ReactPostHandler))
 	mux.HandleFunc("/admin", protectPostGetRequests(AdminHandler))
 	mux.HandleFunc("/user", protectPostGetRequests(UserHandler))
+	mux.HandleFunc("/notification", protectPostGetRequests(NotificationHandler))
 	mux.HandleFunc("/privacy_policy", protectGetRequests(PrivacyPolicyHandler))
 	mux.HandleFunc("/error", protectGetRequests(ErrorHandler))
 	mux.HandleFunc("/oautherror", protectGetRequests(OauthErrorHandler))

@@ -54,14 +54,12 @@ function addAdminPageInnerHTML(data) {
             <div class="post">
               ${item.RequestFromId} ${item.RequestFromName}
               <p>${item.Description}</p>
-              <form action="/admin" method="POST">
-                <button class="delete-btn" name="delete request" value="${item.UUID}">
+                <button class="delete-btn" id="delete-request" value="${item.UUID}">
                   delete request
                 </button>
-                <button class="delete-btn" name="set to moderator" value="${item.RequestFromId}">
+                <button class="delete-btn" id="set-to-moderator" value="${item.RequestFromId}">
                   Set to moderator
                 </button>
-              </form>
             </div>
           </div>
         `;
@@ -167,5 +165,16 @@ function addAdminPageInnerHTML(data) {
 `;
 
     document.getElementById('container').innerHTML = html;
+
+    const adminButtons = document.querySelectorAll('button')
+    adminButtons.forEach((button) => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        const formData = {
+          
+        }
+      })
+    })
 
 }

@@ -153,6 +153,10 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	controller.User(w, r, tmpl)
 }
 
+func NotificationHandler(w http.ResponseWriter, r *http.Request) {
+	controller.Notification(w, r, tmpl)
+}
+
 func PrivacyPolicyHandler(w http.ResponseWriter, r *http.Request) {
 	controller.PrivacyPolicy(w, r, tmpl)
 }

@@ -33,6 +33,7 @@ func ReactPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) 
 	if err == nil && r.Method == "POST" {
 		user := dbmanagement.User{}
 		user, err = dbmanagement.SelectUserFromSession(sessionId)
+
 		// Parse the JSON body into FormData struct
 		var formData ReactPostFormData
 		err := json.NewDecoder(r.Body).Decode(&formData)

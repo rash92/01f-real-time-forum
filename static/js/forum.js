@@ -55,13 +55,11 @@ function addForumInnerHTML(data) {
                         ${(data.UserInfo.Name === item.OwnerId || data.UserInfo.Permission === 'admin' || data.UserInfo.Permission === 'moderator')
                     ? `
                             <div class="post-interactions">
-                                <form method="POST">
                                     <div class="tooltip">
                                         <button id="post-delete-button" class="delete-btn" name="deletepost" value="${item.UUID}">
                                             <i class="fa-solid fa-trash"></i><span class="tooltiptext">Delete</span>
                                         </button>
                                     </div>
-                                </form>
                                 ${data.UserInfo.Name === item.OwnerId
                         ? `
                                       <div class="tooltip">
