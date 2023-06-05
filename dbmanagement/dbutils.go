@@ -129,7 +129,7 @@ CREATE TABLE Chat (
 	sender TEXT NOT NULL,
 	receiver TEXT NOT NULL,
 	text TEXT NOT NULL,
-	time TEXT NOT NULL,
+	time TIMESTAMP NOT NULL,
 	FOREIGN KEY (sender) REFERENCES Users(uuid),
 	FOREIGN KEY (receiver) REFERENCES Users(uuid)
 );`

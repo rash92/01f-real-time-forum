@@ -81,10 +81,9 @@ type ChatBox struct {
 
 // implement a date system
 type ChatText struct {
-	Content string `json:"content"` //encrypt content for security purposes
-
-	Sender   User `json:"sender"`
-	Receiver User `json:"receiver"`
+	Content    string `json:"content"` //encrypt content for security purposes
+	SenderId   string `json:"sender"`
+	ReceiverId string `json:"receiver"`
 	//time is relative to the server's time zone
 	//the text's time will be loaded relative
 	//to the user's time zone in JS
