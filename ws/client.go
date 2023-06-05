@@ -99,9 +99,11 @@ func (c *Client) readPump() { // Same as POST
 			}
 		case "private":
 			recipient, ok1 := msg.Info["recipient"].(string)
+			receiver, _ := dbmanagement.SelectUserFromName(recipient)
 			text, ok2 := msg.Info["text"].(string)
+			user := c.User.UUID
 			if ok1 && ok2 {
-				log.Printf("Private Message: %s %s", recipient, text)
+				log.Printf("Private Message: %s %s %s", user, receiver.UUID, text)
 			}
 		default:
 			c.hub.broadcast <- message

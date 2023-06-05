@@ -85,10 +85,20 @@ const startWebSocket = () => {
             chatInput.style.height = `${chatInput.scrollHeight}px`;
           });
           chatInputDiv.append(chatInput);
-  
           const sendButton = document.createElement("button");
           sendButton.textContent = "Send";
           sendButton.classList.add("send-button");
+          sendButton.addEventListener("click", function () {
+            const text = document.querySelector(".chat-input")
+            let messageToSend =  {
+              type: "private",
+              info: {
+                recipient: user.Name,
+                text: text.value,
+              }
+            }
+            socket.send(JSON.stringify(messageToSend))
+          })
           chatInputDiv.append(sendButton);
   
           chatDiv.append(chatTitle);

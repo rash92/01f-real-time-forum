@@ -73,3 +73,23 @@ type Notification struct {
 	Reaction  int
 	Statement string
 }
+
+// 1) should be loaded upon clicking on a friend from the "active" list
+// 2) should be updated every time a text is sent/received in sql or relative to WS
+// 3) should create a []ChatBox (or a map) which represents every active chat
+type ChatBox struct {
+	UUID string `json:"uuid"`
+
+	Content []ChatText //sort it chronologically
+}
+
+// implement a date system
+type ChatText struct {
+	Content    string `json:"content"` //encrypt content for security purposes
+	SenderId   string `json:"sender"`
+	ReceiverId string `json:"receiver"`
+	//time is relative to the server's time zone
+	//the text's time will be loaded relative
+	//to the user's time zone in JS
+	Time time.Time `json:"time"`
+}
