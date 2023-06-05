@@ -48,12 +48,17 @@ type Client struct {
 	// Buffered channel of outbound messages.
 	send chan []byte
 
-	UUID string
+	User dbmanagement.User
 }
 
-type Message struct {
+type ReadMessage struct {
 	Type string                 `json:"type"`
 	Info map[string]interface{} `json:"info"`
+}
+
+type WriteMessage struct {
+	Type string      `json:"type"`
+	Data interface{} `json:"data"`
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -79,7 +84,7 @@ func (c *Client) readPump() { // Same as POST
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 
-		var msg Message
+		var msg ReadMessage
 		if err := json.Unmarshal(message, &msg); err != nil {
 			log.Printf("Error decoding JSON: %v", err)
 			continue
@@ -112,7 +117,8 @@ func (c *Client) readPump() { // Same as POST
 // executing all writes from this goroutine.
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
-	onlineUsersTicker := time.NewTicker(5 * time.Second) // Update online users every 5 seconds
+	onlineCheckerTicker := time.NewTicker(1 * time.Second)
+	onlineUsersTicker := time.NewTicker(1 * time.Second) // Update online users every 5 seconds
 	defer func() {
 		ticker.Stop()
 		onlineUsersTicker.Stop()
@@ -144,22 +150,37 @@ func (c *Client) writePump() {
 			if err := w.Close(); err != nil {
 				return
 			}
-		case <-ticker.C:
-			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
-			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
-				return
-			}
 		case <-onlineUsersTicker.C:
 			onlineUsersData := OnlineUsersHandler()
-			// The hub closed the channel.
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {
 				return
 			}
-			w.Write(onlineUsersData)
 
+			message := WriteMessage{
+				Type: "onlineUsers",
+				Data: onlineUsersData,
+			}
+			jsonMessage, _ := json.Marshal(message)
+			w.Write(jsonMessage)
+
+			if err := w.Close(); err != nil {
+				return
+			}
+		case <-onlineCheckerTicker.C:
+			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			w, err := c.conn.NextWriter(websocket.TextMessage)
+			if err != nil {
+				return
+			}
+			message := WriteMessage{
+				Type: "userInfo",
+				Data: c.User,
+			}
+			jsonMessage, _ := json.Marshal(message)
+			w.Write(jsonMessage)
 			if err := w.Close(); err != nil {
 				return
 			}
@@ -169,27 +190,35 @@ func (c *Client) writePump() {
 
 // serveWs handles websocket requests from the peer.
 func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
+
+	// Get SessionId from browser and tie it to client
+	SessionId, err := auth.GetSessionFromBrowser(w, r)
+	utils.HandleError("Unable to find user session id", err)
+
+	clientUser, err := dbmanagement.SelectUserFromSession(SessionId)
+	utils.HandleError("Unable to find user session id", err)
+	log.Printf("client User from DB %v", clientUser)
+	if err != nil || clientUser.Name == "" {
+		return
+	}
+
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	// Get SessionId from browser and tie it to client
-	SessionId, err := auth.GetSessionFromBrowser(w, r)
-	utils.HandleError("Unable to find user session id", err)
-
-	uuid, err := dbmanagement.SelectUserFromSession(SessionId)
-	utils.HandleError("Unable to find user session id", err)
-	log.Printf("UUID in serverWS: %v", uuid.UUID)
-
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), UUID: uuid.UUID}
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), User: clientUser}
 	client.hub.register <- client
 
-	// Get online users
-	onlineUsersData := OnlineUsersHandler()
-	// Send the online users data to the client
-	client.send <- onlineUsersData
+	// Initial Send of Client User Info
+	userMessage := WriteMessage{
+		Type: "userInfo",
+		Data: client.User,
+	}
+
+	jClientUser, _ := json.Marshal(userMessage)
+	client.send <- jClientUser
 
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.
@@ -202,7 +231,7 @@ type BasicUserInfo struct {
 	LoggedInStatus int
 }
 
-func OnlineUsersHandler() []byte {
+func OnlineUsersHandler() []BasicUserInfo {
 	onlineUsers := dbmanagement.SelectAllUsers()
 	userArr := []BasicUserInfo{}
 	for _, user := range onlineUsers {
@@ -212,10 +241,6 @@ func OnlineUsersHandler() []byte {
 	sort.Slice(userArr, func(i, j int) bool {
 		return userArr[i].Name < userArr[j].Name
 	})
-	jsonData, err := json.Marshal(userArr)
-	if err != nil {
-		log.Println("Online User Data error", err)
-	}
-	return jsonData
+	return userArr
 
 }

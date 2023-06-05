@@ -812,6 +812,7 @@ input[type="file"] {
 /* CHAT */
 
 #online-users {
+  display: none;
   flex-grow: 1;
   overflow: auto;
   padding: 0.5%;
