@@ -24,12 +24,16 @@ type AdminData struct {
 }
 
 type AdminFormData struct {
-	SetToUserID      string `json:""`
-	SetToModeratorID string `json:""`
-	SetToAdminID     string `json:""`
-	DeleteUserID     string `json:""`
-	TagsToCreate     string `json:""`
-	DeleteTag        string `json:""`
+	SetToUserID         string `json:"set_to_user"`
+	SetToModeratorID    string `json:"set_to_mod"`
+	SetToAdminID        string `json:"set_to_admin"`
+	DeleteUserID        string `json:"delete_user"`
+	TagsToCreate        string `json:"tag_create"`
+	DeleteTag           string `json:"delete_tag"`
+	AllTagDelete        string `json:"delete_all_tag"`
+	DeleteRequestID     string `json:"delete_request"`
+	AcknowledgeReportID string `json:"acknowledge_report"`
+	ResponseMessage     string `json:"response_message"`
 }
 
 // username: admin password: admin for existing user with admin permissions, can create and change other users to be admin while logged in as anyone who is admin
@@ -54,55 +58,63 @@ func Admin(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	}
 
 	if r.Method == "POST" {
+		// Parse the JSON body into FormData struct
+		var formData AdminFormData
+		jerr := json.NewDecoder(r.Body).Decode(&formData)
+		if jerr != nil {
+			// Handle error
+			http.Error(w, "Invalid request payload", http.StatusBadRequest)
+			return
+		}
+
 		err := dbmanagement.UpdateUserToken(user.UUID, 1)
 		if err != nil {
 			http.Redirect(w, r, "/error", http.StatusSeeOther)
 			return
 		}
 		dbmanagement.UpdateUserToken(user.UUID, 1)
-		userToChange := r.FormValue("set to user")
+		userToChange := formData.SetToUserID
 		if userToChange != "" {
 			dbmanagement.UpdateUserPermissionFromUUID(userToChange, "user")
 		}
-		userToChange = r.FormValue("set to moderator")
+		userToChange = formData.SetToModeratorID
 		if userToChange != "" {
 			dbmanagement.UpdateUserPermissionFromUUID(userToChange, "moderator")
 		}
-		userToChange = r.FormValue("set to admin")
+		userToChange = formData.SetToAdminID
 		if userToChange != "" {
 			dbmanagement.UpdateUserPermissionFromUUID(userToChange, "admin")
 		}
-		userToChange = r.FormValue("delete user")
+		userToChange = formData.DeleteUserID
 		if userToChange != "" {
 			dbmanagement.DeleteFromTableWithUUID("Users", userToChange)
 		}
-		tagsToCreate := r.FormValue("tags")
+		tagsToCreate := formData.TagsToCreate
 		if tagsToCreate != "" {
 			dbmanagement.InsertTag(tagsToCreate)
 		}
-		tagToChange := r.FormValue("delete tag")
+		tagToChange := formData.DeleteTag
 		if tagToChange != "" {
 			dbmanagement.DeleteFromTableWithUUID("Tags", tagToChange)
 		}
-		tagToDeletePostsLinkedTo := r.FormValue("delete all posts with tag")
+		tagToDeletePostsLinkedTo := formData.AllTagDelete
 		if tagToDeletePostsLinkedTo != "" {
 			dbmanagement.DeleteAllPostsWithTag(tagToDeletePostsLinkedTo)
 		}
-		adminRequestToDelete := r.FormValue("delete request")
+		adminRequestToDelete := formData.DeleteRequestID
 		if adminRequestToDelete != "" {
 			dbmanagement.DeleteFromTableWithUUID("AdminRequests", adminRequestToDelete)
 		}
-		adminRequestToAcknowledge := r.FormValue("acknowledge report")
+		adminRequestToAcknowledge := formData.AcknowledgeReportID
 		if adminRequestToAcknowledge != "" {
 			request := dbmanagement.SelectAdminRequestFromUUID(adminRequestToAcknowledge)
-			responseMessage := r.FormValue("response message")
+			responseMessage := formData.ResponseMessage
 			if responseMessage == "" {
 				dbmanagement.AddNotification(request.RequestFromId, request.ReportedPostId, "", loggedInAs.UUID, 0, "The admin has recieved your report")
 			} else {
 				dbmanagement.AddNotification(request.RequestFromId, request.ReportedPostId, "", loggedInAs.UUID, 0, responseMessage)
 			}
 		}
-		http.Redirect(w, r, "/admin", http.StatusFound)
 	}
 	utils.HandleError("cant get user", err)
 	adminData.AllUsers = dbmanagement.SelectAllUsers()
