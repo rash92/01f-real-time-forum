@@ -25,6 +25,10 @@ const startWebSocket = () => {
 				if (clientInfo.IsLoggedIn === 1) {
 					usersContainer.style.display = "block"
 				}
+			case "typing":
+				clientInfo = {
+					typing: false,
+				}
 				break
 		}
 	}
@@ -73,6 +77,9 @@ const startWebSocket = () => {
 					chatTitle.textContent =
 						user.Name.charAt(0).toUpperCase() + user.Name.slice(1)
 
+					const typingProgressDiv = document.createElement("div")
+					// typingProgressDiv.classList.add("")
+
 					const chatContentDiv = document.createElement("div")
 					chatContentDiv.classList.add("chat-content")
 
@@ -83,10 +90,38 @@ const startWebSocket = () => {
 					chatInput.rows = 1
 					chatInput.classList.add("chat-input")
 					chatInput.placeholder = "Type your message here..."
+
 					chatInput.addEventListener("input", () => {
 						chatInput.style.height = "auto"
 						chatInput.style.height = `${chatInput.scrollHeight}px`
+
+						if (!clientInfo.typing) {
+							const typingMessage = {
+								type: "typing",
+								info: {
+									// recipient: user.Name,
+									isTyping: true,
+								},
+							}
+							// console.log(typingMessage)
+							socket.send(JSON.stringify(typingMessage))
+						}
 					})
+
+					// Send a typing notification when the user stops typing
+					chatInput.addEventListener("blur", () => {
+						if (clientInfo.typing) {
+							const typingMessage = {
+								type: "typing",
+								info: {
+									// recipient: user.Name,
+									isTyping: false,
+								},
+							}
+							socket.send(JSON.stringify(typingMessage))
+						}
+					})
+
 					chatInputDiv.append(chatInput)
 					const sendButton = document.createElement("button")
 					sendButton.textContent = "Send"
@@ -106,6 +141,7 @@ const startWebSocket = () => {
 
 					chatDiv.append(chatTitle)
 					chatTitle.append(hideChat)
+					chatDiv.append(typingProgressDiv)
 					chatDiv.append(chatContentDiv)
 					chatDiv.append(chatInputDiv)
 					chatBoxesContainer.appendChild(chatDiv)
@@ -115,11 +151,30 @@ const startWebSocket = () => {
 						chatDiv.style.display = "none"
 					})
 
+					// Add an event listener to handle incoming WebSocket messages
+					socket.onmessage = function (event) {
+						let message = JSON.parse(event.data)
+						console.log("message on js side:", message)
+						switch (message.type) {
+							case "typing":
+								let sender = message.data.username
+								let isTyping = message.data.isTyping
+								// updateTypingStatus(username, isTyping)
+								if (isTyping) {
+									typingProgressDiv.innerText = sender + " is typing..."
+								} else {
+									typingProgressDiv.innerText = ""
+								}
+								break
+							// Handle other message types as needed
+						}
+					}
+
 					const userName = {
 						type: "recipientSelect",
 						info: { name: user.Name },
 					}
-					console.log(userName)
+					// console.log(userName)
 					socket.send(JSON.stringify(userName))
 				})
 			}

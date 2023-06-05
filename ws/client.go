@@ -48,7 +48,10 @@ type Client struct {
 	// Buffered channel of outbound messages.
 	send chan []byte
 
-	User dbmanagement.User
+	User         dbmanagement.User
+	typing       chan bool
+	typingStatus bool
+	recipient    *Client
 }
 
 type ReadMessage struct {
@@ -59,6 +62,7 @@ type ReadMessage struct {
 type WriteMessage struct {
 	Type string      `json:"type"`
 	Data interface{} `json:"data"`
+	// Recipient string      `json:"recipient"`
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -89,12 +93,15 @@ func (c *Client) readPump() { // Same as POST
 			log.Printf("Error decoding JSON: %v", err)
 			continue
 		}
+
 		switch msg.Type {
 		case "recipientSelect":
 			name, ok := msg.Info["name"].(string)
 			if ok {
 				log.Printf("Name: %s", name)
-				userConnection, _ := dbmanagement.SelectUserFromName(name) // This brings back hashed password, probably not necessary
+				userConnection, _ := dbmanagement.SelectUserFromName(name)
+				recipientClient := c.hub.GetClientByUsername(name)
+				c.recipient = recipientClient // This brings back hashed password, probably not necessary
 				log.Printf("User Data: %v", userConnection)
 			}
 		case "private":
@@ -104,6 +111,14 @@ func (c *Client) readPump() { // Same as POST
 			user := c.User.UUID
 			if ok1 && ok2 {
 				log.Printf("Private Message: %s %s %s", user, receiver.UUID, text)
+			}
+		case "typing":
+			isTyping, ok2 := msg.Info["isTyping"].(bool)
+			user := c.User.UUID
+			if ok2 {
+				log.Printf("typing: %s %v", user, isTyping)
+				c.typing <- isTyping
+				c.hub.typingBroadcast <- c
 			}
 		default:
 			c.hub.broadcast <- message
@@ -121,6 +136,11 @@ func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	onlineCheckerTicker := time.NewTicker(1 * time.Second)
 	onlineUsersTicker := time.NewTicker(1 * time.Second) // Update online users every 5 seconds
+
+	// Create a timer to track typing state
+	typingTimer := time.NewTimer(0)
+	typingTimer.Stop()
+
 	defer func() {
 		ticker.Stop()
 		onlineUsersTicker.Stop()
@@ -135,7 +155,6 @@ func (c *Client) writePump() {
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
-
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {
 				return
@@ -152,6 +171,39 @@ func (c *Client) writePump() {
 			if err := w.Close(); err != nil {
 				return
 			}
+		case isTyping := <-c.typing:
+			c.typingStatus = isTyping
+
+			// Reset the typing timer whenever isTyping changes
+			if isTyping {
+				typingTimer.Reset(2 * time.Second)
+			} else {
+				typingTimer.Stop()
+			}
+
+			// Broadcast typing status to other clients in the hub
+			message := WriteMessage{
+				Type: "typing",
+				Data: map[string]interface{}{
+					"username": c.User.Name,
+					"isTyping": isTyping,
+				},
+			}
+			jsonMessage, _ := json.Marshal(message)
+			c.recipient.send <- jsonMessage
+			// c.send <- jsonMessage
+		case <-typingTimer.C: // Handle the typing timer expiration
+			c.typingStatus = false
+			// Broadcast typing status to other clients in the hub
+			message := WriteMessage{
+				Type: "typing",
+				Data: map[string]interface{}{
+					"username": c.User.Name,
+					"isTyping": false,
+				},
+			}
+			jsonMessage, _ := json.Marshal(message)
+			c.recipient.send <- jsonMessage
 		case <-onlineUsersTicker.C:
 			onlineUsersData := OnlineUsersHandler()
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
@@ -210,8 +262,12 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), User: clientUser}
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), User: clientUser, typingStatus: false}
+	client.typing = make(chan bool)
 	client.hub.register <- client
+
+	// Store the client object in the clientsByUsername map
+	hub.clientsByUsername[clientUser.Name] = client
 
 	// Initial Send of Client User Info
 	userMessage := WriteMessage{
@@ -226,6 +282,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	// new goroutines.
 	go client.writePump()
 	go client.readPump()
+	go hub.BroadcastTypingStatus()
 }
 
 type BasicUserInfo struct {
@@ -244,5 +301,4 @@ func OnlineUsersHandler() []BasicUserInfo {
 		return userArr[i].Name < userArr[j].Name
 	})
 	return userArr
-
 }
