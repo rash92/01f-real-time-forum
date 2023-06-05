@@ -14,7 +14,6 @@ var tmpl *template.Template
 
 func init() {
 	tmpl = template.Must(template.ParseGlob("static/*.html"))
-
 }
 
 func main() {
@@ -37,7 +36,7 @@ func main() {
 	hub := ws.NewHub()
 	go hub.Run()
 	// handlers
-	//mux.HandleFunc("/", protectPostGetRequests(IndexHandler))
+	// mux.HandleFunc("/", protectPostGetRequests(IndexHandler))
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tmpl.ExecuteTemplate(w, "one-page.html", nil)
 	})
@@ -47,6 +46,7 @@ func main() {
 	// mux.HandleFunc("/posts", protectGetRequests(IndexHandler))
 	mux.HandleFunc("/categories/", CategoriesHandler)
 	mux.HandleFunc("/posts/", PostsHandler)
+	mux.HandleFunc("/comments/", CommentHandler)
 
 	// authentication handlers
 	mux.HandleFunc("/login", protectGetRequests(LoginHandler))
@@ -65,10 +65,13 @@ func main() {
 
 	// forum handlers
 	mux.HandleFunc("/forum", protectPostGetRequests(ForumHandler))
+	mux.HandleFunc("/deletepost", protectPostGetRequests(DeletePostHandler))
 	mux.HandleFunc("/submitpost", protectPostGetRequests(SubmitPostHandler))
+	mux.HandleFunc("/editpost", protectPostGetRequests(EditPostHandler))
 	mux.HandleFunc("/react", protectPostGetRequests(ReactPostHandler))
 	mux.HandleFunc("/admin", protectPostGetRequests(AdminHandler))
 	mux.HandleFunc("/user", protectPostGetRequests(UserHandler))
+	mux.HandleFunc("/notification", protectPostGetRequests(NotificationHandler))
 	mux.HandleFunc("/privacy_policy", protectGetRequests(PrivacyPolicyHandler))
 	mux.HandleFunc("/error", protectGetRequests(ErrorHandler))
 	mux.HandleFunc("/oautherror", protectGetRequests(OauthErrorHandler))

@@ -7,6 +7,7 @@ import (
 	"forum/utils"
 	"html/template"
 	"net/http"
+	"regexp"
 	"strings"
 )
 
@@ -22,14 +23,19 @@ type Data struct {
 }
 
 type RegisterAccountFormData struct {
-	UserName string `json:"user_name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	UserName  string `json:"user_name"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Gender    string `json:"gender"`
+	Age       int    `json:"age,string"`
 }
 
 type AuthenticateFormData struct {
 	UserName string `json:"user_name"`
 	Password string `json:"password"`
+	Email    string `json:"email"`
 }
 
 type OauthAccount struct {
@@ -49,7 +55,7 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data.TitleName = "Login"
 		data.IsCorrect = true
 		data.TagsList = dbmanagement.SelectAllTags()
-		//tmpl.ExecuteTemplate(w, "login.html", data)
+		// tmpl.ExecuteTemplate(w, "login.html", data)
 
 		// Convert the struct to JSON
 		jsonData, err := json.Marshal(data)
@@ -78,10 +84,18 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 
 	userName := formData.UserName
 	password := formData.Password
-
-	user, err := dbmanagement.SelectUserFromName(userName)
-	utils.HandleError("Unable to get user error:", err)
-
+	var user dbmanagement.User
+	matched, err := regexp.MatchString(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`, userName)
+	if err != nil {
+		fmt.Println(err)
+	}
+	if matched {
+		user, err = dbmanagement.SelectUserFromEmail(userName)
+		utils.HandleError("Unable to get user from email error:", err)
+	} else {
+		user, err = dbmanagement.SelectUserFromName(userName)
+		utils.HandleError("Unable to get user from name error, trying by email:", err)
+	}
 	if CompareHash(user.Password, password) && user.IsLoggedIn == 0 {
 		err := CreateUserSession(w, r, user)
 		utils.HandleError("Failed to create session in authenticate", err)
@@ -111,7 +125,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 			data.IsCorrect = true
 			data.IsLoggedIn = true
 			data.TagsList = dbmanagement.SelectAllTags()
-			//tmpl.ExecuteTemplate(w, "login.html", data)
+			// tmpl.ExecuteTemplate(w, "login.html", data)
 
 			// Convert the struct to JSON
 			jsonData, err := json.Marshal(data)
@@ -127,7 +141,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 			data.TitleName = "Login"
 			data.IsCorrect = false
 			data.TagsList = dbmanagement.SelectAllTags()
-			//tmpl.ExecuteTemplate(w, "login.html", data)
+			// tmpl.ExecuteTemplate(w, "login.html", data)
 
 			// Convert the struct to JSON
 			jsonData, err := json.Marshal(data)
@@ -170,7 +184,7 @@ func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	LoggedInStatus(w, r, tmpl, 0)
 	data := Data{}
 	data.TagsList = dbmanagement.SelectAllTags()
-	//tmpl.ExecuteTemplate(w, "register.html", data)
+	// tmpl.ExecuteTemplate(w, "register.html", data)
 
 	// Convert the struct to JSON
 	jsonData, err := json.Marshal(data)
@@ -186,7 +200,9 @@ func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	// Parse the JSON body into FormData struct
 	var formData RegisterAccountFormData
+
 	err := json.NewDecoder(r.Body).Decode(&formData)
+	fmt.Println("form data", formData, "err ", err)
 	if err != nil {
 		// Handle error
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
@@ -195,14 +211,12 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 
 	data := Data{}
 	if r.Method == "POST" {
-		userName := formData.UserName
-		email := formData.Email
 		password := HashPassword(formData.Password)
-		_, err := dbmanagement.InsertUser(userName, email, password, "user", 0)
+		_, err := dbmanagement.InsertUser(formData.UserName, formData.Email, password, "user", 0, formData.FirstName, formData.LastName, formData.Gender, formData.Age)
 		if err != nil {
 			data.RegisterError = strings.Split(err.Error(), ".")[1]
 			data.TagsList = dbmanagement.SelectAllTags()
-			//tmpl.ExecuteTemplate(w, "register.html", data)
+			// tmpl.ExecuteTemplate(w, "register.html", data)
 		}
 	}
 	// Convert the struct to JSON

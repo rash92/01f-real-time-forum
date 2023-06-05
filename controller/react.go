@@ -11,9 +11,10 @@ import (
 )
 
 type ReactPostFormData struct {
-	ID      string `json:"id"`
-	Like    bool   `json:"like"`
-	Dislike bool   `json:"dislike"`
+	IsComment bool   `json:"isComment"`
+	ID        string `json:"id"`
+	Like      bool   `json:"like"`
+	Dislike   bool   `json:"dislike"`
 }
 
 func ReactPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
@@ -32,6 +33,7 @@ func ReactPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) 
 	if err == nil && r.Method == "POST" {
 		user := dbmanagement.User{}
 		user, err = dbmanagement.SelectUserFromSession(sessionId)
+
 		// Parse the JSON body into FormData struct
 		var formData ReactPostFormData
 		err := json.NewDecoder(r.Body).Decode(&formData)
@@ -41,6 +43,7 @@ func ReactPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) 
 			return
 		}
 
+		isComment := formData.IsComment
 		id := formData.ID
 		like := formData.Like
 		dislike := formData.Dislike
@@ -48,23 +51,38 @@ func ReactPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) 
 		fmt.Println(formData)
 
 		if like {
-			dbmanagement.AddReactionToPost(user.UUID, id, 1)
-			post, err := dbmanagement.SelectPostFromUUID(id)
-			if err != nil {
-				PageErrors(w, r, tmpl, 500, "Internal Server Error")
-				return
+			if isComment {
+				dbmanagement.AddReactionToComment(user.UUID, id, 1)
+				comment := dbmanagement.SelectCommentFromUUID(id)
+				receiverId, _ := dbmanagement.SelectUserFromName(comment.OwnerId)
+				dbmanagement.AddNotification(receiverId.UUID, "", id, user.UUID, 1, "")
+			} else {
+				dbmanagement.AddReactionToPost(user.UUID, id, 1)
+				post, err := dbmanagement.SelectPostFromUUID(id)
+				if err != nil {
+					PageErrors(w, r, tmpl, 500, "Internal Server Error")
+					return
+				}
+				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
+				dbmanagement.AddNotification(receiverId.UUID, id, "", user.UUID, 1, "")
 			}
-			receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
-			dbmanagement.AddNotification(receiverId.UUID, id, "", user.UUID, 1, "")
+
 		}
 		if dislike {
-			dbmanagement.AddReactionToPost(user.UUID, id, -1)
-			post, err := dbmanagement.SelectPostFromUUID(id)
-			if err != nil {
-				PageErrors(w, r, tmpl, 500, "Internal Server Error")
+			if isComment {
+				dbmanagement.AddReactionToComment(user.UUID, id, -1)
+				comment := dbmanagement.SelectCommentFromUUID(id)
+				receiverId, _ := dbmanagement.SelectUserFromName(comment.OwnerId)
+				dbmanagement.AddNotification(receiverId.UUID, "", id, user.UUID, -1, "")
+			} else {
+				dbmanagement.AddReactionToPost(user.UUID, id, -1)
+				post, err := dbmanagement.SelectPostFromUUID(id)
+				if err != nil {
+					PageErrors(w, r, tmpl, 500, "Internal Server Error")
+				}
+				receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
+				dbmanagement.AddNotification(receiverId.UUID, id, "", user.UUID, -1, "")
 			}
-			receiverId, _ := dbmanagement.SelectUserFromName(post.OwnerId)
-			dbmanagement.AddNotification(receiverId.UUID, id, "", user.UUID, -1, "")
 		}
 	}
 
