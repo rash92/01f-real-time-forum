@@ -92,11 +92,29 @@ func (c *Client) readPump() { // Same as POST
 		switch msg.Type {
 		case "recipientSelect":
 			name, ok := msg.Info["name"].(string)
-			if ok {
-				log.Printf("Name: %s", name)
-				userConnection, _ := dbmanagement.SelectUserFromName(name) // This brings back hashed password, probably not necessary
-				log.Printf("User Data: %v", userConnection)
+			if !ok {
+				//do something bad
+				break
 			}
+
+			log.Printf("Name: %s", name)
+			userConnection, _ := dbmanagement.SelectUserFromName(name) // This brings back hashed password, probably not necessary
+			log.Printf("User Data: %v", userConnection)
+
+			timeStr, ok := msg.Info["time"].(string)
+			if !ok {
+				//do something bad
+				break
+			}
+
+			//handle time error
+			t, _ := time.Parse("2006-01-02 15:04:05", timeStr)
+			log.Printf("Time: %s", t)
+
+			// trying to insert
+			text := dbmanagement.ChatText{Content: "", SenderId: "SS", ReceiverId: userConnection.UUID, Time: t}
+			dbmanagement.InsertTextInChat(text)
+
 		case "private":
 			recipient, ok1 := msg.Info["recipient"].(string)
 			receiver, _ := dbmanagement.SelectUserFromName(recipient)

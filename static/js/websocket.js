@@ -6,12 +6,12 @@ const startWebSocket = () => {
   let clientInfo;
   let chatQueue = [];
   console.log("Attempting Connection...");
-  
+
   socket.onopen = () => {
     console.log("Successfully Connected");
     socket.send("Hi From the Client!");
   };
-  
+
   socket.onmessage = function (event) {
     let message = JSON.parse(event.data);
     // console.log("[message] Data receieved from server:", message);
@@ -28,15 +28,15 @@ const startWebSocket = () => {
         break;
     }
   };
-  
+
   socket.onclose = (event) => {
     console.log("Socket Closed Connection: ", event);
   };
-  
+
   socket.onerror = (error) => {
     console.log("Socket Error: ", error);
   };
-  
+
   function onlineUserInfo(data) {
     const userArr = Array.from(document.getElementsByClassName("users"));
     const chatBoxesContainer = document.getElementById("chat-boxes-container");
@@ -47,7 +47,7 @@ const startWebSocket = () => {
           onlineUser.textContent.split(" ")[1] ===
           user.Name.charAt(0).toUpperCase() + user.Name.slice(1)
       );
-  
+
       let userDiv;
       if (existingUserDiv) {
         // If userDiv already exists, use it
@@ -64,18 +64,18 @@ const startWebSocket = () => {
             chatBoxesContainer.removeChild(oldestChatDiv);
           }
           chatDiv.classList.add("chat-box");
-  
+
           const chatTitle = document.createElement("div");
           chatTitle.classList.add("chat-title");
           chatTitle.textContent =
             user.Name.charAt(0).toUpperCase() + user.Name.slice(1);
-  
+
           const chatContentDiv = document.createElement("div");
           chatContentDiv.classList.add("chat-content");
-  
+
           const chatInputDiv = document.createElement("div");
           chatInputDiv.classList.add("chat-input-div");
-  
+
           const chatInput = document.createElement("textarea");
           chatInput.rows = 1;
           chatInput.classList.add("chat-input");
@@ -90,7 +90,7 @@ const startWebSocket = () => {
           sendButton.classList.add("send-button");
           sendButton.addEventListener("click", function () {
             const text = document.querySelector(".chat-input")
-            let messageToSend =  {
+            let messageToSend = {
               type: "private",
               info: {
                 recipient: user.Name,
@@ -100,29 +100,29 @@ const startWebSocket = () => {
             socket.send(JSON.stringify(messageToSend))
           })
           chatInputDiv.append(sendButton);
-  
+
           chatDiv.append(chatTitle);
           chatDiv.append(chatContentDiv);
           chatDiv.append(chatInputDiv);
           chatBoxesContainer.appendChild(chatDiv);
           chatQueue.push(chatDiv);
-          const userName = { type: "recipientSelect", info: { name: user.Name } };
+          let date = String(new Date().getDate());
+          let time = new Date().getHours() + ":" + new Date().getMinutes + ":" + new Date().getSeconds
+          const userName = { type: "recipientSelect", info: { name: user.Name, time: date + " " + time } };
           console.log(userName);
           socket.send(JSON.stringify(userName));
         });
       }
-  
+
       // Update textContent based on user's online status
       if (user.LoggedInStatus === 0) {
-        userDiv.textContent = `🔴 ${
-          user.Name.charAt(0).toUpperCase() + user.Name.slice(1)
-        }`;
+        userDiv.textContent = `🔴 ${user.Name.charAt(0).toUpperCase() + user.Name.slice(1)
+          }`;
       } else {
-        userDiv.textContent = `🟢 ${
-          user.Name.charAt(0).toUpperCase() + user.Name.slice(1)
-        }`;
+        userDiv.textContent = `🟢 ${user.Name.charAt(0).toUpperCase() + user.Name.slice(1)
+          }`;
       }
     });
   }
-  
+
 }
