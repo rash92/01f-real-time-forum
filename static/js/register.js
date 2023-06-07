@@ -102,7 +102,7 @@ const renderRegisterForm = (encodedData) => {
           </form>
           <p>
             Registered?
-            <a accesskey="a" href="/login">Sign in</a>
+            <a onclick="renderLoginForm('${encodeURIComponent(JSON.stringify(data))}', false)">Click Here</a>
           </p>
         </div>
       </div>
