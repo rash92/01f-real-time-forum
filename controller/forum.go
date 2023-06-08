@@ -32,6 +32,7 @@ Also handles inserting a new post that updates in realtime.
 func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := Data{}
 	sessionId, err := auth.GetSessionFromBrowser(w, r)
+	fmt.Println(sessionId)
 	if sessionId == "" {
 		err := auth.CreateUserSession(w, r, dbmanagement.User{})
 		if err != nil {
@@ -44,6 +45,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	user := dbmanagement.User{}
 	if err == nil {
 		user, err = dbmanagement.SelectUserFromSession(sessionId)
+		fmt.Println(user)
 		utils.HandleError("Unable to get user", err)
 		data.Cookie = sessionId
 		filterOrder := false
