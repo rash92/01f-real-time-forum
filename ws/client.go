@@ -195,7 +195,7 @@ func (c *Client) writePump() {
 			// Check if recipient is available and has a valid connection
 			if c.recipient != nil && c.recipient.send != nil {
 				fmt.Println("recipient is:", c.recipient)
-				 c.recipient.send <- jsonMessage
+				c.recipient.send <- jsonMessage
 			}
 			// c.send <- jsonMessage
 		case <-typingTimer.C: // Handle the typing timer expiration
@@ -212,7 +212,7 @@ func (c *Client) writePump() {
 			// Check if recipient is available and has a valid connection
 			if c.recipient != nil && c.recipient.send != nil {
 				fmt.Println("recipient is:", c.recipient)
-				 c.recipient.send <- jsonMessage
+				c.recipient.send <- jsonMessage
 			}
 		case <-onlineUsersTicker.C:
 			onlineUsersData := OnlineUsersHandler()

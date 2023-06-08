@@ -1,4 +1,5 @@
 const usersContainer = document.getElementById("online-users")
+const typingProgressDiv = document.createElement("div")
 
 const startWebSocket = () => {
 	let socket = new WebSocket("wss://localhost:8080/ws")
@@ -14,7 +15,6 @@ const startWebSocket = () => {
 
 	socket.onmessage = function (event) {
 		let message = JSON.parse(event.data)
-		// console.log("[message] Data receieved from server:", message);
 		switch (message.type) {
 			case "onlineUsers":
 				onlineUsersData = message.data
@@ -25,9 +25,17 @@ const startWebSocket = () => {
 				if (clientInfo.IsLoggedIn === 1) {
 					usersContainer.style.display = "block"
 				}
+				break
 			case "typing":
 				clientInfo = {
 					typing: false,
+				}
+				let sender = message.data.username
+				let isTyping = message.data.isTyping
+				if (isTyping) {
+					typingProgressDiv.innerText = sender + " is typing..."
+				} else {
+					typingProgressDiv.innerText = ""
 				}
 				break
 		}
@@ -77,7 +85,7 @@ const startWebSocket = () => {
 					chatTitle.textContent =
 						user.Name.charAt(0).toUpperCase() + user.Name.slice(1)
 
-					const typingProgressDiv = document.createElement("div")
+					// const typingProgressDiv = document.createElement("div")
 					// typingProgressDiv.classList.add("")
 
 					const chatContentDiv = document.createElement("div")
@@ -150,25 +158,6 @@ const startWebSocket = () => {
 					hideChat.addEventListener("click", () => {
 						chatDiv.style.display = "none"
 					})
-
-					// Add an event listener to handle incoming WebSocket messages
-					socket.onmessage = function (event) {
-						let message = JSON.parse(event.data)
-						// console.log("message on js side:", message)
-						switch (message.type) {
-							case "typing":
-								let sender = message.data.username
-								let isTyping = message.data.isTyping
-								// updateTypingStatus(username, isTyping)
-								if (isTyping) {
-									typingProgressDiv.innerText = sender + " is typing..."
-								} else {
-									typingProgressDiv.innerText = ""
-								}
-								break
-							// Handle other message types as needed
-						}
-					}
 
 					const userName = {
 						type: "recipientSelect",
