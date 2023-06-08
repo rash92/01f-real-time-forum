@@ -144,6 +144,7 @@ const startWebSocket = () => {
 							},
 						}
 						socket.send(JSON.stringify(messageToSend))
+						text.value = ""
 					})
 					chatInputDiv.append(sendButton)
 
