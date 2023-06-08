@@ -62,12 +62,11 @@ func EditPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	}
 	data.Tags = tagsAsString
 	data.TagsList = dbmanagement.SelectAllTags()
-	//tmpl.ExecuteTemplate(w, "submitpost.html", data)
 
 	// Convert the struct to JSON
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		// Handle error
+		utils.HandleError("cannot marshal tags data", err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")

@@ -60,7 +60,7 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		// Convert the struct to JSON
 		jsonData, err := json.Marshal(data)
 		if err != nil {
-			// Handle error
+			utils.HandleError("cannot marshal loggedinstatus data", err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -77,7 +77,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 	var formData AuthenticateFormData
 	err := json.NewDecoder(r.Body).Decode(&formData)
 	if err != nil {
-		// Handle error
+		utils.HandleError("cannot marshal authenticate data", err)
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
@@ -112,7 +112,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		// Convert the struct to JSON
 		jsonData, err := json.Marshal(data)
 		if err != nil {
-			// Handle error
+			utils.HandleError("cannot marshal compare hash data", err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -130,7 +130,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 			// Convert the struct to JSON
 			jsonData, err := json.Marshal(data)
 			if err != nil {
-				// Handle error
+				utils.HandleError("cannot marshal login data", err)
 			}
 
 			w.Header().Set("Content-Type", "application/json")
@@ -146,7 +146,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 			// Convert the struct to JSON
 			jsonData, err := json.Marshal(data)
 			if err != nil {
-				// Handle error
+				utils.HandleError("cannot marshal tag data", err)
 			}
 
 			w.Header().Set("Content-Type", "application/json")
@@ -189,7 +189,7 @@ func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	// Convert the struct to JSON
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		// Handle error
+		utils.HandleError("cannot marshal registration data", err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -202,7 +202,6 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	var formData RegisterAccountFormData
 
 	err := json.NewDecoder(r.Body).Decode(&formData)
-	fmt.Println("form data", formData, "err ", err)
 	if err != nil {
 		// Handle error
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
@@ -222,7 +221,7 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	// Convert the struct to JSON
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		// Handle error
+		utils.HandleError("cannot marshal tag data", err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
