@@ -87,7 +87,7 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		// Convert the struct to JSON
 		jsonData, err := json.Marshal(data)
 		if err != nil {
-			// Handle error
+			utils.HandleError("cannot marhsal all post data ", err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
