@@ -3,6 +3,7 @@ package ws
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -146,6 +147,7 @@ func (c *Client) writePump() {
 		onlineUsersTicker.Stop()
 		c.conn.Close()
 	}()
+
 	for {
 		select {
 		case message, ok := <-c.send:
@@ -190,7 +192,11 @@ func (c *Client) writePump() {
 				},
 			}
 			jsonMessage, _ := json.Marshal(message)
-			c.recipient.send <- jsonMessage
+			// Check if recipient is available and has a valid connection
+			if c.recipient != nil && c.recipient.send != nil {
+				fmt.Println("recipient is:", c.recipient)
+				 c.recipient.send <- jsonMessage
+			}
 			// c.send <- jsonMessage
 		case <-typingTimer.C: // Handle the typing timer expiration
 			c.typingStatus = false
@@ -203,7 +209,11 @@ func (c *Client) writePump() {
 				},
 			}
 			jsonMessage, _ := json.Marshal(message)
-			c.recipient.send <- jsonMessage
+			// Check if recipient is available and has a valid connection
+			if c.recipient != nil && c.recipient.send != nil {
+				fmt.Println("recipient is:", c.recipient)
+				 c.recipient.send <- jsonMessage
+			}
 		case <-onlineUsersTicker.C:
 			onlineUsersData := OnlineUsersHandler()
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))

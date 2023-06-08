@@ -154,7 +154,7 @@ const startWebSocket = () => {
 					// Add an event listener to handle incoming WebSocket messages
 					socket.onmessage = function (event) {
 						let message = JSON.parse(event.data)
-						console.log("message on js side:", message)
+						// console.log("message on js side:", message)
 						switch (message.type) {
 							case "typing":
 								let sender = message.data.username
