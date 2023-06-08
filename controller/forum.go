@@ -32,7 +32,6 @@ Also handles inserting a new post that updates in realtime.
 func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := Data{}
 	sessionId, err := auth.GetSessionFromBrowser(w, r)
-	fmt.Println(sessionId)
 	if sessionId == "" {
 		err := auth.CreateUserSession(w, r, dbmanagement.User{})
 		if err != nil {
@@ -45,7 +44,6 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	user := dbmanagement.User{}
 	if err == nil {
 		user, err = dbmanagement.SelectUserFromSession(sessionId)
-		fmt.Println(user)
 		utils.HandleError("Unable to get user", err)
 		data.Cookie = sessionId
 		filterOrder := false
@@ -169,10 +167,7 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 	tags := formData.Tags
 	edit := formData.EditPost
 
-	fmt.Println(title, content, tags, edit)
-
 	if edit != "" {
-		fmt.Println("editing")
 		if CheckInputs(content) && CheckInputs(title) {
 			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 			utils.HandleError("cant get user with uuid in all posts", err)
@@ -199,7 +194,6 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 		if CheckInputs(content) && CheckInputs(title) {
 			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 			utils.HandleError("cant get user with uuid in all posts", err)
-			fmt.Println("Inserting")
 			post, err := dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, time.Now(), fileName)
 			if err != nil {
 				PageErrors(w, r, tmpl, 500, "Internal Server Error")

@@ -1,0 +1,22 @@
+Thu Jun  8 18:40:31 BST 2023: The statement has affected 2 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Thu Jun  8 18:40:31 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Thu Jun  8 18:40:35 BST 2023: ***** User from session query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Jun  8 18:40:35 BST 2023: ***** User query failed: sql: no rows in result set on line 196 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Jun  8 18:40:35 BST 2023: ***** Unable to get user: sql: no rows in result set on line 49 in forum/controller.AllPosts at file forum.go *****
+Thu Jun  8 18:40:35 BST 2023: session id is: 5aa56cfc-a3a4-4e17-b323-5d4f57d3247cuser info is: {     0 [] 0    0}cookie data is: 5aa56cfc-a3a4-4e17-b323-5d4f57d3247c on line 54 in forum/controller.AllPosts at file forum.go
+Thu Jun  8 18:40:37 BST 2023: updating user login status to: 1 on line 37 in forum/dbmanagement.UpdateUserLoggedInStatus at file userdbutils.go
+Thu Jun  8 18:40:37 BST 2023: %!s(int=0) on line 107 in forum/authentication.Authenticate at file authenticate.go
+Thu Jun  8 18:40:37 BST 2023: session id is: 453db7a9-3564-4957-a697-3224e7da8545user info is: {6b93ba44-afca-48e9-8f75-72ac2f0e1005 admin a@a $2a$10$Vdp5bqf6BG.mqhfqmydT1OkStAaAVQudOTJOTbmAI/eNXYBVaQDAO admin 1 [] 99 first last gender 0}cookie data is: 453db7a9-3564-4957-a697-3224e7da8545 on line 54 in forum/controller.AllPosts at file forum.go
+Thu Jun  8 18:40:37 BST 2023: session id is: 453db7a9-3564-4957-a697-3224e7da8545user info is: {6b93ba44-afca-48e9-8f75-72ac2f0e1005 admin a@a $2a$10$Vdp5bqf6BG.mqhfqmydT1OkStAaAVQudOTJOTbmAI/eNXYBVaQDAO admin 1 [] 99 first last gender 0}cookie data is: 453db7a9-3564-4957-a697-3224e7da8545 on line 54 in forum/controller.AllPosts at file forum.go
+Thu Jun  8 18:49:43 BST 2023: The statement has affected 1 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Thu Jun  8 18:49:43 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Thu Jun  8 18:49:47 BST 2023: ***** User from session query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Jun  8 18:49:47 BST 2023: ***** User query failed: sql: no rows in result set on line 196 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Thu Jun  8 18:49:47 BST 2023: ***** Unable to get user: sql: no rows in result set on line 49 in forum/controller.AllPosts at file forum.go *****
+Thu Jun  8 18:49:47 BST 2023: session id is: 453db7a9-3564-4957-a697-3224e7da8545user info is: {     0 [] 0    0}cookie data is: 453db7a9-3564-4957-a697-3224e7da8545 on line 54 in forum/controller.AllPosts at file forum.go
+Thu Jun  8 18:49:49 BST 2023: updating user login status to: 1 on line 37 in forum/dbmanagement.UpdateUserLoggedInStatus at file userdbutils.go
+Thu Jun  8 18:49:49 BST 2023: %!s(int=0) on line 107 in forum/authentication.Authenticate at file authenticate.go
+Thu Jun  8 18:49:49 BST 2023: session id is: ffc52b9e-9949-4cd9-bbff-969d3076e8b8user info is: {6b93ba44-afca-48e9-8f75-72ac2f0e1005 admin a@a $2a$10$Vdp5bqf6BG.mqhfqmydT1OkStAaAVQudOTJOTbmAI/eNXYBVaQDAO admin 1 [] 99 first last gender 0}cookie data is: ffc52b9e-9949-4cd9-bbff-969d3076e8b8 on line 54 in forum/controller.AllPosts at file forum.go
+Thu Jun  8 18:49:49 BST 2023: client User from DB {6b93ba44-afca-48e9-8f75-72ac2f0e1005 admin a@a $2a$10$Vdp5bqf6BG.mqhfqmydT1OkStAaAVQudOTJOTbmAI/eNXYBVaQDAO admin 1 [] 99 first last gender 0} on line 268 in forum/ws.ServeWs at file client.go
+Thu Jun  8 18:49:49 BST 2023: ***** Error decoding JSON:: invalid character 'H' looking for beginning of value on line 94 in forum/ws.(*Client).readPump at file client.go *****
+Thu Jun  8 18:49:49 BST 2023: session id is: ffc52b9e-9949-4cd9-bbff-969d3076e8b8user info is: {6b93ba44-afca-48e9-8f75-72ac2f0e1005 admin a@a $2a$10$Vdp5bqf6BG.mqhfqmydT1OkStAaAVQudOTJOTbmAI/eNXYBVaQDAO admin 1 [] 99 first last gender 0}cookie data is: ffc52b9e-9949-4cd9-bbff-969d3076e8b8 on line 54 in forum/controller.AllPosts at file forum.go

@@ -83,7 +83,7 @@ func (c *Client) readPump() { // Same as POST
 		_, message, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
+				utils.HandleError("Unexpected Websocket Close", err)
 			}
 			break
 		}
@@ -91,7 +91,7 @@ func (c *Client) readPump() { // Same as POST
 
 		var msg ReadMessage
 		if err := json.Unmarshal(message, &msg); err != nil {
-			log.Printf("Error decoding JSON: %v", err)
+			utils.HandleError("Error decoding JSON:", err)
 			continue
 		}
 
@@ -99,11 +99,11 @@ func (c *Client) readPump() { // Same as POST
 		case "recipientSelect":
 			name, ok := msg.Info["name"].(string)
 			if ok {
-				log.Printf("Name: %s", name)
 				userConnection, _ := dbmanagement.SelectUserFromName(name)
 				recipientClient := c.hub.GetClientByUsername(name)
 				c.recipient = recipientClient // This brings back hashed password, probably not necessary
-				log.Printf("User Data: %v", userConnection)
+				message := fmt.Sprintf("User Data: %v", userConnection)
+				utils.WriteMessageToLogFile(message)
 			}
 		case "private":
 			recipient, ok1 := msg.Info["recipient"].(string)
@@ -111,19 +111,22 @@ func (c *Client) readPump() { // Same as POST
 			text, ok2 := msg.Info["text"].(string)
 			user := c.User.UUID
 			if ok1 && ok2 {
-				log.Printf("Private Message: %s %s %s", user, receiver.UUID, text)
+				message := fmt.Sprintf("Private Message: %s %s %s", user, receiver.UUID, text)
+				utils.WriteMessageToLogFile(message)
 			}
 		case "typing":
 			isTyping, ok2 := msg.Info["isTyping"].(bool)
 			user := c.User.UUID
 			if ok2 {
-				log.Printf("typing: %s %v", user, isTyping)
+				message := fmt.Sprintf("typing: %s %v", user, isTyping)
+				utils.WriteMessageToLogFile(message)
 				c.typing <- isTyping
 				c.hub.typingBroadcast <- c
 			}
 		default:
 			c.hub.broadcast <- message
-			log.Printf("Recieved %s", message)
+			message := fmt.Sprintf("Recieved %s", message)
+			utils.WriteMessageToLogFile(message)
 		}
 	}
 }
@@ -194,7 +197,6 @@ func (c *Client) writePump() {
 			jsonMessage, _ := json.Marshal(message)
 			// Check if recipient is available and has a valid connection
 			if c.recipient != nil && c.recipient.send != nil {
-				fmt.Println("recipient is:", c.recipient)
 				c.recipient.send <- jsonMessage
 			}
 			// c.send <- jsonMessage
@@ -211,7 +213,6 @@ func (c *Client) writePump() {
 			jsonMessage, _ := json.Marshal(message)
 			// Check if recipient is available and has a valid connection
 			if c.recipient != nil && c.recipient.send != nil {
-				fmt.Println("recipient is:", c.recipient)
 				c.recipient.send <- jsonMessage
 			}
 		case <-onlineUsersTicker.C:
@@ -261,7 +262,8 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
 	clientUser, err := dbmanagement.SelectUserFromSession(SessionId)
 	utils.HandleError("Unable to find user session id", err)
-	log.Printf("client User from DB %v", clientUser)
+	message := fmt.Sprintf("client User from DB %v", clientUser)
+	utils.WriteMessageToLogFile(message)
 	if err != nil || clientUser.Name == "" {
 		return
 	}

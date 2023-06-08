@@ -87,7 +87,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 	var user dbmanagement.User
 	matched, err := regexp.MatchString(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`, userName)
 	if err != nil {
-		fmt.Println(err)
+		utils.HandleError("Regex failed for username or email", err)
 	}
 	if matched {
 		user, err = dbmanagement.SelectUserFromEmail(userName)
