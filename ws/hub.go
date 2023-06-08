@@ -56,10 +56,15 @@ func (h *Hub) GetClientByUsername(username string) *Client {
 }
 
 func (h *Hub) BroadcastTypingStatus() {
+	// Continuously listen for clients whose typing status needs to be broadcasted
 	for {
 		client := <-h.typingBroadcast
+
+		// Iterate over all connected clients in the hub
 		for c := range h.clients {
+			// Skip broadcasting to the client who triggered the typing status
 			if c != client {
+				// Create a message containing the typing status information
 				message := WriteMessage{
 					Type: "typing",
 					Data: map[string]interface{}{
@@ -68,6 +73,8 @@ func (h *Hub) BroadcastTypingStatus() {
 					},
 				}
 				jsonMessage, _ := json.Marshal(message)
+
+				// Send the typing status message to the client
 				c.send <- jsonMessage
 			}
 		}
