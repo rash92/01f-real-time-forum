@@ -63,16 +63,15 @@ type ReadMessage struct {
 type WriteMessage struct {
 	Type string      `json:"type"`
 	Data interface{} `json:"data"`
-	// Recipient string      `json:"recipient"`
 }
 
 // readPump pumps messages from the websocket connection to the hub.
-//
 // The application runs readPump in a per-connection goroutine. The application
 // ensures that there is at most one reader on a connection by executing all
 // reads from this goroutine.
 func (c *Client) readPump() { // Same as POST
 	defer func() {
+		log.Println("closing at readpump")
 		c.hub.unregister <- c
 		c.conn.Close()
 	}()
@@ -138,6 +137,7 @@ func (c *Client) readPump() { // Same as POST
 // executing all writes from this goroutine.
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
+
 	onlineCheckerTicker := time.NewTicker(1 * time.Second)
 	onlineUsersTicker := time.NewTicker(1 * time.Second) // Update online users every 5 seconds
 
@@ -146,6 +146,7 @@ func (c *Client) writePump() {
 	typingTimer.Stop()
 
 	defer func() {
+		log.Println("closing at writepump")
 		ticker.Stop()
 		onlineUsersTicker.Stop()
 		c.conn.Close()
@@ -247,6 +248,11 @@ func (c *Client) writePump() {
 			jsonMessage, _ := json.Marshal(message)
 			w.Write(jsonMessage)
 			if err := w.Close(); err != nil {
+				return
+			}
+		case <-ticker.C:
+			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
 			}
 		}
