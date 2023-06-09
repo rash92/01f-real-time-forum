@@ -45,7 +45,11 @@ type OauthAccount struct {
 // Displays the log in page.
 func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	sessionId, err := GetSessionFromBrowser(w, r)
-	utils.HandleError("Unable to get session id from browser in login:", err)
+	fmt.Println("SessionID:", sessionId)
+	if err != nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		utils.HandleError("Unable to get session id from browser in login:", err)
+	}
 	_, err = dbmanagement.SelectUserFromSession(sessionId)
 	if err == nil {
 		http.Redirect(w, r, "/", http.StatusFound)

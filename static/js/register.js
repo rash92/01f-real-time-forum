@@ -1,7 +1,7 @@
 const renderRegisterForm = (encodedData) => {
-    const decodedData = decodeURIComponent(encodedData);
-    const data = JSON.parse(decodedData)
-    let html = `
+	const decodedData = decodeURIComponent(encodedData)
+	const data = JSON.parse(decodedData)
+	let html = `
       <div class="container">
         <div class="input-wrapper">
           <div>
@@ -82,78 +82,82 @@ const renderRegisterForm = (encodedData) => {
               />
             </div>
             
-      `;
+      `
 
-    // Check if there's a register error
-    if (data.RegisterError !== "" && data.RegisterError !== undefined) {
-        html += `
+	// Check if there's a register error
+	if (data.RegisterError !== "" && data.RegisterError !== undefined) {
+		html += `
           <div class="login-input-incorrect">
             <p class="login-incorrect-password">
               Sorry, that ${data.RegisterError} is already taken.
             </p>
           </div>
-        `;
-    }
+        `
+	}
 
-    html += `
+	html += `
             <div class="login-input">
               <button type="submit">Sign Up</button>
             </div>
           </form>
           <p>
             Registered?
-            <a accesskey="a" href="/login">Sign in</a>
+            <a accesskey="a" onclick="renderLoginForm('${encodeURIComponent(
+							JSON.stringify(data)
+						)}', false)">Sign in</a>
           </p>
         </div>
       </div>
-    `;
+    `
 
-    document.getElementById('container').innerHTML = html;
+	document.getElementById("container").innerHTML = html
 
-    // Add submit form event listener
-    document.querySelector('#register-form').addEventListener('submit', async (event) => {
-        event.preventDefault(); // Prevent form submission
+	// Add submit form event listener
+	document
+		.querySelector("#register-form")
+		.addEventListener("submit", async (event) => {
+			event.preventDefault() // Prevent form submission
 
-        const formData = {
-            user_name: document.querySelector('input[name="user_name"]').value,
-            email: document.querySelector('input[name="email"]').value,
-            password: document.querySelector('input[name="password"]').value,
-            firstName: document.querySelector('input[name="firstName"]').value,
-            lastName: document.querySelector('input[name="lastName"]').value,
-            gender: document.querySelector('input[name="gender"]').value,
-            age: document.querySelector('input[name="age"]').value
-        };
+			const formData = {
+				user_name: document.querySelector('input[name="user_name"]').value,
+				email: document.querySelector('input[name="email"]').value,
+				password: document.querySelector('input[name="password"]').value,
+				firstName: document.querySelector('input[name="firstName"]').value,
+				lastName: document.querySelector('input[name="lastName"]').value,
+				gender: document.querySelector('input[name="gender"]').value,
+				age: document.querySelector('input[name="age"]').value,
+			}
 
-        registerUser(formData);
-    });
-};
+			registerUser(formData)
+		})
+}
 
 const registerUser = async (formData) => {
-    try {
-        const response = await fetch('/register_account', {
-            method: 'POST',
-            body: JSON.stringify(formData),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+	try {
+		const response = await fetch("/register_account", {
+			method: "POST",
+			body: JSON.stringify(formData),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
 
-        if (response.ok) {
-            // Registration successful
-            const data = await response.json();
-            // Do something with the response data if needed
-            if (data.RegisterError !== "") {
-                console.log(data);
-                renderRegisterForm(encodeURIComponent(JSON.stringify(data)))
-            } else {
-                renderLoginForm(encodeURIComponent(JSON.stringify(data)), false)
-            }
-        } else {
-            // Handle error response
-            console.error('Registration failed.');
-        }
-    } catch (error) {
-        // Handle network or other errors
-        console.error('Error occurred:', error);
-    }
-};
+		if (response.ok) {
+			// Registration successful
+			const data = await response.json()
+			// Do something with the response data if needed
+			if (data.RegisterError !== "") {
+				console.log(data)
+				renderRegisterForm(encodeURIComponent(JSON.stringify(data)))
+			} else {
+				renderLoginForm(encodeURIComponent(JSON.stringify(data)), false)
+			}
+		} else {
+			// Handle error response
+			console.error("Registration failed.")
+		}
+	} catch (error) {
+		// Handle network or other errors
+		console.error("Error occurred:", error)
+	}
+}
