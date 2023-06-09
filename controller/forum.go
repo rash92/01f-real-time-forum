@@ -44,9 +44,6 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	}
 
 	user := dbmanagement.User{}
-	// if err.Error() == "http: named cookie not present" {
-	// 	data.UserInfo = dbmanagement.User{}
-	// }
 
 	if err != nil && err.Error() == "http: named cookie not present" {
 		data.UserInfo = dbmanagement.User{}
