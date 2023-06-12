@@ -29,6 +29,10 @@ const startWebSocket = () => {
         clientInfo = {
           typing: false,
         }
+
+        break
+      case "chatSelect":
+        console.log(message.data)
         break
     }
   }
@@ -128,11 +132,14 @@ const startWebSocket = () => {
           sendButton.classList.add("send-button")
           sendButton.addEventListener("click", function () {
             const text = document.querySelector(".chat-input")
+            let date = String(new Date().getDate());
+            let t = new Date().getHours() + ":" + new Date().getMinutes + ":" + new Date().getSeconds
             let messageToSend = {
               type: "private",
               info: {
                 recipient: user.Name,
                 text: text.value,
+                time: date + ' ' + t
               },
             }
             socket.send(JSON.stringify(messageToSend))
@@ -169,9 +176,8 @@ const startWebSocket = () => {
               // Handle other message types as needed
             }
           }
-          let date = String(new Date().getDate());
-          let time = new Date().getHours() + ":" + new Date().getMinutes + ":" + new Date().getSeconds
-          const userName = { type: "recipientSelect", info: { name: user.Name, time: date + " " + time } };
+
+          const userName = { type: "recipientSelect", info: { name: user.Name } };
 
           // console.log(userName)
           socket.send(JSON.stringify(userName))

@@ -2332,3 +2332,23 @@ Mon Jun  5 20:10:41 BST 2023: %!s(int=0) on line 107 in forum/authentication.Aut
 Mon Jun  5 20:10:41 BST 2023: session id is: 0e302635-56ae-47e1-a88b-6b79b006b971user info is: {6b93ba44-afca-48e9-8f75-72ac2f0e1005 admin a@a $2a$10$Vdp5bqf6BG.mqhfqmydT1OkStAaAVQudOTJOTbmAI/eNXYBVaQDAO admin 1 [] 99 first last gender 0}cookie data is: 0e302635-56ae-47e1-a88b-6b79b006b971 on line 52 in forum/controller.AllPosts at file forum.go
 Mon Jun  5 20:10:41 BST 2023: session id is: 0e302635-56ae-47e1-a88b-6b79b006b971user info is: {6b93ba44-afca-48e9-8f75-72ac2f0e1005 admin a@a $2a$10$Vdp5bqf6BG.mqhfqmydT1OkStAaAVQudOTJOTbmAI/eNXYBVaQDAO admin 1 [] 99 first last gender 0}cookie data is: 0e302635-56ae-47e1-a88b-6b79b006b971 on line 52 in forum/controller.AllPosts at file forum.go
 >>>>>>> origin/master
+Mon Jun 12 13:49:47 BST 2023: The statement has affected 1 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Mon Jun 12 13:49:47 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Mon Jun 12 13:49:59 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 13:49:59 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 13:50:00 BST 2023: ***** User query failed: sql: no rows in result set on line 196 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Jun 12 13:50:00 BST 2023: ***** Unable to get user: sql: no rows in result set on line 47 in forum/controller.AllPosts at file forum.go *****
+Mon Jun 12 13:50:00 BST 2023: session id is: e3e6a553-be1a-407d-bf52-81facfd09529user info is: {     0 [] 0    0}cookie data is: e3e6a553-be1a-407d-bf52-81facfd09529 on line 52 in forum/controller.AllPosts at file forum.go
+Mon Jun 12 13:50:08 BST 2023: ***** Query Row failed in: sql: no rows in result set on line 144 in forum/dbmanagement.SelectUserFromName at file userdbutils.go *****
+Mon Jun 12 13:50:08 BST 2023: ***** Unable to get user from name error, trying by email:: sql: no rows in result set on line 97 in forum/authentication.Authenticate at file authenticate.go *****
+Mon Jun 12 13:50:08 BST 2023: Incorrect Password! on line 139 in forum/authentication.Authenticate at file authenticate.go
+Mon Jun 12 13:50:50 BST 2023: Inserting user record... on line 19 in forum/dbmanagement.InsertUser at file userdbutils.go
+Mon Jun 12 13:50:50 BST 2023: ***** User Prepare failed in InserUser function: table Users has no column named FirstName on line 25 in forum/dbmanagement.InsertUser at file userdbutils.go *****
+Mon Jun 12 13:50:55 BST 2023: Inserting user record... on line 19 in forum/dbmanagement.InsertUser at file userdbutils.go
+Mon Jun 12 13:50:55 BST 2023: ***** User Prepare failed in InserUser function: table Users has no column named FirstName on line 25 in forum/dbmanagement.InsertUser at file userdbutils.go *****
+Mon Jun 12 13:51:11 BST 2023: ***** User query failed: sql: no rows in result set on line 196 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
+Mon Jun 12 13:51:11 BST 2023: ***** Unable to get user: sql: no rows in result set on line 47 in forum/controller.AllPosts at file forum.go *****
+Mon Jun 12 13:51:11 BST 2023: session id is: e3e6a553-be1a-407d-bf52-81facfd09529user info is: {     0 [] 0    0}cookie data is: e3e6a553-be1a-407d-bf52-81facfd09529 on line 52 in forum/controller.AllPosts at file forum.go
+Mon Jun 12 13:51:19 BST 2023: ***** Query Row failed in: sql: no rows in result set on line 144 in forum/dbmanagement.SelectUserFromName at file userdbutils.go *****
+Mon Jun 12 13:51:19 BST 2023: ***** Unable to get user from name error, trying by email:: sql: no rows in result set on line 97 in forum/authentication.Authenticate at file authenticate.go *****
+Mon Jun 12 13:51:19 BST 2023: Incorrect Password! on line 139 in forum/authentication.Authenticate at file authenticate.go

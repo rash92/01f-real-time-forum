@@ -3,6 +3,7 @@ package ws
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -98,7 +99,7 @@ func (c *Client) readPump() { // Same as POST
 		case "recipientSelect":
 			name, ok := msg.Info["name"].(string)
 			if !ok {
-				//do something bad
+				utils.WriteMessageToLogFile("Selecting an unknown recipient")
 				break
 			}
 
@@ -106,28 +107,37 @@ func (c *Client) readPump() { // Same as POST
 			userConnection, _ := dbmanagement.SelectUserFromName(name) // This brings back hashed password, probably not necessary
 			log.Printf("User Data: %v", userConnection)
 
-			timeStr, ok := msg.Info["time"].(string)
-			if !ok {
-				//do something bad
+			ChatID, exists := dbmanagement.SelectChatId(c.User.UUID, userConnection.UUID)
+
+			if !exists {
+				utils.WriteMessageToLogFile(fmt.Sprintf("failed to load chat from given users: %v AND %v", userConnection.Name, c.User.Name))
 				break
 			}
 
-			//handle time error
-			t, _ := time.Parse("2006-01-02 15:04:05", timeStr)
-			log.Printf("Time: %s", t)
-
-			// trying to insert
-			text := dbmanagement.ChatText{Content: "", SenderId: "SS", ReceiverId: userConnection.UUID, Time: t}
-			dbmanagement.InsertTextInChat(text)
+			ChatBox := dbmanagement.SelectAllChat(ChatID)
+			ChatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
+			chatToSend, _ := json.Marshal(ChatSelector)
+			c.send <- chatToSend
 
 		case "private":
 			recipient, ok1 := msg.Info["recipient"].(string)
 			receiver, _ := dbmanagement.SelectUserFromName(recipient)
 			text, ok2 := msg.Info["text"].(string)
-			user := c.User.UUID
-			if ok1 && ok2 {
-				log.Printf("Private Message: %s %s %s", user, receiver.UUID, text)
+			timeStr, ok3 := msg.Info["time"].(string)
+
+			//handle time error exists
+			t, _ := time.Parse("2006-01-02 15:04:05", timeStr)
+			log.Printf("Time: %s", t)
+
+			if ok1 && ok2 && ok3 {
+				log.Printf("Private Message: %s %s %s %s", c.User.UUID, receiver.UUID, text, t)
 			}
+
+			//Initialize date to insert into Chat DB
+			var data = dbmanagement.ChatText{Content: text, SenderId: c.User.UUID, ReceiverId: receiver.UUID, Time: t}
+
+			//Insert query
+			dbmanagement.InsertTextInChat(data)
 		case "typing":
 			isTyping, ok2 := msg.Info["isTyping"].(bool)
 			user := c.User.UUID
