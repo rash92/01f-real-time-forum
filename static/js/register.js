@@ -3,46 +3,14 @@ const renderRegisterForm = (encodedData) => {
 	const data = JSON.parse(decodedData)
 	let html = `
       <div class="container">
-        <div class="input-wrapper">
+        <div class="input-wrapper reg-wrapper">
           <div>
             <h1>Register</h1>
           </div>
           <form id="register-form" method="POST">
-            <div class="login-input">
-              <label for="user_name"><i class="fa-solid fa-user"></i></label>
-              <input
-                type="text"
-                placeholder="Username"
-                name="user_name"
-                autocomplete="off"
-                autofocus
-                required
-              />
-            </div>
-            <div class="login-input">
-              <label for="email"><i class="fa-solid fa-envelope"></i></label>
-              <input
-                type="email"
-                placeholder="Email"
-                name="email"
-                autocomplete="off"
-                required
-              />
-            </div>
-            <div class="login-input">
-              <label for="password"><i class="fa-solid fa-lock"></i></label>
-              <input
-                type="password"
-                placeholder="Password"
-                name="password"
-                minlength="6"
-                maxlength="20"
-                autocomplete="off"
-                required
-              />
-            </div>
-            <div class="login-input">
-              <label for="firstName"><i class="fa-solid fa-lock"></i></label>
+          <div class="fName-lName">
+          <div class="login-input">
+              <label for="firstName"><i class="fa-solid fa-user"></i></label>
               <input
                 type="firstName"
                 placeholder="First Name"
@@ -52,7 +20,7 @@ const renderRegisterForm = (encodedData) => {
               />
             </div>
             <div class="login-input">
-              <label for="lastName"><i class="fa-solid fa-lock"></i></label>
+              <label for="lastName"><i class="fa-solid fa-user"></i></label>
               <input
                 type="lastName"
                 placeholder="Last Name"
@@ -60,28 +28,63 @@ const renderRegisterForm = (encodedData) => {
                 autocomplete="off"
                 required
               />
-            </div>
-            <div class="login-input">
-              <label for="gender"><i class="fa-solid fa-lock"></i></label>
-              <input
-                type="gender"
-                placeholder="Gender"
-                name="gender"
-                autocomplete="off"
-                required
-              />
-            </div>
-            <div class="login-input">
-              <label for="age"><i class="fa-solid fa-lock"></i></label>
-              <input
-                type="age"
-                placeholder="Age"
-                name="age"
-                autocomplete="off"
-                required
-              />
-            </div>
-            
+            </div></div>
+          <div class="uName-Email-pWord">
+          <div class="login-input">
+          <label for="user_name"><i class="fa-solid fa-user"></i></label>
+          <input
+            type="text"
+            placeholder="Username"
+            name="user_name"
+            autocomplete="off"
+            autofocus
+            required
+          />
+        </div>
+        <div class="login-input">
+          <label for="email"><i class="fa-solid fa-envelope"></i></label>
+          <input
+            type="email"
+            placeholder="Email"
+            name="email"
+            autocomplete="off"
+            required
+          />
+        </div>
+        <div class="login-input">
+          <label for="password"><i class="fa-solid fa-lock"></i></label>
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            minlength="6"
+            maxlength="20"
+            autocomplete="off"
+            required
+          />
+        </div>
+        </div>
+          <div class="gender-age">
+          <div class="login-input">
+          <label for="gender"><i class="fa-solid fa-user"></i></label>
+          <input
+            type="gender"
+            placeholder="Gender"
+            name="gender"
+            autocomplete="off"
+            required
+          />
+        </div>
+        <div class="login-input">
+          <label for="age"><i class="fa-solid fa-user"></i></label>
+          <input
+            type="age"
+            placeholder="Age"
+            name="age"
+            autocomplete="off"
+            required
+          />
+        </div></div>
       `
 
 	// Check if there's a register error
