@@ -1,4 +1,5 @@
 const usersContainer = document.getElementById("online-users")
+const typingProgressDiv = document.createElement("div")
 
 const startWebSocket = () => {
   let socket = new WebSocket("wss://localhost:8080/ws")
@@ -14,7 +15,6 @@ const startWebSocket = () => {
 
   socket.onmessage = function (event) {
     let message = JSON.parse(event.data)
-    // console.log("[message] Data receieved from server:", message);
     switch (message.type) {
       case "onlineUsers":
         onlineUsersData = message.data
@@ -25,14 +25,18 @@ const startWebSocket = () => {
         if (clientInfo.IsLoggedIn === 1) {
           usersContainer.style.display = "block"
         }
+        break
       case "typing":
         clientInfo = {
           typing: false,
         }
-
-        break
-      case "chatSelect":
-        console.log(message.data)
+        let sender = message.data.username
+        let isTyping = message.data.isTyping
+        if (isTyping) {
+          typingProgressDiv.innerText = sender + " is typing..."
+        } else {
+          typingProgressDiv.innerText = ""
+        }
         break
     }
   }
@@ -81,7 +85,7 @@ const startWebSocket = () => {
           chatTitle.textContent =
             user.Name.charAt(0).toUpperCase() + user.Name.slice(1)
 
-          const typingProgressDiv = document.createElement("div")
+          // const typingProgressDiv = document.createElement("div")
           // typingProgressDiv.classList.add("")
 
           const chatContentDiv = document.createElement("div")

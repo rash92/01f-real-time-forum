@@ -52,7 +52,9 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 
 			if idToReport != "" {
 				dbmanagement.CreateAdminRequest(user.UUID, user.Name, idToReport, "", "", "this post has been reported by a moderator")
-				fmt.Println("a post has been reported with id: ", idToReport)
+				message := fmt.Sprintf("a post has been reported with id: %v", idToReport)
+				utils.WriteMessageToLogFile(message)
+
 			}
 
 		}
@@ -83,7 +85,7 @@ func Post(w http.ResponseWriter, r *http.Request, tmpl *template.Template, posti
 		// Convert the struct to JSON
 		jsonData, err := json.Marshal(data)
 		if err != nil {
-			// Handle error
+			utils.HandleError("cannot marshal post data ", err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")

@@ -352,7 +352,7 @@ p {
 	color: var(--dim-font);
 }
 
-/* LOGIN CARD */
+/* LOGIN CARD AND REGISTRATION */
 .input-wrapper {
 	display: flex;
 	flex-direction: column;
@@ -450,6 +450,20 @@ h3 {
 
 .social i:hover {
 	color: var(--main-font);
+}
+/* REGISTRATION */
+
+.reg-wrapper {
+	position: fixed;
+	top: 10%;
+}
+
+.fName-lName, .gender-age {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
 }
 
 /* POST */

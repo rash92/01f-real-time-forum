@@ -32,9 +32,11 @@ Also handles inserting a new post that updates in realtime.
 func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	data := Data{}
 	sessionId, err := auth.GetSessionFromBrowser(w, r)
+	// fmt.Println("SessionID:", sessionId)
 	if sessionId == "" {
 		err := auth.CreateUserSession(w, r, dbmanagement.User{})
 		if err != nil {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 			utils.HandleError("Unable to create visitor session", err)
 		} else {
 			sessionId, _ = auth.GetSessionFromBrowser(w, r)
@@ -42,6 +44,11 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	}
 
 	user := dbmanagement.User{}
+
+	if err != nil && err.Error() == "http: named cookie not present" {
+		data.UserInfo = dbmanagement.User{}
+	}
+
 	if err == nil {
 		user, err = dbmanagement.SelectUserFromSession(sessionId)
 		utils.HandleError("Unable to get user", err)
@@ -82,17 +89,14 @@ func AllPosts(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		data.TitleName = "Forum"
 		data.TagsList = dbmanagement.SelectAllTags()
 		data.ListOfData = append(data.ListOfData, posts...)
-		// tmpl.ExecuteTemplate(w, "forum.html", data)
-
-		// Convert the struct to JSON
-		jsonData, err := json.Marshal(data)
-		if err != nil {
-			// Handle error
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(jsonData)
 	}
+	// Convert the struct to JSON
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		utils.HandleError("cannot marhsal all post data ", err)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonData)
 }
 
 func ExistingTag(tag string) bool {
@@ -167,10 +171,7 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 	tags := formData.Tags
 	edit := formData.EditPost
 
-	fmt.Println(title, content, tags, edit)
-
 	if edit != "" {
-		fmt.Println("editing")
 		if CheckInputs(content) && CheckInputs(title) {
 			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 			utils.HandleError("cant get user with uuid in all posts", err)
@@ -197,7 +198,6 @@ func SubmissionHandler(w http.ResponseWriter, r *http.Request, user dbmanagement
 		if CheckInputs(content) && CheckInputs(title) {
 			userFromUUID, err := dbmanagement.SelectUserFromUUID(user.UUID)
 			utils.HandleError("cant get user with uuid in all posts", err)
-			fmt.Println("Inserting")
 			post, err := dbmanagement.InsertPost(title, content, userFromUUID.Name, 0, 0, time.Now(), fileName)
 			if err != nil {
 				PageErrors(w, r, tmpl, 500, "Internal Server Error")

@@ -1,6 +1,9 @@
 package ws
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"log"
+)
 
 type Hub struct {
 	clients           map[*Client]bool
@@ -29,6 +32,7 @@ func (h *Hub) Run() {
 			h.clients[client] = true
 		case client := <-h.unregister:
 			if _, ok := h.clients[client]; ok {
+				log.Println("closing at hun run function - case unregiser")
 				delete(h.clients, client)
 				close(client.send)
 			}
@@ -37,6 +41,7 @@ func (h *Hub) Run() {
 				select {
 				case client.send <- message:
 				default:
+					log.Println("closing at hun run function - case h.broadcast")
 					close(client.send)
 					delete(h.clients, client)
 				}
@@ -56,10 +61,15 @@ func (h *Hub) GetClientByUsername(username string) *Client {
 }
 
 func (h *Hub) BroadcastTypingStatus() {
+	// Continuously listen for clients whose typing status needs to be broadcasted
 	for {
 		client := <-h.typingBroadcast
+
+		// Iterate over all connected clients in the hub
 		for c := range h.clients {
+			// Skip broadcasting to the client who triggered the typing status
 			if c != client {
+				// Create a message containing the typing status information
 				message := WriteMessage{
 					Type: "typing",
 					Data: map[string]interface{}{
@@ -68,6 +78,8 @@ func (h *Hub) BroadcastTypingStatus() {
 					},
 				}
 				jsonMessage, _ := json.Marshal(message)
+
+				// Send the typing status message to the client
 				c.send <- jsonMessage
 			}
 		}

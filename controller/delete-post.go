@@ -21,6 +21,7 @@ func DeletePost(w http.ResponseWriter, r *http.Request, tmpl *template.Template)
 	user := dbmanagement.User{}
 	if err == nil {
 		user, err = dbmanagement.SelectUserFromSession(sessionId)
+		utils.HandleError("cannot select user from session id ", err)
 		data.Cookie = sessionId
 
 		data.UserInfo = user

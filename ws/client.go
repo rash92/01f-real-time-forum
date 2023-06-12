@@ -20,7 +20,7 @@ const (
 	writeWait = 10 * time.Second
 
 	// Time allowed to read the next pong message from the peer.
-	pongWait = 60 * time.Second
+	pongWait = 10 * time.Second
 
 	// Send pings to peer with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
@@ -63,16 +63,15 @@ type ReadMessage struct {
 type WriteMessage struct {
 	Type string      `json:"type"`
 	Data interface{} `json:"data"`
-	// Recipient string      `json:"recipient"`
 }
 
 // readPump pumps messages from the websocket connection to the hub.
-//
 // The application runs readPump in a per-connection goroutine. The application
 // ensures that there is at most one reader on a connection by executing all
 // reads from this goroutine.
 func (c *Client) readPump() { // Same as POST
 	defer func() {
+		log.Println("closing at readpump")
 		c.hub.unregister <- c
 		c.conn.Close()
 	}()
@@ -83,7 +82,7 @@ func (c *Client) readPump() { // Same as POST
 		_, message, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
+				utils.HandleError("Unexpected Websocket Close", err)
 			}
 			break
 		}
@@ -91,7 +90,7 @@ func (c *Client) readPump() { // Same as POST
 
 		var msg ReadMessage
 		if err := json.Unmarshal(message, &msg); err != nil {
-			log.Printf("Error decoding JSON: %v", err)
+			utils.HandleError("Error decoding JSON:", err)
 			continue
 		}
 
@@ -142,13 +141,15 @@ func (c *Client) readPump() { // Same as POST
 			isTyping, ok2 := msg.Info["isTyping"].(bool)
 			user := c.User.UUID
 			if ok2 {
-				log.Printf("typing: %s %v", user, isTyping)
+				message := fmt.Sprintf("typing: %s %v", user, isTyping)
+				utils.WriteMessageToLogFile(message)
 				c.typing <- isTyping
 				c.hub.typingBroadcast <- c
 			}
 		default:
 			c.hub.broadcast <- message
-			log.Printf("Recieved %s", message)
+			message := fmt.Sprintf("Recieved %s", message)
+			utils.WriteMessageToLogFile(message)
 		}
 	}
 }
@@ -158,8 +159,9 @@ func (c *Client) readPump() { // Same as POST
 // A goroutine running writePump is started for each connection. The
 // application ensures that there is at most one writer to a connection by
 // executing all writes from this goroutine.
-func (c *Client) writePump() {
+func (c *Client) writePump() { //GET REQUEST
 	ticker := time.NewTicker(pingPeriod)
+
 	onlineCheckerTicker := time.NewTicker(1 * time.Second)
 	onlineUsersTicker := time.NewTicker(1 * time.Second) // Update online users every 5 seconds
 
@@ -168,10 +170,12 @@ func (c *Client) writePump() {
 	typingTimer.Stop()
 
 	defer func() {
+		log.Println("closing at writepump")
 		ticker.Stop()
 		onlineUsersTicker.Stop()
 		c.conn.Close()
 	}()
+
 	for {
 		select {
 		case message, ok := <-c.send:
@@ -216,7 +220,10 @@ func (c *Client) writePump() {
 				},
 			}
 			jsonMessage, _ := json.Marshal(message)
-			c.recipient.send <- jsonMessage
+			// Check if recipient is available and has a valid connection
+			if c.recipient != nil && c.recipient.send != nil {
+				c.recipient.send <- jsonMessage
+			}
 			// c.send <- jsonMessage
 		case <-typingTimer.C: // Handle the typing timer expiration
 			c.typingStatus = false
@@ -229,7 +236,10 @@ func (c *Client) writePump() {
 				},
 			}
 			jsonMessage, _ := json.Marshal(message)
-			c.recipient.send <- jsonMessage
+			// Check if recipient is available and has a valid connection
+			if c.recipient != nil && c.recipient.send != nil {
+				c.recipient.send <- jsonMessage
+			}
 		case <-onlineUsersTicker.C:
 			onlineUsersData := OnlineUsersHandler()
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
@@ -264,6 +274,11 @@ func (c *Client) writePump() {
 			if err := w.Close(); err != nil {
 				return
 			}
+		case <-ticker.C:
+			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				return
+			}
 		}
 	}
 }
@@ -277,7 +292,8 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
 	clientUser, err := dbmanagement.SelectUserFromSession(SessionId)
 	utils.HandleError("Unable to find user session id", err)
-	log.Printf("client User from DB %v", clientUser)
+	message := fmt.Sprintf("client User from DB %v", clientUser)
+	utils.WriteMessageToLogFile(message)
 	if err != nil || clientUser.Name == "" {
 		return
 	}
