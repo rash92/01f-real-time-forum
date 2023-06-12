@@ -1375,3 +1375,9 @@ Mon Jun 12 09:38:50 BST 2023: ***** Unable to get user or no user: sql: no rows 
 Mon Jun 12 09:39:05 BST 2023: ***** User from session query failed: sql: no rows in result set on line 192 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
 Mon Jun 12 09:39:05 BST 2023: ***** User query failed: sql: no rows in result set on line 196 in forum/dbmanagement.SelectUserFromSession at file userdbutils.go *****
 Mon Jun 12 09:39:05 BST 2023: ***** Unable to get user or no user: sql: no rows in result set on line 27 in forum/authentication.LimitRequests.func1 at file limiter.go *****
+Mon Jun 12 14:24:39 BST 2023: The statement has affected 1 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Mon Jun 12 14:24:39 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Mon Jun 12 14:33:30 BST 2023: The statement has affected 0 rows on line 181 in forum/dbmanagement.DeleteAllSessions at file deleting.go
+Mon Jun 12 14:33:30 BST 2023: updating user login status to: 0 on line 50 in forum/dbmanagement.ResetAllUserLoggedInStatus at file userdbutils.go
+Mon Jun 12 14:33:36 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****
+Mon Jun 12 14:33:36 BST 2023: ***** Unable to get session from browser Err:: http: named cookie not present on line 18 in forum/authentication.GetSessionFromBrowser at file session.go *****

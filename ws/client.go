@@ -135,7 +135,7 @@ func (c *Client) readPump() { // Same as POST
 // A goroutine running writePump is started for each connection. The
 // application ensures that there is at most one writer to a connection by
 // executing all writes from this goroutine.
-func (c *Client) writePump() {
+func (c *Client) writePump() { //GET REQUEST
 	ticker := time.NewTicker(pingPeriod)
 
 	onlineCheckerTicker := time.NewTicker(1 * time.Second)
