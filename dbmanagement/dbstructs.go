@@ -91,5 +91,5 @@ type ChatText struct {
 	//time is relative to the server's time zone
 	//the text's time will be loaded relative
 	//to the user's time zone in JS
-	Time time.Time `json:"time"`
+	Time string `json:"time"`
 }

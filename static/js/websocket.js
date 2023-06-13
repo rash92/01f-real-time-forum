@@ -15,6 +15,7 @@ const startWebSocket = () => {
 
   socket.onmessage = function (event) {
     let message = JSON.parse(event.data)
+    console.log("TYPE: ", typeof message, "\nDATA: ", message)
     switch (message.type) {
       case "onlineUsers":
         onlineUsersData = message.data
@@ -38,6 +39,9 @@ const startWebSocket = () => {
           typingProgressDiv.innerText = ""
         }
         break
+      case "chatSelect":
+        console.log("THIS IS AN IMPORTANT MSG", message.data)
+      //function to render stuff
     }
   }
 
@@ -136,16 +140,16 @@ const startWebSocket = () => {
           sendButton.classList.add("send-button")
           sendButton.addEventListener("click", function () {
             const text = document.querySelector(".chat-input")
-            let date = String(new Date().getDate());
-            let t = new Date().getHours() + ":" + new Date().getMinutes + ":" + new Date().getSeconds
+
             let messageToSend = {
               type: "private",
               info: {
                 recipient: user.Name,
                 text: text.value,
-                time: date + ' ' + t
               },
             }
+
+            console.log("this is the private message: ", messageToSend)
             socket.send(JSON.stringify(messageToSend))
           })
           chatInputDiv.append(sendButton)
@@ -161,25 +165,6 @@ const startWebSocket = () => {
           hideChat.addEventListener("click", () => {
             chatDiv.style.display = "none"
           })
-
-          // Add an event listener to handle incoming WebSocket messages
-          socket.onmessage = function (event) {
-            let message = JSON.parse(event.data)
-            console.log("message on js side:", message)
-            switch (message.type) {
-              case "typing":
-                let sender = message.data.username
-                let isTyping = message.data.isTyping
-                // updateTypingStatus(username, isTyping)
-                if (isTyping) {
-                  typingProgressDiv.innerText = sender + " is typing..."
-                } else {
-                  typingProgressDiv.innerText = ""
-                }
-                break
-              // Handle other message types as needed
-            }
-          }
 
           const userName = { type: "recipientSelect", info: { name: user.Name } };
 

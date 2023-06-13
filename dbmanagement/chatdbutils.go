@@ -4,14 +4,17 @@ import (
 	"database/sql"
 	"fmt"
 	"forum/utils"
+	"log"
 	"sort"
+	"time"
 )
 
 // create insert query
 func InsertTextInChat(Text ChatText) error {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
-	utils.WriteMessageToLogFile("Inserting text msg in ChatDB...")
+	//utils.WriteMessageToLogFile("Inserting text msg in ChatDB...")
+	log.Println("Inserting text msg in ChatDB...")
 
 	//check whether a conversation exists already
 
@@ -19,15 +22,25 @@ func InsertTextInChat(Text ChatText) error {
 
 	if !exists {
 		//generate UUID
+
 		UUID = GenerateUUIDString()
+		log.Println("Generating a UUID of value: ", UUID)
 	}
 
-	query := "INSERT INTO Chat(uuid, sender, receiver, text, time) VALUES(?, ?, ?, ?, ?);"
+	query := `INSERT INTO Chat(uuid, sender, receiver, text, time) VALUES(?, ?, ?, ?, ?);`
 	statement, err := db.Prepare(query)
-	utils.HandleError("Chat INSERT Prepare failed: ", err)
+	if err != nil {
+		// utils.HandleError("Chat INSERT Prepare failed: ", err)
+		log.Println("Failed to prepare INSERT statement in Chat", err)
+		return err
+	}
 
-	_, err = statement.Exec(UUID, Text.SenderId, Text.ReceiverId, Text.Content, Text.Time.String())
-	utils.HandleError("Chat INSERT statement execution failed: ", err)
+	_, err = statement.Exec(UUID, Text.SenderId, Text.ReceiverId, Text.Content, Text.Time)
+	if err != nil {
+		// utils.HandleError("Chat INSERT statement execution failed: ", err)
+		log.Println("Failed to execute INSERT statement in Chat", err)
+		return err
+	}
 
 	return nil
 }
@@ -37,10 +50,13 @@ func SelectAllChat(ChatId string) ChatBox {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 
-	query := fmt.Sprintf("SELECT (sender, receiver, text, time) FROM Chat WHERE uuid = '%s';", ChatId)
+	query := fmt.Sprintf("SELECT sender, receiver, text, time FROM Chat WHERE uuid = '%s';", ChatId)
 
 	row, err := db.Query(query)
-	utils.HandleError("ChatBox SELECT query failed: ", err)
+	// utils.HandleError("ChatBox SELECT query failed: ", err)
+	if err != nil {
+		log.Println("ChatBox SELECT query failed: ", err)
+	}
 	defer row.Close()
 
 	var chat ChatBox
@@ -50,13 +66,27 @@ func SelectAllChat(ChatId string) ChatBox {
 		var text ChatText
 		err := row.Scan(&text.SenderId, &text.ReceiverId, &text.Content, &text.Time)
 		if err != nil {
-			utils.HandleError("Chat SELECT query failed to scan: ", err)
+			// utils.HandleError("Chat SELECT query failed to scan: ", err)
+			log.Println("Chat SELECT query failed to scan: ", err)
 			return ChatBox{}
 		}
 		texts = append(texts, text)
 	}
 
-	sort.Slice(texts, func(i, j int) bool { return texts[i].Time.Before(texts[j].Time) })
+	sort.Slice(texts, func(i, j int) bool {
+
+		t1, err := time.Parse("2006-01-02 15:04:05", texts[i].Time)
+		if err != nil {
+			log.Fatal("SelectAllChat SELECT query failed to parse time: ", texts[i].Time)
+			return false
+		}
+		t2, err := time.Parse("2006-01-02 15:04:05", texts[j].Time)
+		if err != nil {
+			log.Fatal("SelectAllChat SELECT query failed to parse time: ", texts[j].Time)
+			return false
+		}
+		return t1.Before(t2)
+	})
 	chat.UUID = ChatId
 	chat.Content = texts
 
@@ -70,17 +100,16 @@ func SelectChatId(senderId, receiverId string) (string, bool) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 
-	query := fmt.Sprintf(" SELECT uuid FROM Chat WHERE (sender = '%s' AND receiver = '%s') OR (sender = '%s' AND receiver = '%s') LIMIT 1;", senderId, receiverId, receiverId, senderId)
+	query := "SELECT uuid FROM Chat WHERE (sender = ? AND receiver = ?) OR (sender = ? AND receiver = ?) LIMIT 1"
 
-	row, err := db.Query(query)
-	utils.HandleError("Chat UUID SELECT query failed: ", err)
-	defer row.Close()
+	err := db.QueryRow(query, senderId, receiverId, receiverId, senderId).Scan(&UUID)
 
-	err = row.Scan(&UUID)
 	if err != nil {
-		utils.HandleError("Chat UUID value scanning failed: ", err)
+		// utils.HandleError("Chat UUID SELECT query failed: ", err)
+		log.Println("Chat UUID SELECT query failed: ", err)
 		return "", false
 	}
+
 	return UUID, true
 }
 

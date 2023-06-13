@@ -32,7 +32,7 @@ func (h *Hub) Run() {
 			h.clients[client] = true
 		case client := <-h.unregister:
 			if _, ok := h.clients[client]; ok {
-				log.Println("closing at hun run function - case unregiser")
+				log.Println("closing at hub run function - case unregister")
 				delete(h.clients, client)
 				close(client.send)
 			}

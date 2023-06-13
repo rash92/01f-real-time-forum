@@ -105,42 +105,61 @@ func (c *Client) readPump() { // Same as POST
 			log.Printf("Name: %s", name)
 			userConnection, _ := dbmanagement.SelectUserFromName(name) // This brings back hashed password, probably not necessary
 			log.Printf("User Data: %v", userConnection)
-
+			//if chatId is inexistent, then just leave it as it is until either client sends a message
 			ChatID, exists := dbmanagement.SelectChatId(c.User.UUID, userConnection.UUID)
 
 			if !exists {
-				utils.WriteMessageToLogFile(fmt.Sprintf("failed to load chat from given users: %v AND %v", userConnection.Name, c.User.Name))
-				break
-			}
+				log.Printf("NO EXISTING chat between following users: %v AND %v", userConnection.Name, c.User.Name)
+			} else {
+				ChatBox := dbmanagement.SelectAllChat(ChatID)
+				log.Println("\n\nretrieved the following value: ", ChatBox, "\n\n")
+				//to be elaborated
+				ChatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
+				chatToSend, _ := json.Marshal(ChatSelector)
+				c.send <- chatToSend
 
-			ChatBox := dbmanagement.SelectAllChat(ChatID)
-			ChatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
-			chatToSend, _ := json.Marshal(ChatSelector)
-			c.send <- chatToSend
+			}
 
 		case "private":
 			recipient, ok1 := msg.Info["recipient"].(string)
 			receiver, _ := dbmanagement.SelectUserFromName(recipient)
 			text, ok2 := msg.Info["text"].(string)
-			timeStr, ok3 := msg.Info["time"].(string)
 
-			//handle time error exists
-			t, _ := time.Parse("2006-01-02 15:04:05", timeStr)
-			log.Printf("Time: %s", t)
-
-			if ok1 && ok2 && ok3 {
-				log.Printf("Private Message: %s %s %s %s", c.User.UUID, receiver.UUID, text, t)
+			if ok1 && ok2 {
+				log.Printf("Private Message: %s %s %s %s", c.User.UUID, receiver.UUID, text, time.Now())
 			}
 
 			//Initialize date to insert into Chat DB
-			var data = dbmanagement.ChatText{Content: text, SenderId: c.User.UUID, ReceiverId: receiver.UUID, Time: t}
+			var data = dbmanagement.ChatText{
+				Content:    text,
+				SenderId:   c.User.UUID,
+				ReceiverId: receiver.UUID,
+				Time:       time.Now().Format("2006-01-02 15:04:05")}
 
 			//Insert query
 			dbmanagement.InsertTextInChat(data)
+			//THEN*-* select the inserted text and add it to the chatBox
+			ChatID, exists := dbmanagement.SelectChatId(c.User.UUID, receiver.UUID)
+			// log.Printf("\n\nTHIS IS CHATID: \n%s\n%v\n\n", ChatID, exists)
+			if !exists {
+				log.Printf("NO CHAT FOUND between %s and %s in Private\n", recipient, c.User.Name)
+			} else {
+				ChatBox := dbmanagement.SelectAllChat(ChatID)
+
+				log.Println("\n\nretrieved the following value: ", ChatBox, "\n\n")
+
+				//to be elaborated
+
+				ChatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
+				chatToSend, _ := json.Marshal(ChatSelector)
+				c.send <- chatToSend
+
+			}
+
 		case "typing":
-			isTyping, ok2 := msg.Info["isTyping"].(bool)
+			isTyping, ok := msg.Info["isTyping"].(bool)
 			user := c.User.UUID
-			if ok2 {
+			if ok {
 				message := fmt.Sprintf("typing: %s %v", user, isTyping)
 				utils.WriteMessageToLogFile(message)
 				c.typing <- isTyping
@@ -179,23 +198,30 @@ func (c *Client) writePump() { //GET REQUEST
 	for {
 		select {
 		case message, ok := <-c.send:
-			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			//c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// The hub closed the channel.
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
+			fmt.Println("\nMESSAGE RECEIVED: \n", string(message))
+
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {
 				return
 			}
+
 			w.Write(message)
 
 			// Add queued chat messages to the current websocket message.
 			n := len(c.send)
 			for i := 0; i < n; i++ {
 				w.Write(newline)
-				w.Write(<-c.send)
+				// Check if recipient is available and has a valid connection
+				// if c.recipient != nil && c.recipient.send != nil {
+				// c.recipient.send <- jsonMessage
+				// }
+
 			}
 
 			if err := w.Close(); err != nil {
