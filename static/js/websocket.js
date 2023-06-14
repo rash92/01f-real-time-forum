@@ -33,15 +33,17 @@ const startWebSocket = () => {
         }
         let sender = message.data.username
         let isTyping = message.data.isTyping
+        console.log(isTyping);
         if (isTyping) {
           typingProgressDiv.innerText = sender + " is typing..."
         } else {
           typingProgressDiv.innerText = ""
         }
         break
-      case "chatSelect":
-        console.log("THIS IS AN IMPORTANT MSG", message.data)
-      //function to render stuff
+      case "chatSelect", "private":
+        console.log(`THIS IS A ${message.type} MESSAGE: \n`, message.data)
+        renderChat(message)
+        break
     }
   }
 
@@ -111,7 +113,7 @@ const startWebSocket = () => {
               const typingMessage = {
                 type: "typing",
                 info: {
-                  // recipient: user.Name,
+                  //recipient: user.Name,
                   isTyping: true,
                 },
               }
@@ -151,6 +153,7 @@ const startWebSocket = () => {
 
             console.log("this is the private message: ", messageToSend)
             socket.send(JSON.stringify(messageToSend))
+            text.value = ""
           })
           chatInputDiv.append(sendButton)
 
@@ -187,8 +190,26 @@ const startWebSocket = () => {
 
 
 //function responsible for rendering the chat adequately corresponding to the users view models
-const renderChat = (data) => {
-  //get the chat container and append to it the data.content
-  //for both the user and the recipient
-  chatBox = document.getElementById("")
+const renderChat = (obj) => {
+  // Get the chat container and append the data.content
+  // for both the user and the recipient
+  const chatBox = document.getElementsByClassName("chat-content")[0];
+  const recipient = document.getElementsByClassName("chat-title")[0];
+  const name = recipient.innerText.toLowerCase();
+  const text = document.createElement("div");
+
+
+  switch (obj.type) {
+    case "chatSelect":
+      obj.data.Content.forEach((elem) => {
+        text.innerText = `${elem.content}`;
+        chatBox.appendChild(text);
+      });
+      break
+    case "private":
+      text.innerText = obj.data.content;
+      chatBox.appendChild(text);
+      break
+  }
+
 }
