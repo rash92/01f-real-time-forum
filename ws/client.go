@@ -49,6 +49,8 @@ type Client struct {
 	// Buffered channel of outbound messages.
 	send chan []byte
 
+	msg chan []byte
+
 	User         dbmanagement.User
 	typing       chan bool
 	typingStatus bool
@@ -80,6 +82,7 @@ func (c *Client) readPump() { // Same as POST
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
 		_, message, err := c.conn.ReadMessage()
+
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				utils.HandleError("Unexpected Websocket Close", err)
@@ -114,9 +117,24 @@ func (c *Client) readPump() { // Same as POST
 				ChatBox := dbmanagement.SelectAllChat(ChatID)
 				log.Println("\n\nretrieved the following value: ", ChatBox, "\n\n")
 				//to be elaborated
+
+				for i, v := range ChatBox.Content {
+					S, err := dbmanagement.SelectUserFromUUID(v.SenderId)
+					if err != nil {
+						log.Println("UUID NOT FOUND: ", err)
+					}
+					R, err := dbmanagement.SelectUserFromUUID(v.ReceiverId)
+					if err != nil {
+						log.Println("UUID NOT FOUND: ", err)
+					}
+
+					ChatBox.Content[i].SenderId, ChatBox.Content[i].ReceiverId = S.Name, R.Name
+
+				}
+
 				ChatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
 				chatToSend, _ := json.Marshal(ChatSelector)
-				c.send <- chatToSend
+				c.msg <- chatToSend
 
 			}
 
@@ -127,6 +145,8 @@ func (c *Client) readPump() { // Same as POST
 
 			if ok1 && ok2 {
 				log.Printf("Private Message: %s %s %s %s", c.User.UUID, receiver.UUID, text, time.Now())
+			} else {
+				log.Println("NOHTING HAPPENEDD")
 			}
 
 			//Initialize date to insert into Chat DB
@@ -136,27 +156,18 @@ func (c *Client) readPump() { // Same as POST
 				ReceiverId: receiver.UUID,
 				Time:       time.Now().Format("2006-01-02 15:04:05")}
 
-			//Insert query
+			//Insert queryS
 			dbmanagement.InsertTextInChat(data)
-
-			//THEN*-* select the inserted text and add it to the chatBox
-			ChatID, exists := dbmanagement.SelectChatId(c.User.UUID, receiver.UUID)
-			if !exists {
-				log.Printf("NO CHAT FOUND between %s and %s in Private\n", recipient, c.User.Name)
-			} else {
-				ChatBox := dbmanagement.SelectAllChat(ChatID)
-
-				// log.Println("\n\nretrieved the following value: ", ChatBox, "\n\n")
-
-				ChatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
-				chatToSend, _ := json.Marshal(ChatSelector)
-				c.send <- chatToSend
-
-			}
+			data.SenderId = c.User.Name
+			data.ReceiverId = receiver.Name
+			ChatSelector := WriteMessage{Type: "private", Data: data}
+			chatToSend, _ := json.Marshal(ChatSelector)
+			c.msg <- chatToSend
 
 		case "typing":
 			isTyping, ok := msg.Info["isTyping"].(bool)
 			user := c.User.UUID
+			fmt.Println(isTyping)
 			if ok {
 				message := fmt.Sprintf("typing: %s %v", user, isTyping)
 				utils.WriteMessageToLogFile(message)
@@ -196,7 +207,7 @@ func (c *Client) writePump() { //GET REQUEST
 	for {
 		select {
 		case message, ok := <-c.send:
-			//c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// The hub closed the channel.
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
@@ -215,16 +226,13 @@ func (c *Client) writePump() { //GET REQUEST
 			n := len(c.send)
 			for i := 0; i < n; i++ {
 				w.Write(newline)
-				// Check if recipient is available and has a valid connection
-				// if c.recipient != nil && c.recipient.send != nil {
-				// c.recipient.send <- jsonMessage
-				// }
-
+				w.Write(<-c.send)
 			}
 
 			if err := w.Close(); err != nil {
 				return
 			}
+
 		case isTyping := <-c.typing:
 			c.typingStatus = isTyping
 
@@ -264,6 +272,14 @@ func (c *Client) writePump() { //GET REQUEST
 			if c.recipient != nil && c.recipient.send != nil {
 				c.recipient.send <- jsonMessage
 			}
+
+		case msg := <-c.msg:
+			// Check if recipient is available and has a valid connection
+			if c.recipient != nil && c.recipient.send != nil {
+				c.send <- msg
+				c.recipient.send <- msg
+			}
+
 		case <-onlineUsersTicker.C:
 			onlineUsersData := OnlineUsersHandler()
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
