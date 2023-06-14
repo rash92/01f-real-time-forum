@@ -1,7 +1,7 @@
 :root {
-	--main-color: #b9cdda;
-	--highlight-color: #d7dae5;
-	--like: #a5aa52;
+	--main-color: #c4e7ff;
+	--highlight-color: #ebf5fe;
+	--like: #65c63f;
 	--dislke: #d64933;
 	--dim-font: rgba(0, 0, 0, 0.5);
 	--navHeight: 5%;
@@ -19,9 +19,9 @@ body {
 	overflow: auto;
 	background: linear-gradient(
 		45deg,
-		rgba(185, 205, 218, 1) 0%,
-		rgba(199, 211, 223, 1) 50%,
-		rgba(215, 218, 229, 1) 100%
+		var(--main-color) 0%,
+		var(--main-color) 50%,
+		var(--highlight-color) 100%
 	);
 	background-size: cover;
 	height: 100vh;
@@ -36,6 +36,7 @@ footer {
 	height: 50px;
 	width: 100vw;
 	background-color: var(--highlight-color);
+	z-index: 99;
 }
 
 a {

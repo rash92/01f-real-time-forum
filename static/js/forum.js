@@ -20,6 +20,9 @@ const renderForum = () => {
 };
 
 function addForumInnerHTML(data) {
+
+    document.getElementById("online-users").style.visibility = "visible"
+
     let html = `
       <form action="/" method="post">
           <div class="container-filter">

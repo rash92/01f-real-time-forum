@@ -17,6 +17,9 @@ const renderSubmitPost = () => {
 }
 
 function addSubmitPostInnerHTML(data) {
+
+    document.getElementById("online-users").style.visibility = "visible"
+
     let html = `
   <div class="container-post">
     <div class="submission">

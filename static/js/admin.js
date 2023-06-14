@@ -1,25 +1,28 @@
 const renderAdminPage = () => {
-    fetch("/admin")
-        .then(function (response) {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error("Error: " + response.status);
-            }
-        })
-        .then(function (jdata) {
-            // Process the JSON data received from Go
-            addAdminPageInnerHTML(jdata)
-            renderNavbar()
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+  fetch("/admin")
+    .then(function (response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error("Error: " + response.status);
+      }
+    })
+    .then(function (jdata) {
+      // Process the JSON data received from Go
+      addAdminPageInnerHTML(jdata)
+      renderNavbar()
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 }
 
 function addAdminPageInnerHTML(data) {
-    console.log("admin", data);
-    let html = `
+
+  document.getElementById("online-users").style.visibility = "visible";
+
+  console.log("admin", data);
+  let html = `
   <div class="container-filter">
     <div class="filter">
         <button id="mod" onclick="hideShowAdmin(this)" value="mod"><i class="fa-solid fa-hourglass-start"></i>
@@ -42,14 +45,14 @@ function addAdminPageInnerHTML(data) {
   </div>
 `;
 
-    html += `
+  html += `
   <div id="mod-requests" style="display: block;">
     `;
 
-    if (data.AdminRequests !== undefined && data.AdminRequests !== null) {
-        data.AdminRequests.forEach(item => {
-            if (item.Description === "this user is asking to become a moderator") {
-                html += `
+  if (data.AdminRequests !== undefined && data.AdminRequests !== null) {
+    data.AdminRequests.forEach(item => {
+      if (item.Description === "this user is asking to become a moderator") {
+        html += `
           <div class="container-post">
             <div class="post">
               ${item.RequestFromId} ${item.RequestFromName}
@@ -63,22 +66,22 @@ function addAdminPageInnerHTML(data) {
             </div>
           </div>
         `;
-            }
-        });
-    }
+      }
+    });
+  }
 
-    html += `
+  html += `
   </div>
 `;
 
-    html += `
+  html += `
   <div id="reported-posts" style="display: none">
     `;
 
-    if (data.AdminRequests !== undefined && data.AdminRequests !== null) {
-        data.AdminRequests.forEach(item => {
-            if (item.ReportedPostId !== "") {
-                html += `
+  if (data.AdminRequests !== undefined && data.AdminRequests !== null) {
+    data.AdminRequests.forEach(item => {
+      if (item.ReportedPostId !== "") {
+        html += `
           <div class="container-post">
             <div class="post">
               the post ${item.ReportedPostId} has been reported by:
@@ -97,21 +100,21 @@ function addAdminPageInnerHTML(data) {
             </div>
           </div>
         `;
-            }
-        });
-    }
+      }
+    });
+  }
 
-    html += `
+  html += `
   </div>
 `;
 
-    html += `
+  html += `
   <div id="user-admin" style="display: none;">
     `;
 
-    if (data.AllUsers !== undefined && data.AllUsers !== null) {
-        data.AllUsers.forEach(item => {
-            html += `
+  if (data.AllUsers !== undefined && data.AllUsers !== null) {
+    data.AllUsers.forEach(item => {
+      html += `
         <div class="container-post">
           <div class="post">
             <p>User name: ${item.Name}</p>
@@ -127,14 +130,14 @@ function addAdminPageInnerHTML(data) {
           </div>
         </div>
       `;
-        });
-    }
+    });
+  }
 
-    html += `
+  html += `
   </div>
 `;
 
-    html += `
+  html += `
   <div id="tags-admin" style="display: none;">
     <div class="container-post">
       <form action="/admin" method="post">
@@ -144,9 +147,9 @@ function addAdminPageInnerHTML(data) {
     </div>
     `;
 
-    if (data.TagsList !== null && data.TagsList !== undefined) {
-        data.TagsList.forEach(item => {
-            html += `
+  if (data.TagsList !== null && data.TagsList !== undefined) {
+    data.TagsList.forEach(item => {
+      html += `
         <div class="container-post">
           <div class="post">
             <p>Tag Name: ${item.TagName}</p>
@@ -157,24 +160,24 @@ function addAdminPageInnerHTML(data) {
           </div>
         </div>
       `;
-        });
-    }
+    });
+  }
 
-    html += `
+  html += `
   </div>
 `;
 
-    document.getElementById('container').innerHTML = html;
+  document.getElementById('container').innerHTML = html;
 
-    const adminButtons = document.querySelectorAll('button')
-    adminButtons.forEach((button) => {
-      button.addEventListener('click', (event) => {
-        event.preventDefault();
+  const adminButtons = document.querySelectorAll('button')
+  adminButtons.forEach((button) => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
 
-        const formData = {
-          
-        }
-      })
+      const formData = {
+
+      }
     })
+  })
 
 }
