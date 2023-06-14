@@ -184,3 +184,11 @@ const startWebSocket = () => {
     })
   }
 }
+
+
+//function responsible for rendering the chat adequately corresponding to the users view models
+const renderChat = (data) => {
+  //get the chat container and append to it the data.content
+  //for both the user and the recipient
+  chatBox = document.getElementById("")
+}

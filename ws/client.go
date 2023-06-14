@@ -138,17 +138,15 @@ func (c *Client) readPump() { // Same as POST
 
 			//Insert query
 			dbmanagement.InsertTextInChat(data)
+
 			//THEN*-* select the inserted text and add it to the chatBox
 			ChatID, exists := dbmanagement.SelectChatId(c.User.UUID, receiver.UUID)
-			// log.Printf("\n\nTHIS IS CHATID: \n%s\n%v\n\n", ChatID, exists)
 			if !exists {
 				log.Printf("NO CHAT FOUND between %s and %s in Private\n", recipient, c.User.Name)
 			} else {
 				ChatBox := dbmanagement.SelectAllChat(ChatID)
 
-				log.Println("\n\nretrieved the following value: ", ChatBox, "\n\n")
-
-				//to be elaborated
+				// log.Println("\n\nretrieved the following value: ", ChatBox, "\n\n")
 
 				ChatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
 				chatToSend, _ := json.Marshal(ChatSelector)

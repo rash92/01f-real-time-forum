@@ -27,7 +27,7 @@ func InsertTextInChat(Text ChatText) error {
 		log.Println("Generating a UUID of value: ", UUID)
 	}
 
-	query := `INSERT INTO Chat(uuid, sender, receiver, text, time) VALUES(?, ?, ?, ?, ?);`
+	query := "INSERT INTO Chat(uuid, sender, receiver, text, time) VALUES(?, ?, ?, ?, ?);"
 	statement, err := db.Prepare(query)
 	if err != nil {
 		// utils.HandleError("Chat INSERT Prepare failed: ", err)
@@ -66,7 +66,6 @@ func SelectAllChat(ChatId string) ChatBox {
 		var text ChatText
 		err := row.Scan(&text.SenderId, &text.ReceiverId, &text.Content, &text.Time)
 		if err != nil {
-			// utils.HandleError("Chat SELECT query failed to scan: ", err)
 			log.Println("Chat SELECT query failed to scan: ", err)
 			return ChatBox{}
 		}
@@ -75,14 +74,14 @@ func SelectAllChat(ChatId string) ChatBox {
 
 	sort.Slice(texts, func(i, j int) bool {
 
-		t1, err := time.Parse("2006-01-02 15:04:05", texts[i].Time)
+		t1, err := time.Parse(time.RFC3339, texts[i].Time)
 		if err != nil {
-			log.Fatal("SelectAllChat SELECT query failed to parse time: ", texts[i].Time)
+			log.Fatal("SelectAllChat sorting slice failed to parse t1: ", texts[i].Time)
 			return false
 		}
-		t2, err := time.Parse("2006-01-02 15:04:05", texts[j].Time)
+		t2, err := time.Parse(time.RFC3339, texts[j].Time)
 		if err != nil {
-			log.Fatal("SelectAllChat SELECT query failed to parse time: ", texts[j].Time)
+			log.Fatal("SelectAllChat sorting slice failed to parse t2: ", texts[j].Time)
 			return false
 		}
 		return t1.Before(t2)
@@ -105,7 +104,6 @@ func SelectChatId(senderId, receiverId string) (string, bool) {
 	err := db.QueryRow(query, senderId, receiverId, receiverId, senderId).Scan(&UUID)
 
 	if err != nil {
-		// utils.HandleError("Chat UUID SELECT query failed: ", err)
 		log.Println("Chat UUID SELECT query failed: ", err)
 		return "", false
 	}
@@ -113,6 +111,7 @@ func SelectChatId(senderId, receiverId string) (string, bool) {
 	return UUID, true
 }
 
+// to be implemented later
 func DeleteText(Text ChatText) error {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
