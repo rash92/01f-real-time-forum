@@ -12,6 +12,7 @@ const renderForum = () => {
             // Process the JSON data received from Go
             if (jdata.UserInfo.IsLoggedIn) {
                 addForumInnerHTML(jdata)
+                renderNavbar()
             } else {
                 renderLoginForm(encodeURIComponent(JSON.stringify(jdata)), false)
             }

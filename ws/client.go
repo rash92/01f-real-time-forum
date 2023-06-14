@@ -115,7 +115,7 @@ func (c *Client) readPump() { // Same as POST
 				log.Printf("NO EXISTING chat between following users: %v AND %v", userConnection.Name, c.User.Name)
 			} else {
 				ChatBox := dbmanagement.SelectAllChat(ChatID)
-				log.Println("\n\nretrieved the following value: ", ChatBox, "\n\n")
+				//log.Println("\n\nretrieved the following value: ", ChatBox, "\n\n")
 				//to be elaborated
 
 				for i, v := range ChatBox.Content {
@@ -132,9 +132,10 @@ func (c *Client) readPump() { // Same as POST
 
 				}
 
+				c.recipient = c.hub.clientsByUsername[name]
 				ChatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
 				chatToSend, _ := json.Marshal(ChatSelector)
-				c.msg <- chatToSend
+				c.send <- chatToSend
 
 			}
 
@@ -162,7 +163,10 @@ func (c *Client) readPump() { // Same as POST
 			data.ReceiverId = receiver.Name
 			ChatSelector := WriteMessage{Type: "private", Data: data}
 			chatToSend, _ := json.Marshal(ChatSelector)
-			c.msg <- chatToSend
+			//c.recipient = c.hub.clientsByUsername[recipient]
+
+			c.send <- chatToSend
+			c.recipient.send <- chatToSend
 
 		case "typing":
 			isTyping, ok := msg.Info["isTyping"].(bool)
@@ -273,7 +277,12 @@ func (c *Client) writePump() { //GET REQUEST
 				c.recipient.send <- jsonMessage
 			}
 
-		case msg := <-c.msg:
+		case msg, ok := <-c.msg:
+			if !ok {
+				// The hub closed the channel.
+				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+				return
+			}
 			// Check if recipient is available and has a valid connection
 			if c.recipient != nil && c.recipient.send != nil {
 				c.send <- msg
