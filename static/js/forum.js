@@ -10,8 +10,11 @@ const renderForum = () => {
         })
         .then(function (jdata) {
             // Process the JSON data received from Go
-            addForumInnerHTML(jdata)
-            renderNavbar()
+            if (jdata.UserInfo.IsLoggedIn) {
+                addForumInnerHTML(jdata)
+            } else {
+                renderLoginForm(encodeURIComponent(JSON.stringify(jdata)), false)
+            }
         })
         .catch(function (error) {
             console.log(error);

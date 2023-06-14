@@ -1,4 +1,5 @@
 const renderPrivacyPolicy = () => {
+    renderNavbar()
     var privacyPolicyContent = `
     <body>
 	<h1>Privacy Policy</h1>
