@@ -130,6 +130,14 @@ func (c *Client) readPump() { // Same as POST
 
 					ChatBox.Content[i].SenderId, ChatBox.Content[i].ReceiverId = S.Name, R.Name
 
+					t, err := time.Parse("2006-01-02T15:04:05Z07:00", v.Time)
+					if err != nil {
+						fmt.Println("Error parsing time:", err)
+						return
+					}
+
+					ChatBox.Content[i].Time = t.Format("2006-01-02 15:04:05")
+
 				}
 
 				c.recipient = c.hub.clientsByUsername[name]

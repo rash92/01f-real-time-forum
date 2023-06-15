@@ -190,27 +190,47 @@ const startWebSocket = () => {
 }
 
 
-//function responsible for rendering the chat adequately corresponding to the users view models
 const renderChat = (obj) => {
-  // Get the chat container and append the data.content
-  // for both the user and the recipient
   const chatBox = document.getElementsByClassName("chat-content")[0];
   const recipient = document.getElementsByClassName("chat-title")[0];
-  const name = recipient.innerText.toLowerCase();
-  const text = document.createElement("div");
-
+  const name = recipient.innerText.split('\n')[0].toLowerCase();
 
   switch (obj.type) {
     case "chatSelect":
       obj.data.Content.forEach((elem) => {
-        text.innerText = elem.content;
+        const text = document.createElement("div");
+        text.innerText = elem.time + ": " + elem.content;
+
+        if (name === elem.receiver) {
+          text.classList.add("sent")
+        } else {
+          text.classList.add("received")
+        }
         chatBox.appendChild(text);
       });
-      break
+      break;
     case "private":
-      text.innerText = obj.data.content;
-      chatBox.appendChild(text);
-      break
+      const chatBubble = document.createElement("div");
+      let text = obj.data.content
+      let time = obj.data.time
+      chatBubble.innerText = time + ": " + text;
+
+      if (name === obj.data.receiver) {
+        chatBubble.classList.add("sent")
+      } else {
+        chatBubble.classList.add("received")
+      }
+      chatBox.appendChild(chatBubble);
+      break;
   }
 
+  const sentElements = document.getElementsByClassName("sent");
+  for (let i = 0; i < sentElements.length; i++) {
+    const sentElement = sentElements[i];
+    sentElement.style.backgroundColor = "blue";
+    sentElement.style.flexDirection = "row-reverse";
+
+  }
 }
+
+
