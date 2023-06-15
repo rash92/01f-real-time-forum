@@ -133,8 +133,8 @@ func (c *Client) readPump() { // Same as POST
 				}
 
 				c.recipient = c.hub.clientsByUsername[name]
-				ChatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
-				chatToSend, _ := json.Marshal(ChatSelector)
+				chatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
+				chatToSend, _ := json.Marshal(chatSelector)
 				c.send <- chatToSend
 
 			}
@@ -221,6 +221,7 @@ func (c *Client) writePump() { //GET REQUEST
 
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {
+				log.Println(err)
 				return
 			}
 

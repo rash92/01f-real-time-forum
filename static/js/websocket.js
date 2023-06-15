@@ -15,7 +15,7 @@ const startWebSocket = () => {
 
   socket.onmessage = function (event) {
     let message = JSON.parse(event.data)
-    console.log("TYPE: ", typeof message, "\nDATA: ", message)
+    // console.log("TYPE: ", typeof message, "\nDATA: ", message)
     switch (message.type) {
       case "onlineUsers":
         onlineUsersData = message.data
@@ -40,7 +40,8 @@ const startWebSocket = () => {
           typingProgressDiv.innerText = ""
         }
         break
-      case "chatSelect", "private":
+      case "chatSelect":
+      case "private":
         console.log(`THIS IS A ${message.type} MESSAGE: \n`, message.data)
         renderChat(message)
         break
@@ -202,7 +203,7 @@ const renderChat = (obj) => {
   switch (obj.type) {
     case "chatSelect":
       obj.data.Content.forEach((elem) => {
-        text.innerText = `${elem.content}`;
+        text.innerText = elem.content;
         chatBox.appendChild(text);
       });
       break
