@@ -6,6 +6,7 @@ const startWebSocket = () => {
   let onlineUsersData
   let clientInfo
   let chatQueue = []
+  let size = 1
   console.log("Attempting Connection...")
 
   socket.onopen = () => {
@@ -43,7 +44,7 @@ const startWebSocket = () => {
       case "chatSelect":
       case "private":
         console.log(`THIS IS A ${message.type} MESSAGE: \n`, message.data)
-        renderChat(message)
+        renderChat(message, size)
         break
     }
   }
@@ -97,6 +98,7 @@ const startWebSocket = () => {
 
           const chatContentDiv = document.createElement("div")
           chatContentDiv.classList.add("chat-content")
+
 
           const chatInputDiv = document.createElement("div")
           chatInputDiv.classList.add("chat-input-div")
@@ -199,9 +201,13 @@ const renderChat = (obj, size = 1) => {
   chatBox.innerHTML = ""
 
   let totalChatSize = (obj.data.Content).length
+  let index = totalChatSize - size * 10
 
   //re-render the most recent  
-  for (let index = totalChatSize - size * 10; index <= totalChatSize - 1; index++) {
+  if (index <= 0) {
+    index = 0
+  }
+  for (index; index <= totalChatSize - 1; index++) {
     let value = obj.data.Content[index]
 
     const text = document.createElement("div");
@@ -223,6 +229,13 @@ const renderChat = (obj, size = 1) => {
     sentElement.style.flexDirection = "row-reverse";
 
   }
+
+  chatBox.addEventListener("scroll", function () {
+    if (chatBox.scrollTop === 0) {
+      renderChat(obj, size + 1)
+
+    }
+  });
 }
 
 
