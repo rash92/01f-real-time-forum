@@ -6,7 +6,7 @@ const startWebSocket = () => {
   let onlineUsersData
   let clientInfo
   let chatQueue = []
-  let size = 1
+  // let size = 1
   console.log("Attempting Connection...")
 
   socket.onopen = () => {
@@ -44,7 +44,7 @@ const startWebSocket = () => {
       case "chatSelect":
       case "private":
         console.log(`THIS IS A ${message.type} MESSAGE: \n`, message.data)
-        renderChat(message, size)
+        renderChat(message)
         break
     }
   }
@@ -202,6 +202,8 @@ const renderChat = (obj, size = 1) => {
 
   let totalChatSize = (obj.data.Content).length
   let index = totalChatSize - size * 10
+  console.log("Expected number of lines: ", size * 10)
+  console.log("Total number of messages: ", totalChatSize)
 
   //re-render the most recent  
   if (index <= 0) {
@@ -211,6 +213,8 @@ const renderChat = (obj, size = 1) => {
     let value = obj.data.Content[index]
 
     const text = document.createElement("div");
+    //to be reviewed with peter
+    text.style.height = "24%";
     text.innerText = value.time + ": " + value.content;
 
     if (recipientName === value.receiver) {
@@ -225,7 +229,7 @@ const renderChat = (obj, size = 1) => {
   const sentElements = document.getElementsByClassName("sent");
   for (let i = 0; i < sentElements.length; i++) {
     const sentElement = sentElements[i];
-    sentElement.style.backgroundColor = "blue";
+    sentElement.style.backgroundColor = "aquamarine";
     sentElement.style.flexDirection = "row-reverse";
 
   }
