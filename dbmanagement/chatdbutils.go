@@ -10,7 +10,7 @@ import (
 )
 
 // create insert query
-func InsertTextInChat(Text ChatText) error {
+func InsertTextInChat(Text ChatText) (string, error) {
 	db, _ := sql.Open("sqlite3", "./forum.db")
 	defer db.Close()
 	//utils.WriteMessageToLogFile("Inserting text msg in ChatDB...")
@@ -32,17 +32,17 @@ func InsertTextInChat(Text ChatText) error {
 	if err != nil {
 		// utils.HandleError("Chat INSERT Prepare failed: ", err)
 		log.Println("Failed to prepare INSERT statement in Chat", err)
-		return err
+		return "", err
 	}
 
 	_, err = statement.Exec(UUID, Text.SenderId, Text.ReceiverId, Text.Content, Text.Time)
 	if err != nil {
 		// utils.HandleError("Chat INSERT statement execution failed: ", err)
 		log.Println("Failed to execute INSERT statement in Chat", err)
-		return err
+		return "", err
 	}
 
-	return nil
+	return UUID, nil
 }
 
 // create select query
@@ -135,4 +135,28 @@ func DeleteText(Text ChatText) error {
 	utils.HandleError("Chat DELETE statement execution failed: ", err)
 
 	return err
+}
+
+func (ChatBox *ChatBox) AdjustChatJson() {
+	for i, v := range ChatBox.Content {
+		S, err := SelectUserFromUUID(v.SenderId)
+		if err != nil {
+			log.Println("UUID NOT FOUND: ", err)
+		}
+		R, err := SelectUserFromUUID(v.ReceiverId)
+		if err != nil {
+			log.Println("UUID NOT FOUND: ", err)
+		}
+
+		ChatBox.Content[i].SenderId, ChatBox.Content[i].ReceiverId = S.Name, R.Name
+
+		t, err := time.Parse("2006-01-02T15:04:05Z07:00", v.Time)
+		if err != nil {
+			fmt.Println("Error parsing time:", err)
+			return
+		}
+
+		ChatBox.Content[i].Time = t.Format("2006-01-02 15:04:05")
+
+	}
 }

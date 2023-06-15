@@ -190,38 +190,30 @@ const startWebSocket = () => {
 }
 
 
-const renderChat = (obj) => {
+const renderChat = (obj, size = 1) => {
   const chatBox = document.getElementsByClassName("chat-content")[0];
-  const recipient = document.getElementsByClassName("chat-title")[0];
-  const name = recipient.innerText.split('\n')[0].toLowerCase();
+  const recipientBox = document.getElementsByClassName("chat-title")[0];
+  const recipientName = recipientBox.innerText.split('\n')[0].toLowerCase();
 
-  switch (obj.type) {
-    case "chatSelect":
-      obj.data.Content.forEach((elem) => {
-        const text = document.createElement("div");
-        text.innerText = elem.time + ": " + elem.content;
+  //delete everything within the chatBox
+  chatBox.innerHTML = ""
 
-        if (name === elem.receiver) {
-          text.classList.add("sent")
-        } else {
-          text.classList.add("received")
-        }
-        chatBox.appendChild(text);
-      });
-      break;
-    case "private":
-      const chatBubble = document.createElement("div");
-      let text = obj.data.content
-      let time = obj.data.time
-      chatBubble.innerText = time + ": " + text;
+  let totalChatSize = (obj.data.Content).length
 
-      if (name === obj.data.receiver) {
-        chatBubble.classList.add("sent")
-      } else {
-        chatBubble.classList.add("received")
-      }
-      chatBox.appendChild(chatBubble);
-      break;
+  //re-render the most recent  
+  for (let index = totalChatSize - size * 10; index <= totalChatSize - 1; index++) {
+    let value = obj.data.Content[index]
+
+    const text = document.createElement("div");
+    text.innerText = value.time + ": " + value.content;
+
+    if (recipientName === value.receiver) {
+      text.classList.add("sent")
+    } else {
+      text.classList.add("received")
+    }
+    chatBox.appendChild(text);
+
   }
 
   const sentElements = document.getElementsByClassName("sent");

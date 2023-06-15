@@ -118,27 +118,7 @@ func (c *Client) readPump() { // Same as POST
 				//log.Println("\n\nretrieved the following value: ", ChatBox, "\n\n")
 				//to be elaborated
 
-				for i, v := range ChatBox.Content {
-					S, err := dbmanagement.SelectUserFromUUID(v.SenderId)
-					if err != nil {
-						log.Println("UUID NOT FOUND: ", err)
-					}
-					R, err := dbmanagement.SelectUserFromUUID(v.ReceiverId)
-					if err != nil {
-						log.Println("UUID NOT FOUND: ", err)
-					}
-
-					ChatBox.Content[i].SenderId, ChatBox.Content[i].ReceiverId = S.Name, R.Name
-
-					t, err := time.Parse("2006-01-02T15:04:05Z07:00", v.Time)
-					if err != nil {
-						fmt.Println("Error parsing time:", err)
-						return
-					}
-
-					ChatBox.Content[i].Time = t.Format("2006-01-02 15:04:05")
-
-				}
+				ChatBox.AdjustChatJson()
 
 				c.recipient = c.hub.clientsByUsername[name]
 				chatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
@@ -158,20 +138,24 @@ func (c *Client) readPump() { // Same as POST
 				log.Println("NOHTING HAPPENEDD")
 			}
 
-			//Initialize date to insert into Chat DB
+			//Initialize data to insert into Chat DB
 			var data = dbmanagement.ChatText{
 				Content:    text,
 				SenderId:   c.User.UUID,
 				ReceiverId: receiver.UUID,
 				Time:       time.Now().Format("2006-01-02 15:04:05")}
 
-			//Insert queryS
-			dbmanagement.InsertTextInChat(data)
-			data.SenderId = c.User.Name
-			data.ReceiverId = receiver.Name
-			ChatSelector := WriteMessage{Type: "private", Data: data}
+			uuid, err := dbmanagement.InsertTextInChat(data)
+			if err != nil {
+				log.Printf("no uuid found in chat database at private")
+				return
+			}
+			//reselect the chat from the database and send it again
+			ChatBox := dbmanagement.SelectAllChat(uuid)
+			ChatBox.AdjustChatJson()
+
+			ChatSelector := WriteMessage{Type: "private", Data: ChatBox}
 			chatToSend, _ := json.Marshal(ChatSelector)
-			//c.recipient = c.hub.clientsByUsername[recipient]
 
 			c.send <- chatToSend
 			c.recipient.send <- chatToSend
