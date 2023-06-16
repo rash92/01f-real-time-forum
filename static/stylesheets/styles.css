@@ -17,12 +17,10 @@
 html,
 body {
 	overflow: auto;
-	background: linear-gradient(
-		45deg,
-		var(--main-color) 0%,
-		var(--main-color) 50%,
-		var(--highlight-color) 100%
-	);
+	background: linear-gradient(45deg,
+			var(--main-color) 0%,
+			var(--main-color) 50%,
+			var(--highlight-color) 100%);
 	background-size: cover;
 	height: 100vh;
 	padding-top: 32px;
@@ -280,6 +278,7 @@ p {
 	font-size: 1em;
 	z-index: 1;
 }
+
 .tooltip:hover .tooltiptext {
 	visibility: visible;
 }
@@ -452,6 +451,7 @@ h3 {
 .social i:hover {
 	color: var(--main-font);
 }
+
 /* REGISTRATION */
 
 .reg-wrapper {
@@ -459,7 +459,8 @@ h3 {
 	top: 10%;
 }
 
-.fName-lName, .gender-age {
+.fName-lName,
+.gender-age {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
@@ -861,7 +862,6 @@ input[type="file"] {
 
 .chat-box {
 	display: flex;
-	overflow: auto;
 	flex-direction: column;
 	align-items: center;
 	width: 500px;
@@ -887,11 +887,17 @@ input[type="file"] {
 	background-color: white;
 	overflow-y: auto;
 	width: 100%;
-	height: calc(100%-1rem);
+	height: calc(100% - 1rem - 4%);
+	margin: 2%, 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
 }
 
 .chat-input-div {
-	background-color: white;
+	background-color: rgb(255, 254, 254);
 	display: flex;
 	flex-direction: row;
 	margin-top: auto;
@@ -918,6 +924,41 @@ input[type="file"] {
 	margin: 1%;
 	cursor: pointer;
 	font-size: 1em;
+}
+
+.chat-bubble {
+	height: 50%;
+	width: 100%;
+	padding: 2%;
+	margin: 1%;
+}
+
+.time {
+	font: "vedana";
+	/* height:;
+	width: ; */
+}
+
+.text {
+	font: "vedana";
+}
+
+.sent {
+	display: flex;
+	justify-content: space-between;
+
+	flex-direction: row-reverse;
+	align-items: center;
+	background-color: aquamarine;
+}
+
+.received {
+	display: flex;
+	justify-content: space-between;
+
+	flex-direction: row;
+	align-items: center;
+	background-color: #555;
 }
 
 @media screen and (max-width: 1012px) {

@@ -212,27 +212,35 @@ const renderChat = (obj, size = 1) => {
   for (index; index <= totalChatSize - 1; index++) {
     let value = obj.data.Content[index]
 
+    const chatBubble = document.createElement("div");
+    chatBubble.classList.add("chat-bubble")
+
     const text = document.createElement("div");
-    //to be reviewed with peter
-    text.style.height = "24%";
-    text.innerText = value.time + ": " + value.content;
+    text.classList.add("text")
+    text.innerText = value.content;
+
+    const time = document.createElement("div");
+    time.classList.add("time")
+    time.innerText = value.time;
 
     if (recipientName === value.receiver) {
-      text.classList.add("sent")
+      chatBubble.classList.add("sent")
     } else {
-      text.classList.add("received")
+      chatBubble.classList.add("received")
     }
-    chatBox.appendChild(text);
+    chatBubble.appendChild(text);
+    chatBubble.appendChild(time);
+
+    chatBox.appendChild(chatBubble);
+
 
   }
 
-  const sentElements = document.getElementsByClassName("sent");
-  for (let i = 0; i < sentElements.length; i++) {
-    const sentElement = sentElements[i];
-    sentElement.style.backgroundColor = "aquamarine";
-    sentElement.style.flexDirection = "row-reverse";
-
-  }
+  // const sentElements = document.getElementsByClassName("sent");
+  // for (let i = 0; i < sentElements.length; i++) {
+  //   const sentElement = sentElements[i];
+  //   sentElement.style.backgroundColor = "aquamarine";
+  // }
 
   chatBox.addEventListener("scroll", function () {
     if (chatBox.scrollTop === 0) {
