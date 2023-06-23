@@ -1,5 +1,7 @@
-{{template "header"}}
-<body>
+const renderPrivacyPolicy = () => {
+    renderNavbar()
+    var privacyPolicyContent = `
+    <body>
 	<h1>Privacy Policy</h1>
 	<p>Last updated: January 23, 2023</p>
 	<p>
@@ -549,4 +551,11 @@
 		</li>
 	</ul>
 </body>
-{{template "footer"}}
+        `;
+
+    var privacyPolicyContainer = document.getElementById('container');
+    privacyPolicyContainer.innerHTML = privacyPolicyContent;
+
+    document.getElementById("online-users").style.visibility = "hidden";
+
+}

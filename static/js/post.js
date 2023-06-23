@@ -20,6 +20,8 @@ const renderPostPage = (postid) => {
 
 function addPostInnerHTML(data) {
 
+    document.getElementById("online-users").style.visibility = "visible"
+
     const html = `
         <div class="container-post">
             <div class="single-post">

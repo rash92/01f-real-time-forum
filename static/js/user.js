@@ -20,6 +20,8 @@ const renderUserPage = () => {
 
 function addUserInnerHTML(data) {
 
+    document.getElementById("online-users").style.visibility = "visible"
+
     const html = `
       <div class="container-filter">
           <div class="filter">

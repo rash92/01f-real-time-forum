@@ -110,7 +110,7 @@ func SubForum(w http.ResponseWriter, r *http.Request, tmpl *template.Template, t
 		// Convert the struct to JSON
 		jsonData, err := json.Marshal(data)
 		if err != nil {
-			// Handle error
+			utils.HandleError("cannot marshal sub form data ", err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")

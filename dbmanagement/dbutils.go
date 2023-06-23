@@ -129,7 +129,7 @@ var createNotificationsTableStatement = `
 
 var createChatTableStatement = `
 CREATE TABLE Chat (
-	uuid TEXT NOT NULL PRIMARY KEY,
+	uuid TEXT NOT NULL,
 	sender TEXT NOT NULL,
 	receiver TEXT NOT NULL,
 	text TEXT NOT NULL,

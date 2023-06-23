@@ -10,8 +10,12 @@ const renderForum = () => {
         })
         .then(function (jdata) {
             // Process the JSON data received from Go
-            addForumInnerHTML(jdata)
-            renderNavbar()
+            if (jdata.UserInfo.IsLoggedIn) {
+                addForumInnerHTML(jdata)
+                renderNavbar()
+            } else {
+                renderLoginForm(encodeURIComponent(JSON.stringify(jdata)), false)
+            }
         })
         .catch(function (error) {
             console.log(error);
@@ -20,6 +24,9 @@ const renderForum = () => {
 };
 
 function addForumInnerHTML(data) {
+
+    document.getElementById("online-users").style.visibility = "visible"
+
     let html = `
       <form action="/" method="post">
           <div class="container-filter">

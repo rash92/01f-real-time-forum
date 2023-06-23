@@ -1,7 +1,7 @@
 :root {
-	--main-color: #b9cdda;
-	--highlight-color: #d7dae5;
-	--like: #a5aa52;
+	--main-color: #c4e7ff;
+	--highlight-color: #ebf5fe;
+	--like: #65c63f;
 	--dislke: #d64933;
 	--dim-font: rgba(0, 0, 0, 0.5);
 	--navHeight: 5%;
@@ -17,12 +17,10 @@
 html,
 body {
 	overflow: auto;
-	background: linear-gradient(
-		45deg,
-		rgba(185, 205, 218, 1) 0%,
-		rgba(199, 211, 223, 1) 50%,
-		rgba(215, 218, 229, 1) 100%
-	);
+	background: linear-gradient(45deg,
+			var(--main-color) 0%,
+			var(--main-color) 50%,
+			var(--highlight-color) 100%);
 	background-size: cover;
 	height: 100vh;
 	padding-top: 32px;
@@ -36,6 +34,7 @@ footer {
 	height: 50px;
 	width: 100vw;
 	background-color: var(--highlight-color);
+	z-index: 99;
 }
 
 a {
@@ -279,6 +278,7 @@ p {
 	font-size: 1em;
 	z-index: 1;
 }
+
 .tooltip:hover .tooltiptext {
 	visibility: visible;
 }
@@ -352,7 +352,7 @@ p {
 	color: var(--dim-font);
 }
 
-/* LOGIN CARD */
+/* LOGIN CARD AND REGISTRATION */
 .input-wrapper {
 	display: flex;
 	flex-direction: column;
@@ -450,6 +450,22 @@ h3 {
 
 .social i:hover {
 	color: var(--main-font);
+}
+
+/* REGISTRATION */
+
+.reg-wrapper {
+	position: fixed;
+	top: 10%;
+}
+
+.fName-lName,
+.gender-age {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
 }
 
 /* POST */
@@ -846,7 +862,6 @@ input[type="file"] {
 
 .chat-box {
 	display: flex;
-	overflow: auto;
 	flex-direction: column;
 	align-items: center;
 	width: 500px;
@@ -872,11 +887,17 @@ input[type="file"] {
 	background-color: white;
 	overflow-y: auto;
 	width: 100%;
-	height: calc(100%-1rem);
+	height: calc(100% - 1rem - 4%);
+	margin: 2%, 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
 }
 
 .chat-input-div {
-	background-color: white;
+	background-color: rgb(255, 254, 254);
 	display: flex;
 	flex-direction: row;
 	margin-top: auto;
@@ -903,6 +924,41 @@ input[type="file"] {
 	margin: 1%;
 	cursor: pointer;
 	font-size: 1em;
+}
+
+.chat-bubble {
+	height: 50%;
+	width: 100%;
+	padding: 2%;
+	margin: 1%;
+}
+
+.time {
+	font: "vedana";
+	/* height:;
+	width: ; */
+}
+
+.text {
+	font: "vedana";
+}
+
+.sent {
+	display: flex;
+	justify-content: space-between;
+
+	flex-direction: row-reverse;
+	align-items: center;
+	background-color: aquamarine;
+}
+
+.received {
+	display: flex;
+	justify-content: space-between;
+
+	flex-direction: row;
+	align-items: center;
+	background-color: #555;
 }
 
 @media screen and (max-width: 1012px) {

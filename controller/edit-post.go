@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -42,13 +41,11 @@ func EditPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 
 		idToEdit := editData.PostID
 
-		fmt.Println(idToEdit)
-
 		if idToEdit != "" {
 			data.IsEdit = true
 			data.EditPost, err = dbmanagement.SelectPostFromUUID(idToEdit)
 			if err != nil {
-				fmt.Println(err)
+				utils.HandleError("id to edit failed", err)
 				PageErrors(w, r, tmpl, 500, "Internal Server Error")
 				return
 			}
@@ -65,14 +62,11 @@ func EditPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	}
 	data.Tags = tagsAsString
 	data.TagsList = dbmanagement.SelectAllTags()
-	//tmpl.ExecuteTemplate(w, "submitpost.html", data)
-
-	fmt.Println(data.EditPost.UUID)
 
 	// Convert the struct to JSON
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		// Handle error
+		utils.HandleError("cannot marshal tags data", err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")

@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -18,7 +17,6 @@ type ReactPostFormData struct {
 }
 
 func ReactPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
-	fmt.Println("reacting")
 	sessionId, err := auth.GetSessionFromBrowser(w, r)
 	if sessionId == "" {
 		err := auth.CreateUserSession(w, r, dbmanagement.User{})
@@ -33,6 +31,9 @@ func ReactPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) 
 	if err == nil && r.Method == "POST" {
 		user := dbmanagement.User{}
 		user, err = dbmanagement.SelectUserFromSession(sessionId)
+		if err != nil {
+			utils.HandleError("Cannot select user from Session", err)
+		}
 
 		// Parse the JSON body into FormData struct
 		var formData ReactPostFormData
@@ -47,8 +48,6 @@ func ReactPost(w http.ResponseWriter, r *http.Request, tmpl *template.Template) 
 		id := formData.ID
 		like := formData.Like
 		dislike := formData.Dislike
-
-		fmt.Println(formData)
 
 		if like {
 			if isComment {

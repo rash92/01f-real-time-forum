@@ -45,7 +45,11 @@ type OauthAccount struct {
 // Displays the log in page.
 func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	sessionId, err := GetSessionFromBrowser(w, r)
-	utils.HandleError("Unable to get session id from browser in login:", err)
+	fmt.Println("SessionID:", sessionId)
+	if err != nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		utils.HandleError("Unable to get session id from browser in login:", err)
+	}
 	_, err = dbmanagement.SelectUserFromSession(sessionId)
 	if err == nil {
 		http.Redirect(w, r, "/", http.StatusFound)
@@ -60,7 +64,7 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		// Convert the struct to JSON
 		jsonData, err := json.Marshal(data)
 		if err != nil {
-			// Handle error
+			utils.HandleError("cannot marshal loggedinstatus data", err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -77,7 +81,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 	var formData AuthenticateFormData
 	err := json.NewDecoder(r.Body).Decode(&formData)
 	if err != nil {
-		// Handle error
+		utils.HandleError("cannot marshal authenticate data", err)
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
@@ -87,7 +91,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 	var user dbmanagement.User
 	matched, err := regexp.MatchString(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`, userName)
 	if err != nil {
-		fmt.Println(err)
+		utils.HandleError("Regex failed for username or email", err)
 	}
 	if matched {
 		user, err = dbmanagement.SelectUserFromEmail(userName)
@@ -112,7 +116,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 		// Convert the struct to JSON
 		jsonData, err := json.Marshal(data)
 		if err != nil {
-			// Handle error
+			utils.HandleError("cannot marshal compare hash data", err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -130,7 +134,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 			// Convert the struct to JSON
 			jsonData, err := json.Marshal(data)
 			if err != nil {
-				// Handle error
+				utils.HandleError("cannot marshal login data", err)
 			}
 
 			w.Header().Set("Content-Type", "application/json")
@@ -146,7 +150,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request, tmpl *template.Templat
 			// Convert the struct to JSON
 			jsonData, err := json.Marshal(data)
 			if err != nil {
-				// Handle error
+				utils.HandleError("cannot marshal tag data", err)
 			}
 
 			w.Header().Set("Content-Type", "application/json")
@@ -189,7 +193,7 @@ func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	// Convert the struct to JSON
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		// Handle error
+		utils.HandleError("cannot marshal registration data", err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -202,7 +206,6 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	var formData RegisterAccountFormData
 
 	err := json.NewDecoder(r.Body).Decode(&formData)
-	fmt.Println("form data", formData, "err ", err)
 	if err != nil {
 		// Handle error
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
@@ -222,7 +225,7 @@ func RegisterAcount(w http.ResponseWriter, r *http.Request, tmpl *template.Templ
 	// Convert the struct to JSON
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		// Handle error
+		utils.HandleError("cannot marshal tag data", err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")

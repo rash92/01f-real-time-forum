@@ -25,6 +25,7 @@ func Comment(w http.ResponseWriter, r *http.Request, tmpl *template.Template, po
 	user := dbmanagement.User{}
 	if err == nil {
 		user, err = dbmanagement.SelectUserFromSession(sessionId)
+		utils.HandleError("cannot select user from session ", err)
 		data.Cookie = sessionId
 
 		data.UserInfo = user
@@ -40,7 +41,7 @@ func Comment(w http.ResponseWriter, r *http.Request, tmpl *template.Template, po
 			var formData CommentFormData
 			jerr := json.NewDecoder(r.Body).Decode(&formData)
 			if jerr != nil {
-				// Handle error
+				utils.HandleError("Invalid request payload", err)
 				http.Error(w, "Invalid request payload", http.StatusBadRequest)
 				return
 			}

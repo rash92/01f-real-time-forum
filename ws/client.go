@@ -3,6 +3,7 @@ package ws
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	auth "forum/authentication"
 	"forum/dbmanagement"
 	"forum/utils"
@@ -19,7 +20,7 @@ const (
 	writeWait = 10 * time.Second
 
 	// Time allowed to read the next pong message from the peer.
-	pongWait = 60 * time.Second
+	pongWait = 10 * time.Second
 
 	// Send pings to peer with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
@@ -48,6 +49,8 @@ type Client struct {
 	// Buffered channel of outbound messages.
 	send chan []byte
 
+	msg chan []byte
+
 	User         dbmanagement.User
 	typing       chan bool
 	typingStatus bool
@@ -62,16 +65,15 @@ type ReadMessage struct {
 type WriteMessage struct {
 	Type string      `json:"type"`
 	Data interface{} `json:"data"`
-	// Recipient string      `json:"recipient"`
 }
 
 // readPump pumps messages from the websocket connection to the hub.
-//
 // The application runs readPump in a per-connection goroutine. The application
 // ensures that there is at most one reader on a connection by executing all
 // reads from this goroutine.
 func (c *Client) readPump() { // Same as POST
 	defer func() {
+		log.Println("closing at readpump")
 		c.hub.unregister <- c
 		c.conn.Close()
 	}()
@@ -80,9 +82,10 @@ func (c *Client) readPump() { // Same as POST
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
 		_, message, err := c.conn.ReadMessage()
+
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
+				utils.HandleError("Unexpected Websocket Close", err)
 			}
 			break
 		}
@@ -90,39 +93,87 @@ func (c *Client) readPump() { // Same as POST
 
 		var msg ReadMessage
 		if err := json.Unmarshal(message, &msg); err != nil {
-			log.Printf("Error decoding JSON: %v", err)
+			utils.HandleError("Error decoding JSON:", err)
 			continue
 		}
 
 		switch msg.Type {
 		case "recipientSelect":
 			name, ok := msg.Info["name"].(string)
-			if ok {
-				log.Printf("Name: %s", name)
-				userConnection, _ := dbmanagement.SelectUserFromName(name)
-				recipientClient := c.hub.GetClientByUsername(name)
-				c.recipient = recipientClient // This brings back hashed password, probably not necessary
-				log.Printf("User Data: %v", userConnection)
+			if !ok {
+				utils.WriteMessageToLogFile("Selecting an unknown recipient")
+				break
 			}
+
+			log.Printf("Name: %s", name)
+			userConnection, _ := dbmanagement.SelectUserFromName(name) // This brings back hashed password, probably not necessary
+			log.Printf("User Data: %v", userConnection)
+			//if chatId is inexistent, then just leave it as it is until either client sends a message
+			ChatID, exists := dbmanagement.SelectChatId(c.User.UUID, userConnection.UUID)
+
+			if !exists {
+				log.Printf("NO EXISTING chat between following users: %v AND %v", userConnection.Name, c.User.Name)
+			} else {
+				ChatBox := dbmanagement.SelectAllChat(ChatID)
+				//log.Println("\n\nretrieved the following value: ", ChatBox, "\n\n")
+				//to be elaborated
+
+				ChatBox.AdjustChatJson()
+
+				c.recipient = c.hub.clientsByUsername[name]
+				chatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
+				chatToSend, _ := json.Marshal(chatSelector)
+				c.send <- chatToSend
+
+			}
+
 		case "private":
 			recipient, ok1 := msg.Info["recipient"].(string)
 			receiver, _ := dbmanagement.SelectUserFromName(recipient)
 			text, ok2 := msg.Info["text"].(string)
-			user := c.User.UUID
+
 			if ok1 && ok2 {
-				log.Printf("Private Message: %s %s %s", user, receiver.UUID, text)
+				log.Printf("Private Message: %s %s %s %s", c.User.UUID, receiver.UUID, text, time.Now())
+			} else {
+				log.Println("NOHTING HAPPENEDD")
 			}
+
+			//Initialize data to insert into Chat DB
+			var data = dbmanagement.ChatText{
+				Content:    text,
+				SenderId:   c.User.UUID,
+				ReceiverId: receiver.UUID,
+				Time:       time.Now().Format("2006-01-02 15:04:05")}
+
+			uuid, err := dbmanagement.InsertTextInChat(data)
+			if err != nil {
+				log.Printf("no uuid found in chat database at private")
+				return
+			}
+			//reselect the chat from the database and send it again
+			ChatBox := dbmanagement.SelectAllChat(uuid)
+			ChatBox.AdjustChatJson()
+
+			ChatSelector := WriteMessage{Type: "private", Data: ChatBox}
+			chatToSend, _ := json.Marshal(ChatSelector)
+
+			c.send <- chatToSend
+			c.recipient.send <- chatToSend
+
 		case "typing":
-			isTyping, ok2 := msg.Info["isTyping"].(bool)
+			isTyping, ok := msg.Info["isTyping"].(bool)
 			user := c.User.UUID
-			if ok2 {
-				log.Printf("typing: %s %v", user, isTyping)
+			fmt.Println(isTyping)
+			if ok {
+				message := fmt.Sprintf("typing: %s %v", user, isTyping)
+				utils.WriteMessageToLogFile(message)
 				c.typing <- isTyping
 				c.hub.typingBroadcast <- c
 			}
 		default:
 			c.hub.broadcast <- message
-			log.Printf("Recieved %s", message)
+			message := fmt.Sprintf("Recieved %s", message)
+			utils.WriteMessageToLogFile(message)
 		}
 	}
 }
@@ -132,8 +183,9 @@ func (c *Client) readPump() { // Same as POST
 // A goroutine running writePump is started for each connection. The
 // application ensures that there is at most one writer to a connection by
 // executing all writes from this goroutine.
-func (c *Client) writePump() {
+func (c *Client) writePump() { //GET REQUEST
 	ticker := time.NewTicker(pingPeriod)
+
 	onlineCheckerTicker := time.NewTicker(1 * time.Second)
 	onlineUsersTicker := time.NewTicker(1 * time.Second) // Update online users every 5 seconds
 
@@ -142,10 +194,12 @@ func (c *Client) writePump() {
 	typingTimer.Stop()
 
 	defer func() {
+		log.Println("closing at writepump")
 		ticker.Stop()
 		onlineUsersTicker.Stop()
 		c.conn.Close()
 	}()
+
 	for {
 		select {
 		case message, ok := <-c.send:
@@ -155,10 +209,14 @@ func (c *Client) writePump() {
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
+			fmt.Println("\nMESSAGE RECEIVED: \n", string(message))
+
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {
+				log.Println(err)
 				return
 			}
+
 			w.Write(message)
 
 			// Add queued chat messages to the current websocket message.
@@ -171,6 +229,7 @@ func (c *Client) writePump() {
 			if err := w.Close(); err != nil {
 				return
 			}
+
 		case isTyping := <-c.typing:
 			c.typingStatus = isTyping
 
@@ -190,7 +249,10 @@ func (c *Client) writePump() {
 				},
 			}
 			jsonMessage, _ := json.Marshal(message)
-			c.recipient.send <- jsonMessage
+			// Check if recipient is available and has a valid connection
+			if c.recipient != nil && c.recipient.send != nil {
+				c.recipient.send <- jsonMessage
+			}
 			// c.send <- jsonMessage
 		case <-typingTimer.C: // Handle the typing timer expiration
 			c.typingStatus = false
@@ -203,7 +265,23 @@ func (c *Client) writePump() {
 				},
 			}
 			jsonMessage, _ := json.Marshal(message)
-			c.recipient.send <- jsonMessage
+			// Check if recipient is available and has a valid connection
+			if c.recipient != nil && c.recipient.send != nil {
+				c.recipient.send <- jsonMessage
+			}
+
+		case msg, ok := <-c.msg:
+			if !ok {
+				// The hub closed the channel.
+				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+				return
+			}
+			// Check if recipient is available and has a valid connection
+			if c.recipient != nil && c.recipient.send != nil {
+				c.send <- msg
+				c.recipient.send <- msg
+			}
+
 		case <-onlineUsersTicker.C:
 			onlineUsersData := OnlineUsersHandler()
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
@@ -238,6 +316,11 @@ func (c *Client) writePump() {
 			if err := w.Close(); err != nil {
 				return
 			}
+		case <-ticker.C:
+			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				return
+			}
 		}
 	}
 }
@@ -251,7 +334,8 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
 	clientUser, err := dbmanagement.SelectUserFromSession(SessionId)
 	utils.HandleError("Unable to find user session id", err)
-	log.Printf("client User from DB %v", clientUser)
+	message := fmt.Sprintf("client User from DB %v", clientUser)
+	utils.WriteMessageToLogFile(message)
 	if err != nil || clientUser.Name == "" {
 		return
 	}
