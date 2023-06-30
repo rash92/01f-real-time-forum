@@ -157,8 +157,14 @@ func (c *Client) readPump() { // Same as POST
 			ChatSelector := WriteMessage{Type: "private", Data: ChatBox}
 			chatToSend, _ := json.Marshal(ChatSelector)
 
+			fmt.Println("chatToSend:", string(chatToSend))
+
 			c.send <- chatToSend
+			fmt.Println("c.send:", c.send)
+			fmt.Println("chatToSend AFTER c.send:", string(chatToSend))
 			c.recipient.send <- chatToSend
+			fmt.Println("c.recipient.send:", c.recipient.send)
+			fmt.Println("chatToSend AFTER c.recipient.send:", string(chatToSend))
 
 		case "typing":
 			isTyping, ok := msg.Info["isTyping"].(bool)
