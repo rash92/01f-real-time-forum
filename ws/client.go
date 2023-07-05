@@ -10,7 +10,6 @@ import (
 	"log"
 	"net/http"
 	"sort"
-	"strings"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -153,6 +152,15 @@ func (c *Client) readPump() { // Same as POST
 			}
 			//reselect the chat from the database and send it again
 			ChatBox := dbmanagement.SelectAllChat(uuid)
+			// messagedUsers, nonMessagedUsers := OnlineUsersHandler(c.User)
+			// message := WriteMessage{
+			// 	Type: "onlineUsers",
+			// 	Data: map[string][]BasicUserInfo{
+			// 		"messagedUsers":    messagedUsers,
+			// 		"nonMessagedUsers": nonMessagedUsers,
+			// 	},
+			// }
+			// jsonMessage, _ := json.Marshal(message)
 			ChatBox.AdjustChatJson()
 			c.recipient, c.IsRecipientOnline = c.hub.clientsByUsername[recipient]
 			ChatSelector := WriteMessage{Type: "private", Data: ChatBox}
@@ -190,7 +198,7 @@ func (c *Client) writePump() { //GET REQUEST
 	ticker := time.NewTicker(pingPeriod)
 
 	onlineCheckerTicker := time.NewTicker(1 * time.Second)
-	onlineUsersTicker := time.NewTicker(1 * time.Second) // Update online users every 5 seconds
+	onlineUsersTicker := time.NewTicker(1 * time.Second)
 
 	// Create a timer to track typing state
 	typingTimer := time.NewTimer(0)
@@ -391,16 +399,22 @@ func OnlineUsersHandler(currentUser dbmanagement.User) (messagedUsers []BasicUse
 			userChatId, found := dbmanagement.SelectChatId(currentUser.UUID, user.UUID)
 			if !found {
 				nonMessagedUsers = append(nonMessagedUsers, BasicUserInfo{user.UUID, user.Name, user.IsLoggedIn, time.Time{}})
+			} else {
+				userChats := dbmanagement.SelectAllChat(userChatId)
+				lastMessageTime, _ := time.Parse("2006-01-02T15:04:05Z07:00", userChats.Content[len(userChats.Content)-1].Time)
+				messagedUsers = append(messagedUsers, BasicUserInfo{user.UUID, user.Name, user.IsLoggedIn, lastMessageTime})
 			}
-			userChats := dbmanagement.SelectAllChat(userChatId)
-			lastMessageTime, _ := time.Parse("2006-01-02T15:04:05Z07:00", userChats.Content[len(userChats.Content)-1].Time)
-			messagedUsers = append(messagedUsers, BasicUserInfo{user.UUID, user.Name, user.IsLoggedIn, lastMessageTime})
 		}
 	}
 
 	// TO DO: SORTED ALPHABETICALLY WHEN NEW USER ELSE BY LAST CHATTED TO
 	sort.Slice(messagedUsers, func(i, j int) bool {
-		return strings.ToLower(messagedUsers[i].Name) < strings.ToLower(messagedUsers[j].Name)
+		t1 := messagedUsers[i].LastMessageTime
+		t2 := messagedUsers[j].LastMessageTime
+		return t2.Before(t1)
+	})
+	sort.Slice(nonMessagedUsers, func(i, j int) bool {
+		return nonMessagedUsers[i].Name < nonMessagedUsers[j].Name
 	})
 	return
 }
