@@ -149,7 +149,6 @@ func (ChatBox *ChatBox) AdjustChatJson() {
 		}
 
 		ChatBox.Content[i].SenderId, ChatBox.Content[i].ReceiverId = S.Name, R.Name
-
 		t, err := time.Parse("2006-01-02T15:04:05Z07:00", v.Time)
 		if err != nil {
 			fmt.Println("Error parsing time:", err)
