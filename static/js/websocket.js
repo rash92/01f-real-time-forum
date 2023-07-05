@@ -43,7 +43,6 @@ const startWebSocket = () => {
         break
       case "chatSelect":
       case "private":
-        console.log(`THIS IS A ${message.type} MESSAGE: \n`, message.data)
         renderChat(message)
         break
     }
@@ -58,6 +57,7 @@ const startWebSocket = () => {
   }
 
   function onlineUserInfo(data) {
+    debugger
     const userArr = Array.from(document.getElementsByClassName("users"))
     const chatBoxesContainer = document.getElementById("chat-boxes-container")
     data.forEach((user) => {
@@ -209,6 +209,7 @@ const renderChat = (obj, size = 1) => {
   if (index <= 0) {
     index = 0
   }
+  // obj.data.Content.reverse();
   for (index; index <= totalChatSize - 1; index++) {
     let value = obj.data.Content[index]
 
@@ -231,23 +232,25 @@ const renderChat = (obj, size = 1) => {
     chatBubble.appendChild(text);
     chatBubble.appendChild(time);
 
-    chatBox.appendChild(chatBubble);
+    chatBox.insertBefore(chatBubble, chatBox.firstChild);
 
 
   }
 
-  // const sentElements = document.getElementsByClassName("sent");
-  // for (let i = 0; i < sentElements.length; i++) {
-  //   const sentElement = sentElements[i];
-  //   sentElement.style.backgroundColor = "aquamarine";
-  // }
+
+  let reachedMax = (totalChatSize % (size * 10) != 0)
+  let isThrottled = false;
 
   chatBox.addEventListener("scroll", function () {
-    if (chatBox.scrollTop === 0) {
-      renderChat(obj, size + 1)
+    if (!isThrottled && chatBox.scrollTop === 0 && reachedMax) {
+      isThrottled = true;
 
+      setTimeout(function () {
+        renderChat(obj, size + 1);
+        isThrottled = false;
+      }, 1000); // Adjust the throttle delay as needed (e.g., 500 milliseconds)
     }
   });
-}
 
+}
 

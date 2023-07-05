@@ -51,10 +51,11 @@ type Client struct {
 
 	msg chan []byte
 
-	User         dbmanagement.User
-	typing       chan bool
-	typingStatus bool
-	recipient    *Client
+	User              dbmanagement.User
+	typing            chan bool
+	typingStatus      bool
+	IsRecipientOnline bool
+	recipient         *Client
 }
 
 type ReadMessage struct {
@@ -120,7 +121,6 @@ func (c *Client) readPump() { // Same as POST
 
 				ChatBox.AdjustChatJson()
 
-				c.recipient = c.hub.clientsByUsername[name]
 				chatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
 				chatToSend, _ := json.Marshal(chatSelector)
 				c.send <- chatToSend
@@ -153,12 +153,14 @@ func (c *Client) readPump() { // Same as POST
 			//reselect the chat from the database and send it again
 			ChatBox := dbmanagement.SelectAllChat(uuid)
 			ChatBox.AdjustChatJson()
-
+			c.recipient, c.IsRecipientOnline = c.hub.clientsByUsername[recipient]
 			ChatSelector := WriteMessage{Type: "private", Data: ChatBox}
 			chatToSend, _ := json.Marshal(ChatSelector)
 
 			c.send <- chatToSend
-			c.recipient.send <- chatToSend
+			if c.IsRecipientOnline {
+				c.recipient.send <- chatToSend
+			}
 
 		case "typing":
 			isTyping, ok := msg.Info["isTyping"].(bool)
