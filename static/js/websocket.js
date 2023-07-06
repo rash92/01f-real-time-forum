@@ -45,6 +45,7 @@ const startWebSocket = () => {
         break;
       case "chatSelect":
       case "private":
+        console.log(message);
         renderChat(message);
         break;
     }
@@ -201,7 +202,7 @@ const renderChat = (obj, size = 1) => {
   const chatBox = document.getElementsByClassName("chat-content")[0];
   const recipientBox = document.getElementsByClassName("chat-title")[0];
   const recipientName = recipientBox.innerText.split("\n")[0].toLowerCase();
-
+  console.log(recipientName);
   //delete everything within the chatBox
   chatBox.innerHTML = "";
 
@@ -227,11 +228,12 @@ const renderChat = (obj, size = 1) => {
 
     const time = document.createElement("div");
     time.classList.add("time");
-    time.innerText = value.time;
 
     if (recipientName === value.receiver) {
+      time.innerText = `${value.sender} ${value.time}`;
       chatBubble.classList.add("sent");
     } else {
+      time.innerText = `${recipientName} ${value.time}`;
       chatBubble.classList.add("received");
     }
     chatBubble.appendChild(text);
