@@ -948,19 +948,19 @@ input[type="file"] {
 .sent {
   display: flex;
   justify-content: space-between;
-
+  color: white;
   flex-direction: row-reverse;
   align-items: center;
-  background-color: aquamarine;
+  background-color: darkgreen;
 }
 
 .received {
   display: flex;
   justify-content: space-between;
-
+  color: black;
   flex-direction: row;
   align-items: center;
-  background-color: #555;
+  background-color: lightblue;
 }
 
 @media screen and (max-width: 1012px) {
