@@ -1,11 +1,7 @@
-
 var currentUrl = window.location.href;
 console.log(currentUrl.split("8080")[1]);
 
-
-
 const renderNavbar = () => {
-
   fetch("/forum")
     .then(function (response) {
       if (response.ok) {
@@ -16,7 +12,7 @@ const renderNavbar = () => {
     })
     .then(function (data) {
       // Process the JSON data received from Go
-      addNavBarHTML(data)
+      addNavBarHTML(data);
     })
     .catch(function (error) {
       console.log(error);
@@ -48,12 +44,16 @@ function addNavBarHTML(data) {
         </div>
     `;
 
-  if (!data || data.UserInfo.Name === '') {
+  if (!data || data.UserInfo.Name === "") {
     html += `
         <div class="menu">
-        <li><a accesskey="a" onclick="renderLoginForm('${encodeURIComponent(JSON.stringify(data))}', false)">Sign in</a></li>
+        <li><a accesskey="a" onclick="renderLoginForm('${encodeURIComponent(
+          JSON.stringify(data)
+        )}', false)">Sign in</a></li>
         <p>|</p>
-        <li><a accesskey="a" onclick="renderRegisterForm('${encodeURIComponent(JSON.stringify(data))}')">Sign up</a></li>
+        <li><a accesskey="a" onclick="renderRegisterForm('${encodeURIComponent(
+          JSON.stringify(data)
+        )}')">Sign up</a></li>
         </div>
       `;
   } else {
@@ -62,11 +62,17 @@ function addNavBarHTML(data) {
           <div class="create">
             <a onclick="renderSubmitPost()"><i class="fa-solid fa-plus"></i> Create</a>
           </div>
-          <li><a onclick="renderUserPage()"><i class="fa-solid fa-user"></i> ${data.UserInfo.Name}</a></li>
+          <li id="current-user"><a onclick="renderUserPage()"><i class="fa-solid fa-user"></i> ${
+            data.UserInfo.Name
+          }</a></li>
           <div class="dropdown">
             <button class="dropbtn">
               <i class="fa-solid fa-bell"></i>
-              ${data.UserInfo.Notifications ? '<span class="badge"><i class="fa-solid fa-circle"></i></span>' : ''}
+              ${
+                data.UserInfo.Notifications
+                  ? '<span class="badge"><i class="fa-solid fa-circle"></i></span>'
+                  : ""
+              }
             </button>
             <div class="dropdown-content">
               <div class="notifications-interactions">
@@ -103,7 +109,7 @@ function addNavBarHTML(data) {
               </a>
       `;
 
-    if (data.UserInfo.Permission === 'user') {
+    if (data.UserInfo.Permission === "user") {
       html += `
             <button class="dropdown-content-links" name="request to become moderator" value=${data.UserInfo.UUID} onclick="renderUserPage()">
               <div><i class="fa-solid fa-gavel"></i> Become a moderator?</div>
@@ -111,7 +117,7 @@ function addNavBarHTML(data) {
         `;
     }
 
-    if (data.UserInfo.Permission === 'admin') {
+    if (data.UserInfo.Permission === "admin") {
       html += `
           <a class="dropdown-content-links" onclick="renderAdminPage()">
             <div><i class="fa-solid fa-gear"></i> Admin tools</div>
@@ -131,41 +137,43 @@ function addNavBarHTML(data) {
 
   html += `</nav>`;
 
-  document.getElementById('navbar').innerHTML = html;
+  document.getElementById("navbar").innerHTML = html;
 
-  const deleteNotificationButton = document.querySelectorAll("#delete-notification")
-  deleteNotificationButton.forEach(notification => {
-    notification.addEventListener('click', (event) => {
+  const deleteNotificationButton = document.querySelectorAll(
+    "#delete-notification"
+  );
+  deleteNotificationButton.forEach((notification) => {
+    notification.addEventListener("click", (event) => {
       event.preventDefault();
 
-      const notificationid = notification.value
+      const notificationid = notification.value;
       const formData = {
-        deleteNotification: notificationid
-      }
-      deleteNotification(formData)
-    })
-  })
+        deleteNotification: notificationid,
+      };
+      deleteNotification(formData);
+    });
+  });
 
   const deleteNotification = async (formData) => {
     try {
       const response = await fetch(`/notification`, {
-          method: 'POST',
-          body: JSON.stringify(formData),
-          headers: {
-              'Content-Type': 'application/json'
-          }
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
       if (response.ok) {
-          // Authentication successful
-          renderNavbar()
+        // Authentication successful
+        renderNavbar();
       } else {
-          // Handle error response
-          console.error('Delete Post failed.');
+        // Handle error response
+        console.error("Delete Post failed.");
       }
-  } catch (error) {
+    } catch (error) {
       // Handle network or other errors
-      console.error('Error occurred:', error);
-  }
-  }
+      console.error("Error occurred:", error);
+    }
+  };
 }

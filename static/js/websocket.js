@@ -44,9 +44,12 @@ const startWebSocket = () => {
         }
         break;
       case "chatSelect":
+        renderChat(message);
+        break;
       case "private":
         console.log(message);
         renderChat(message);
+        messageNotification(message);
         break;
     }
   };
@@ -201,6 +204,9 @@ const startWebSocket = () => {
 const renderChat = (obj, size = 1) => {
   const chatBox = document.getElementsByClassName("chat-content")[0];
   const recipientBox = document.getElementsByClassName("chat-title")[0];
+  if (!recipientBox) {
+    return;
+  }
   const recipientName = recipientBox.innerText.split("\n")[0].toLowerCase();
   console.log(recipientName);
   //delete everything within the chatBox
@@ -256,3 +262,35 @@ const renderChat = (obj, size = 1) => {
     }
   });
 };
+
+function messageNotification(message) {
+  const currentUser = document
+    .getElementById("current-user")
+    .textContent.split(" ")[1];
+  const usersArr = Array.from(document.getElementsByClassName("users"));
+  const messageArr = message.data.Content;
+  const chatBox = document.querySelector(".chat-box");
+  const currentlyTalkingTo = document.querySelector(".chat-title");
+
+  let sender;
+  if (currentUser === messageArr[messageArr.length - 1].sender) {
+    sender = messageArr[messageArr.length - 1].reciever;
+  } else {
+    sender = messageArr[messageArr.length - 1].sender;
+  }
+  const senderDiv = usersArr.find(
+    (onlineUser) => onlineUser.textContent.split(" ")[1] === sender
+  );
+  if (
+    !(
+      currentlyTalkingTo &&
+      currentlyTalkingTo.textContent.toLowerCase().split("hide")[0] ===
+        sender &&
+      chatBox &&
+      chatBox.style.display !== "none"
+    ) &&
+    messageArr[messageArr.length - 1].sender !== currentUser
+  ) {
+    alert(sender + " has sent you a message");
+  }
+}
