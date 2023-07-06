@@ -152,20 +152,10 @@ func (c *Client) readPump() { // Same as POST
 			}
 			//reselect the chat from the database and send it again
 			ChatBox := dbmanagement.SelectAllChat(uuid)
-			// messagedUsers, nonMessagedUsers := OnlineUsersHandler(c.User)
-			// message := WriteMessage{
-			// 	Type: "onlineUsers",
-			// 	Data: map[string][]BasicUserInfo{
-			// 		"messagedUsers":    messagedUsers,
-			// 		"nonMessagedUsers": nonMessagedUsers,
-			// 	},
-			// }
-			// jsonMessage, _ := json.Marshal(message)
 			ChatBox.AdjustChatJson()
 			c.recipient, c.IsRecipientOnline = c.hub.clientsByUsername[recipient]
 			ChatSelector := WriteMessage{Type: "private", Data: ChatBox}
 			chatToSend, _ := json.Marshal(ChatSelector)
-
 			c.send <- chatToSend
 			if c.IsRecipientOnline {
 				c.recipient.send <- chatToSend
@@ -294,8 +284,8 @@ func (c *Client) writePump() { //GET REQUEST
 			}
 
 		case <-onlineUsersTicker.C:
-			messagedUsers, nonMessagedUsers := OnlineUsersHandler(c.User)
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			messagedUsers, nonMessagedUsers := OnlineUsersHandler(c.User)
 
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {

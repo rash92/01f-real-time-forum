@@ -20,6 +20,7 @@ const startWebSocket = () => {
     // console.log("TYPE: ", typeof message, "\nDATA: ", message)
     switch (message.type) {
       case "onlineUsers":
+        console.log("Online users triggered in onmessage");
         onlineUserInfo(message.data.messagedUsers, usersContainer);
         onlineUserInfo(message.data.nonMessagedUsers, nonMessagedContainer);
         break;
@@ -58,7 +59,8 @@ const startWebSocket = () => {
   };
 
   function onlineUserInfo(data, container) {
-    const userArr = Array.from(document.getElementsByClassName("users"));
+    const userArr = [];
+    container.innerHTML = "";
     const chatBoxesContainer = document.getElementById("chat-boxes-container");
     data.forEach((user) => {
       // Try to find existing userDiv for the user
