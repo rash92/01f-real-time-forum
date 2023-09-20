@@ -51,10 +51,11 @@ type Client struct {
 
 	msg chan []byte
 
-	User         dbmanagement.User
-	typing       chan bool
-	typingStatus bool
-	recipient    *Client
+	User              dbmanagement.User
+	typing            chan bool
+	typingStatus      bool
+	IsRecipientOnline bool
+	recipient         *Client
 }
 
 type ReadMessage struct {
@@ -120,7 +121,6 @@ func (c *Client) readPump() { // Same as POST
 
 				ChatBox.AdjustChatJson()
 
-				c.recipient = c.hub.clientsByUsername[name]
 				chatSelector := WriteMessage{Type: "chatSelect", Data: ChatBox}
 				chatToSend, _ := json.Marshal(chatSelector)
 				c.send <- chatToSend
@@ -153,12 +153,13 @@ func (c *Client) readPump() { // Same as POST
 			//reselect the chat from the database and send it again
 			ChatBox := dbmanagement.SelectAllChat(uuid)
 			ChatBox.AdjustChatJson()
-
+			c.recipient, c.IsRecipientOnline = c.hub.clientsByUsername[recipient]
 			ChatSelector := WriteMessage{Type: "private", Data: ChatBox}
 			chatToSend, _ := json.Marshal(ChatSelector)
-
 			c.send <- chatToSend
-			c.recipient.send <- chatToSend
+			if c.IsRecipientOnline {
+				c.recipient.send <- chatToSend
+			}
 
 		case "typing":
 			isTyping, ok := msg.Info["isTyping"].(bool)
@@ -187,7 +188,7 @@ func (c *Client) writePump() { //GET REQUEST
 	ticker := time.NewTicker(pingPeriod)
 
 	onlineCheckerTicker := time.NewTicker(1 * time.Second)
-	onlineUsersTicker := time.NewTicker(1 * time.Second) // Update online users every 5 seconds
+	onlineUsersTicker := time.NewTicker(1 * time.Second)
 
 	// Create a timer to track typing state
 	typingTimer := time.NewTimer(0)
@@ -283,8 +284,8 @@ func (c *Client) writePump() { //GET REQUEST
 			}
 
 		case <-onlineUsersTicker.C:
-			onlineUsersData := OnlineUsersHandler()
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			messagedUsers, nonMessagedUsers := OnlineUsersHandler(c.User)
 
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {
@@ -293,7 +294,10 @@ func (c *Client) writePump() { //GET REQUEST
 
 			message := WriteMessage{
 				Type: "onlineUsers",
-				Data: onlineUsersData,
+				Data: map[string][]BasicUserInfo{
+					"messagedUsers":    messagedUsers,
+					"nonMessagedUsers": nonMessagedUsers,
+				},
 			}
 			jsonMessage, _ := json.Marshal(message)
 			w.Write(jsonMessage)
@@ -370,19 +374,37 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 }
 
 type BasicUserInfo struct {
-	Name           string
-	LoggedInStatus int
+	UUID            string
+	Name            string
+	LoggedInStatus  int
+	LastMessageTime time.Time
 }
 
-func OnlineUsersHandler() []BasicUserInfo {
+func OnlineUsersHandler(currentUser dbmanagement.User) (messagedUsers []BasicUserInfo, nonMessagedUsers []BasicUserInfo) {
 	onlineUsers := dbmanagement.SelectAllUsers()
-	userArr := []BasicUserInfo{}
+	messagedUsers = []BasicUserInfo{}
+	nonMessagedUsers = []BasicUserInfo{}
 	for _, user := range onlineUsers {
-		userArr = append(userArr, BasicUserInfo{user.Name, user.IsLoggedIn})
+		if user.Name != currentUser.Name {
+			userChatId, found := dbmanagement.SelectChatId(currentUser.UUID, user.UUID)
+			if !found {
+				nonMessagedUsers = append(nonMessagedUsers, BasicUserInfo{user.UUID, user.Name, user.IsLoggedIn, time.Time{}})
+			} else {
+				userChats := dbmanagement.SelectAllChat(userChatId)
+				lastMessageTime, _ := time.Parse("2006-01-02T15:04:05Z07:00", userChats.Content[len(userChats.Content)-1].Time)
+				messagedUsers = append(messagedUsers, BasicUserInfo{user.UUID, user.Name, user.IsLoggedIn, lastMessageTime})
+			}
+		}
 	}
+
 	// TO DO: SORTED ALPHABETICALLY WHEN NEW USER ELSE BY LAST CHATTED TO
-	sort.Slice(userArr, func(i, j int) bool {
-		return userArr[i].Name < userArr[j].Name
+	sort.Slice(messagedUsers, func(i, j int) bool {
+		t1 := messagedUsers[i].LastMessageTime
+		t2 := messagedUsers[j].LastMessageTime
+		return t2.Before(t1)
 	})
-	return userArr
+	sort.Slice(nonMessagedUsers, func(i, j int) bool {
+		return nonMessagedUsers[i].Name < nonMessagedUsers[j].Name
+	})
+	return
 }
